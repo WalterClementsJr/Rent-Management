@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addcustomer.AddCustomerController">
+   <children>
+      <AnchorPane prefHeight="600.0" prefWidth="581.0">
+         <children>
+            <VBox alignment="CENTER" fillWidth="false" prefHeight="506.0" prefWidth="382.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="300.0" spacing="10.0">
+                     <children>
+                        <Label text="Ho va Ten" />
+                        <TextField fx:id="name" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="299.0" spacing="10.0">
+                     <children>
+                        <Label text="Gioi Tinh" />
+                        <RadioButton fx:id="btnMale" mnemonicParsing="false" text="Nam" />
+                        <RadioButton fx:id="btnFemale" mnemonicParsing="false" text="Nu" />
+                        <Group />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="300.0" spacing="10.0">
+                     <children>
+                        <Label text="SDT" />
+                        <TextField fx:id="sdt" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="301.0" spacing="10.0">
+                     <children>
+                        <Label text="CMND" />
+                        <TextField fx:id="cmnd" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="299.0" spacing="10.0">
+                     <children>
+                        <Label text="Ngay Sinh" />
+                        <DatePicker fx:id="date" prefHeight="25.0" prefWidth="170.0" promptText="D/MM/YYYY" />
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="284.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="save" mnemonicParsing="false" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
+                        <Button fx:id="cancel" mnemonicParsing="false" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.main.MainController">
+   <left>
+      <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label prefHeight="98.0" prefWidth="260.0" text="Something" />
+            <Button fx:id="menuBtnHome" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Home" textAlignment="CENTER" />
+            <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Customer" textAlignment="CENTER" />
+            <Button fx:id="menuBtnRoom" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListRoom" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Room" textAlignment="CENTER" />
+            <Button fx:id="menuBtnPayment" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Payment" textAlignment="CENTER" />
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddRoomWindow" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Settings" textAlignment="CENTER" />
+         </children></VBox>
+   </left>
+   <center>
+      <StackPane fx:id="rootPane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
