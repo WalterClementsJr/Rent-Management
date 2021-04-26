@@ -1,5 +1,6 @@
 package main.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -10,13 +11,21 @@ public class Customer {
     
     private int id;
     private String hoTen;
-    private String gioiTinh;
-    private Date ngaySinh;
+    private boolean gioiTinh;
+    private LocalDate ngaySinh;
     private String SDT;
     private String CMND;
 
-    public Customer(int id, String hoTen, String gioiTinh, Date ngaySinh, String SDT, String CMND) {
+    public Customer(int id, String hoTen, boolean gioiTinh, LocalDate ngaySinh, String SDT, String CMND) {
         this.id = id;
+        this.hoTen = hoTen;
+        this.gioiTinh = gioiTinh;
+        this.ngaySinh = ngaySinh;
+        this.SDT = SDT;
+        this.CMND = CMND;
+    }
+    
+    public Customer(String hoTen, boolean gioiTinh, LocalDate ngaySinh, String SDT, String CMND) {
         this.hoTen = hoTen;
         this.gioiTinh = gioiTinh;
         this.ngaySinh = ngaySinh;
@@ -39,11 +48,11 @@ public class Customer {
         return hoTen;
     }
 
-    public String getGioiTinh() {
+    public boolean getGioiTinh() {
         return gioiTinh;
     }
 
-    public Date getNgaySinh() {
+    public LocalDate getNgaySinh() {
         return ngaySinh;
     }
 
@@ -59,11 +68,11 @@ public class Customer {
         this.hoTen = hoTen;
     }
 
-    public void setGioiTinh(String gioiTinh) {
+    public void setGioiTinh(boolean gioiTinh) {
         this.gioiTinh = gioiTinh;
     }
 
-    public void setNgaySinh(Date ngaySinh) {
+    public void setNgaySinh(LocalDate ngaySinh) {
         this.ngaySinh = ngaySinh;
     }
 

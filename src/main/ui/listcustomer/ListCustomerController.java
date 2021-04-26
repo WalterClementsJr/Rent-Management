@@ -2,9 +2,16 @@ package main.ui.listcustomer;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,15 +20,24 @@ import javafx.scene.Scene;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import main.database.DatabaseHandler;
+import main.model.Customer;
 import main.ui.addcustomer.AddCustomerController;
+import main.ui.alert.CustomAlert;
 import main.ui.main.MainController;
 import main.util.Util;
 
 public class ListCustomerController implements Initializable {
 
-    
     @FXML
     private ResourceBundle resources;
 
@@ -29,7 +45,10 @@ public class ListCustomerController implements Initializable {
     private URL location;
 
     @FXML
-    private TableView<?> tableView;
+    private AnchorPane root;
+
+    @FXML
+    private TableView<Customer> tableView;
 
     @FXML
     private MenuItem edit;
@@ -46,22 +65,57 @@ public class ListCustomerController implements Initializable {
     @FXML
     private Button btnDelete;
 
+    // extra elements
+    ObservableList<Customer> list = FXCollections.observableArrayList();
+
+    public static void main(String[] args) {
+        DatabaseHandler handler = DatabaseHandler.getInstance();
+        String query = "SELECT * FROM KHACH";
+        
+        ResultSet rs = handler.execQuery(query);
+
+        try {
+            while (rs.next()) {
+                System.out.println(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
-    @FXML
-    private void loadAddCustomerWindow(ActionEvent event) {
-        System.out.println("load add customer window");
-        Util.loadWindow(getClass().getResource(
-                "/main/ui/addcustomer/addCustomer.fxml"),
-                "Add New Customer", null);
+        try {
+            loadData();
+        } catch (SQLException ex) {
+            Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
+    private Stage getStage() {
+        return (Stage) root.getScene().getWindow();
+    }
+
+    private void loadData() throws SQLException {
+        list.clear();
+
+        DatabaseHandler handler = DatabaseHandler.getInstance();
+        String query = "SELECT * FROM KHACH";
+        ResultSet rs = handler.execQuery(query);
+
+        Util.loadResultSetToTable(list, rs, tableView);
+    }
+
     @FXML
-    void loadEditCustomerWindow(ActionEvent event) {
+    private void handleAddButton(ActionEvent event) {
+        System.out.println("load add customer window");
+        Stage stage = (Stage) Util.loadWindow(getClass().getResource(
+                "/main/ui/addcustomer/addCustomer.fxml"),
+                "Add New Customer", getStage());
+    }
+
+    @FXML
+    void handleEditButton(ActionEvent event) {
         System.out.println("editing customer");
 
 //        Customer selectedForEdit = tableView.getSelectionModel().getSelectedItem();
@@ -71,31 +125,28 @@ public class ListCustomerController implements Initializable {
 //        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/ui/addcustomer/addCustomer.fxml"));
-            Parent parent = (Parent) loader.load();
+            Parent parent = loader.load();
 
-            AddCustomerController controller = (AddCustomerController) loader.getController();
-//            controller.inflateUI(selectedForEdit);
+            loader.getController();
 
-//            Stage stage = new Stage(StageStyle.DECORATED);
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.initOwner(getStage());
+            stage.initModality(Modality.WINDOW_MODAL);
 
+            Scene scene = new Scene(parent);
+            scene.getStylesheets().add(Util.STYLE_SHEET_LOCATION);
+
+            stage.setScene(scene);
             stage.setTitle("Edit Customer");
-            stage.setScene(new Scene(parent));
             stage.show();
-//            Util.setStageIcon(stage);
+            Util.setWindowIcon(stage);
 
 //            stage.setOnHiding((e) -> {
 //                handleRefresh(new ActionEvent());
 //            });
-
         } catch (IOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("cannot load edit window");
+            Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    @FXML
-    private void handleEditButton(ActionEvent event) {
-        System.out.println("editing in list customer");
-    }
+
 }

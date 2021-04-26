@@ -1,11 +1,6 @@
 package main.ui.alert;
 
-//import com.jfoenix.controls.JFXButton;
-//import com.jfoenix.controls.JFXDialog;
-//import com.jfoenix.controls.JFXDialogLayout;
-//import com.jfoenix.controls.events.JFXDialogEvent;
-//import javafx.scene.layout.
-import javafx.scene.control.DialogEvent;
+
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
@@ -20,8 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -30,33 +23,29 @@ import javax.imageio.ImageIO;
 import main.util.Util;
 
 public class CustomAlert {
-
-    public static void main(String[] args) {
-        showSimpleAlert("Title here", "FUck you man");
-    }
-
+    
     public static void showSimpleAlert(String title, String content) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
-        styleAlert(alert);
+//        styleAlert(alert);
         alert.showAndWait();
     }
 
     public static void showErrorMessage(String title, String content) {
         Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Error");
+        alert.setTitle("Lỗi");
         alert.setHeaderText(title);
         alert.setContentText(content);
-        styleAlert(alert);
+//        styleAlert(alert);
         alert.showAndWait();
     }
 
     public static void showErrorMessage(Exception ex) {
         Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Error occured");
-        alert.setHeaderText("Error Occured");
+        alert.setTitle("lỗi");
+        alert.setHeaderText("Đã xảy ra lỗi");
         alert.setContentText(ex.getLocalizedMessage());
 
         StringWriter sw = new StringWriter();
@@ -118,28 +107,11 @@ public class CustomAlert {
     }
 
     public static void showDialog(StackPane root, Node nodeToBeBlurred, List<Button> controls, String header, String body) {
-//        BoxBlur blur = new BoxBlur(3, 3, 3);
-//        if (controls.isEmpty()) {
-//            controls.add(new Button("Okay"));
-//        }
-//        DialogLayout dialogLayout = new JFXDialogLayout();
-//        JFXDialog dialog = new JFXDialog(root, dialogLayout, JFXDialog.DialogTransition.TOP);
-//
-//        controls.forEach(controlButton -> {
-//            controlButton.getStyleClass().add("dialog-button");
-//            controlButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
-//                dialog.close();
-//            });
-//        });
-//
-//        dialogLayout.setHeading(new Label(header));
-//        dialogLayout.setBody(new Label(body));
-//        dialogLayout.setActions(controls);
-//        dialog.show();
-//        dialog.setOnDialogClosed((DialogEvent event1) -> {
-//            nodeToBeBlurred.setEffect(null);
-//        });
-//        nodeToBeBlurred.setEffect(blur);
+
+//        Alert alert = new Alert(AlertType.ERROR);
+//        alert.setTitle("Error occured");
+//        alert.setHeaderText(title);
+//        alert.setContentText(content);
     }
 
     public static void showTrayMessage(String title, String message) {
@@ -163,6 +135,6 @@ public class CustomAlert {
 
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(Alert.class.getResource(Util.STYLE_SHEET_LOCATION).toExternalForm());
-        dialogPane.getStyleClass().add("custom-alert");
+//        dialogPane.getStyleClass().add("custom-alert");
     }
 }

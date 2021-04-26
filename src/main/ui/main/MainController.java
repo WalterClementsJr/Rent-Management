@@ -8,14 +8,20 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.util.Util;
 
 public class MainController implements Initializable {
     
+
+    @FXML
+    private VBox menu;
+
     @FXML
     private Button menuBtnHome;
 
@@ -27,14 +33,24 @@ public class MainController implements Initializable {
 
     @FXML
     private Button menuBtnPayment;
-    
+
     @FXML
     private StackPane rootPane;
+
     
     // external Pane
     private AnchorPane lCustomer;
     private AnchorPane lRoom;
 
+    private Scene lCustomerScene;
+    private Scene lRoomScene;
+    private Scene scene;
+    
+    
+    private Stage getStage() {
+        return (Stage) rootPane.getScene().getWindow();
+    }
+        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // load external panes
@@ -51,29 +67,14 @@ public class MainController implements Initializable {
         System.out.println("listCustomer");
 
     }
-    private Stage getStage() {
-        return (Stage) rootPane.getScene().getWindow();
-    }
-    
+
     @FXML
     private void loadListRoom(ActionEvent event) {
         showNode(rootPane.getChildren(), lRoom);
         System.out.println("listroom");
     }
     
-    @FXML
-    private void handleMenuClose(ActionEvent event) {
-        getStage().close();
-    }
 
-
-
-    @FXML
-    private void loadAddRoomWindow(ActionEvent event) {
-        Util.loadWindow(getClass().getResource(
-                "/main/ui/addroom/addRoom.fxml"),
-                "Add New Room", null);
-    }
 
     @FXML
     private void handleMenuFullScreen(ActionEvent event) {
