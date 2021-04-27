@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import main.database.DatabaseHandler;
+import main.model.Customer;
 import main.ui.main.MainController;
 
 public class Util {
@@ -33,7 +34,7 @@ public class Util {
     public static final SimpleDateFormat DATABASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");    
     public static final String APP_ICON_LOCATION    = "main/resources/icons/icon.png";
     public static final String APP_NAME             = "Quản Lý Nhà Trọ";
-    public static final String STYLE_SHEET_LOCATION = "src/main/app/bootstrap3.css";
+    public static final String STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
     
     public static void setWindowIcon(Stage stage) {
         stage.getIcons().add(new Image(APP_ICON_LOCATION));
@@ -130,9 +131,20 @@ public class Util {
      * @throws SQLException
      * load data lên tableView
      */
-    public static void loadResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {
+    public static void loadCustomerResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {
         list.clear();
         
+//        ObservableList<Person> list = null;
+//        TableView<Person> tableView = new TableView<Person>(list);
+//
+//        TableColumn<Person, String> firstNameCol = new TableColumn<Person, String>("First Name");
+//        firstNameCol.setCellValueFactory(new Callback<CellDataFeatures<Person, String>, ObservableValue<String>>() {
+//            public ObservableValue<String> call(CellDataFeatures<Person, String> p) {
+//                // p.getValue() returns the Person instance for a particular TableView row
+//                return p.getValue().firstNameProperty();
+//            }
+//        });
+//        
         for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
             final int j = i;
             TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
@@ -158,9 +170,7 @@ public class Util {
             list.add(row);
 
         }
-        
         tableView.setItems(list);
-        
     }
     
 }

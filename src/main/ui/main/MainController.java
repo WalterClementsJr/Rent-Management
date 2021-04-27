@@ -74,8 +74,6 @@ public class MainController implements Initializable {
         System.out.println("listroom");
     }
     
-
-
     @FXML
     private void handleMenuFullScreen(ActionEvent event) {
         Stage stage = getStage();

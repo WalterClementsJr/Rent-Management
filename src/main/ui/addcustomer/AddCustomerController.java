@@ -108,6 +108,7 @@ public class AddCustomerController implements Initializable {
             sex.selectToggle(btnMale);
         }
         
+        datePicker.setValue(customer.getNgaySinh());
         sdt.setText(customer.getSDT());
         cmnd.setText(customer.getCMND());
         isEditing = true;
@@ -133,15 +134,16 @@ public class AddCustomerController implements Initializable {
             return;
         }
         
+        if (isEditing) {
+            handleEdit();
+            return;
+        }
+
         String customerName = name.getText().trim();
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
         LocalDate customerBDay = datePicker.getValue();
         String customerCMND = sdt.getText().trim();
         String customerSDT = cmnd.getText().trim();
-        
-        if(isEditing) {
-            handleEdit();
-        }
         
         if (dbHandler.isCMNDExist(customerCMND)) {
             CustomAlert.showErrorMessage("CMND đã tồn tại", "Số CMND của %s đã tồn tại.".formatted(customerName));
@@ -169,17 +171,22 @@ public class AddCustomerController implements Initializable {
     
     @FXML
     private void handleEdit() {
+        String customerName = name.getText().trim();
+        boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
+        LocalDate customerBDay = datePicker.getValue();
+        String customerCMND = sdt.getText().trim();
+        String customerSDT = cmnd.getText().trim();
         Customer customer = new Customer(
-                name.getText(),
-                sex.getSelectedToggle().equals(btnFemale),
-                datePicker.getValue(),
-                sdt.getText(),
-                cmnd.getText());
+                customerName,
+                customerSex,
+                customerBDay,
+                customerCMND,
+                customerSDT);
         
         if(dbHandler.updateCustomer(customer)) {
-            CustomAlert.showSimpleAlert("Success", "Update thành công");
+            CustomAlert.showSimpleAlert("Đã thêm", "Update thành công");
         } else {
-            CustomAlert.showErrorMessage("Failed", "Không thể update");
+            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Không thể thực hiện");
         }
     }
     
