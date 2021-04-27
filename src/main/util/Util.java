@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -16,8 +17,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -29,12 +32,18 @@ import main.model.Customer;
 import main.ui.main.MainController;
 
 public class Util {
-    public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
     public static final SimpleDateFormat DISPLAY_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d-M-yyyy");
     public static final SimpleDateFormat DATABASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");    
     public static final String APP_ICON_LOCATION    = "main/resources/icons/icon.png";
     public static final String APP_NAME             = "Quản Lý Nhà Trọ";
     public static final String STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
+    
+    
+    public static void main(String[] args) {
+        LocalDate d = stringToLocalDate("21-2-2020");
+        System.out.println(d.toString());
+    }
     
     public static void setWindowIcon(Stage stage) {
         stage.getIcons().add(new Image(APP_ICON_LOCATION));
@@ -89,21 +98,12 @@ public class Util {
         return null;
     }
     
-    public static String formatDateTimeString(Date date) {
-        return DATE_TIME_FORMAT.format(date);
-    }
-    
-    public static String formatDateTimeString(Long time) {
-        return DATE_TIME_FORMAT.format(new Date(time));
-    }
-
     public static String dateToString(java.util.Date date) {
         return DISPLAY_DATE_FORMAT.format(date);
     }
     
-    public static java.util.Date stringToDate(String string) throws ParseException {
-        DISPLAY_DATE_FORMAT.setLenient(false);
-        return DISPLAY_DATE_FORMAT.parse(string);
+    public static LocalDate stringToLocalDate(String string) {
+        return LocalDate.parse(string, DATE_TIME_FORMATTER);
     }
     
     public static LocalDate SQLDateToLocalDate(java.sql.Date sqlDate) {
@@ -131,6 +131,57 @@ public class Util {
      * @throws SQLException
      * load data lên tableView
      */
+    public static void initCustomerTableColumns(TableView tableView) {
+        TableColumn<Customer, Integer> idCol = new TableColumn<Customer, Integer>("ID");
+        TableColumn<Customer, String> hotenCol = new TableColumn<Customer, String>("Họ tên");
+        TableColumn<Customer, Boolean> gioitinhCol = new TableColumn<Customer, Boolean>("Giới tính");
+        TableColumn<Customer, LocalDate> ngaysinhCol = new TableColumn<Customer, LocalDate>("Ngày sinh");
+        TableColumn<Customer, String> sdtCol = new TableColumn<Customer, String>("SDT");
+        TableColumn<Customer, String> cmndCol = new TableColumn<Customer, String>("CMND");
+
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        hotenCol.setCellValueFactory(new PropertyValueFactory<>("hoTen"));
+        gioitinhCol.setCellValueFactory(new PropertyValueFactory<>("gioiTinh"));
+        ngaysinhCol.setCellValueFactory(new PropertyValueFactory<>("ngaySinh"));
+        sdtCol.setCellValueFactory(new PropertyValueFactory<>("SDT"));
+        cmndCol.setCellValueFactory(new PropertyValueFactory<>("CMND"));
+
+        gioitinhCol.setCellFactory(column -> {
+            return new TableCell<Customer, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, true);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(Util.bitToGender(item));
+                    }
+                }
+            };
+        });
+        
+        ngaysinhCol.setCellFactory(column -> {
+            return new TableCell<Customer, LocalDate>() {
+                @Override
+                protected void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, true);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(Util.DATE_TIME_FORMATTER.format(item));
+                    }
+                }
+            };
+        });
+        
+        tableView.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
+        System.out.println("added columns");
+    }
+    
     public static void loadCustomerResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {
         list.clear();
         

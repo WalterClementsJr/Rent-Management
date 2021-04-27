@@ -23,6 +23,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -76,7 +77,7 @@ public class ListCustomerController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initCol();
+        Util.initCustomerTableColumns(tableView);
         try {
             loadData();
         } catch (SQLException ex) {
@@ -88,59 +89,6 @@ public class ListCustomerController implements Initializable {
         return (Stage) root.getScene().getWindow();
     }
     
-    private void initCol() {
-        TableColumn<Customer, Integer> idCol = new TableColumn<Customer, Integer>("ID");
-        TableColumn<Customer, String> hotenCol = new TableColumn<Customer, String>("Họ tên");
-        TableColumn<Customer, Boolean> gioitinhCol = new TableColumn<Customer, Boolean>("Giới tính");
-        TableColumn<Customer, LocalDate> ngaysinhCol = new TableColumn<Customer, LocalDate>("Ngày sinh");
-        TableColumn<Customer, String> sdtCol = new TableColumn<Customer, String>("SDT");
-        TableColumn<Customer, String> cmndCol = new TableColumn<Customer, String>("CMND");
-        
-
-        
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        hotenCol.setCellValueFactory(new PropertyValueFactory<>("hoTen"));
-        gioitinhCol.setCellValueFactory(new PropertyValueFactory<>("gioiTinh"));
-        ngaysinhCol.setCellValueFactory(new PropertyValueFactory<>("ngaySinh"));
-        sdtCol.setCellValueFactory(new PropertyValueFactory<>("SDT"));
-        cmndCol.setCellValueFactory(new PropertyValueFactory<>("CMND"));
-
-//        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-//        hotenCol.setCellValueFactory(new PropertyValueFactory<>("hoTen"));
-//        gioitinhCol.setCellValueFactory(cellData -> cellData.getValue().gioiTinhProperty());
-//        ngaysinhCol.setCellValueFactory(new PropertyValueFactory<>("ngaySinh"));
-//        sdtCol.setCellValueFactory(new PropertyValueFactory<>("SDT"));
-//        cmndCol.setCellValueFactory(new PropertyValueFactory<>("CMND"));
-//
-//        gioitinhCol.setCellFactory(column -> {
-//            return new TableCell<Customer, Boolean>() {
-//                @Override
-//                protected void updateItem(LocalDate item, boolean empty) {
-//                    super.updateItem(item, empty);
-//
-//                    if (item == null || empty) {
-//                        setText(null);
-//                        setStyle("");
-//                    } else {
-//                        // Format date.
-//                        setText(myDateFormatter.format(item));
-//
-//                        // Style all dates in March with a different color.
-//                        if (item.getMonth() == Month.MARCH) {
-//                            setTextFill(Color.CHOCOLATE);
-//                            setStyle("-fx-background-color: yellow");
-//                        } else {
-//                            setTextFill(Color.BLACK);
-//                            setStyle("");
-//                        }
-//                    }
-//                }
-//            };
-//        });
-        
-        tableView.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
-        System.out.println("added columns");
-    }
 
     private void loadData() throws SQLException {
         list.clear();
