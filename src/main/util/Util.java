@@ -110,7 +110,7 @@ public class Util {
         return sqlDate.toLocalDate();
     }
     
-    public static java.util.Date LocalDateToSQLDate(LocalDate local) {
+    public static java.sql.Date LocalDateToSQLDate(LocalDate local) {
         return java.sql.Date.valueOf(local);
     }
     
@@ -179,6 +179,7 @@ public class Util {
         });
         
         tableView.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
+        idCol.setVisible(false);
         System.out.println("added columns");
     }
     

@@ -130,22 +130,26 @@ public final class DatabaseHandler {
 
     /**
      *
-     * @param customer (with no id)
+     * @param customer (with id)
      * @return true if update success, false if fails
      *
      */
     public boolean updateCustomer(Customer customer) {
         try {
-            String update = "UPDATE KHACH SET HOTEN=?, GIOITINH=?, NGAYSINH=?, SDT=?, CMND=? WHERE ID=?";
+            String update = "UPDATE KHACH SET HOTEN=?, GIOITINH=?, NGAYSINH=?, SDT=?, CMND=? WHERE MAKH=?";
             PreparedStatement stmt = conn.prepareStatement(update);
             stmt.setNString(1, customer.getHoTen());
             stmt.setBoolean(2, customer.getGioiTinh());
-            stmt.setDate(3, java.sql.Date.valueOf(customer.getNgaySinh()));
+            stmt.setDate(3, Util.LocalDateToSQLDate(customer.getNgaySinh()));
             stmt.setString(4, customer.getSDT());
             stmt.setString(5, customer.getCMND());
             stmt.setInt(6, customer.getId());
+            
+            System.out.println(customer.getId()+ customer.getHoTen() + customer.getNgaySinh() + customer.getGioiTinh()
+            + customer.getCMND() + customer.getSDT());
 
             int res = stmt.executeUpdate();
+            System.out.println(stmt);
             return (res > 0);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,12 +163,8 @@ public final class DatabaseHandler {
                     "DELETE FROM CUSTOMER WHERE MAKHACH=?");
             stmt.setInt(1, customer.getId());
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                int count = rs.getInt(1);
-                System.out.println(count);
-                return (count > 0);
-            }
+            stmt.executeUpdate();
+            
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

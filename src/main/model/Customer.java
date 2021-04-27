@@ -112,4 +112,11 @@ public class Customer {
     public StringProperty SDTProperty() {
         return SDT;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "id=" + id + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh + ", SDT=" + SDT + ", CMND=" + CMND + '}';
+    }
+    
+    
 }

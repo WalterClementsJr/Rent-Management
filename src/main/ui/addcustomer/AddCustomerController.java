@@ -61,10 +61,13 @@ public class AddCustomerController implements Initializable {
     private DatabaseHandler dbHandler;
     private ToggleGroup sex;
     private boolean isEditing = false;
+    Customer currentCustomer = null;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        dbHandler = DatabaseHandler.getInstance();
+        
         sex = new ToggleGroup();
         btnMale.setToggleGroup(sex);
         btnFemale.setToggleGroup(sex);
@@ -112,6 +115,7 @@ public class AddCustomerController implements Initializable {
         sdt.setText(customer.getSDT());
         cmnd.setText(customer.getCMND());
         isEditing = true;
+        currentCustomer = customer;
     }
     
     @FXML
@@ -123,8 +127,7 @@ public class AddCustomerController implements Initializable {
         cmnd.clear();
     }
     
-    @FXML
-    private void handleAdd(ActionEvent event) {
+    private void checkEntries() {
         if (name.getText().isBlank()
                 || sex.getSelectedToggle()==null
                 || datePicker.getValue()==null
@@ -133,6 +136,10 @@ public class AddCustomerController implements Initializable {
             CustomAlert.showErrorMessage("Hãy điền đủ các trường", "");
             return;
         }
+    }
+    @FXML
+    private void handleSave(ActionEvent event) {
+        
         
         if (isEditing) {
             handleEdit();
@@ -157,34 +164,28 @@ public class AddCustomerController implements Initializable {
                 customerSDT);
 
         if (dbHandler.insertNewCustomer(customer)) {
-            CustomAlert.showSimpleAlert("New book added", customerName + " has been added");
+            CustomAlert.showSimpleAlert("Khách ", customerName + " đã được thêm");
             clearEntries();
         } else {
-            CustomAlert.showErrorMessage("Không thêm được khách", "Hãy kiểm lại tra thông tin và thử lại sau");
+            CustomAlert.showErrorMessage("Không thêm được khách", "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
-    
-    @FXML
-    private void handleSave(ActionEvent event) {
-        System.out.println("Save in add customer");
-    }
-    
-    @FXML
+
     private void handleEdit() {
         String customerName = name.getText().trim();
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
         LocalDate customerBDay = datePicker.getValue();
-        String customerCMND = sdt.getText().trim();
-        String customerSDT = cmnd.getText().trim();
-        Customer customer = new Customer(
-                customerName,
-                customerSex,
-                customerBDay,
-                customerCMND,
-                customerSDT);
-        
-        if(dbHandler.updateCustomer(customer)) {
+        String customerCMND = cmnd.getText().trim();
+        String customerSDT = sdt.getText().trim();
+
+        currentCustomer.setHoTen(customerName);
+        currentCustomer.setGioiTinh(customerSex);
+        currentCustomer.setNgaySinh(customerBDay);
+        currentCustomer.setSDT(customerSDT);
+        currentCustomer.setCMND(customerCMND);
+        if(dbHandler.updateCustomer(currentCustomer)) {
             CustomAlert.showSimpleAlert("Đã thêm", "Update thành công");
+            currentCustomer = null;
         } else {
             CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Không thể thực hiện");
         }

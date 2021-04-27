@@ -15,27 +15,25 @@
    <children>
       <Pane prefHeight="700.0" prefWidth="1000.0">
          <children>
-            <HBox alignment="CENTER" layoutX="500.0" layoutY="612.0" prefHeight="64.0" prefWidth="443.0" spacing="15.0">
+            <HBox alignment="CENTER_RIGHT" layoutX="500.0" layoutY="612.0" prefHeight="64.0" prefWidth="443.0" spacing="15.0">
                <children>
-                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#handleEditButton" prefHeight="32.0" prefWidth="122.0" text="Edit" />
-                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="32.0" prefWidth="122.0" text="Add" />
-                  <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="32.0" prefWidth="122.0" text="Delete" />
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="32.0" prefWidth="122.0" styleClass="success" text="Thêm Khách" />
                </children>
             </HBox>
             <Label prefHeight="64.0" prefWidth="142.0" style="-fx-background-color: pink;" text="listCustomer" />
             <TabPane layoutY="110.0" prefHeight="492.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                  <Tab fx:id="table" text="Tất cả">
+                  <Tab text="Tất cả">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="438.0" prefWidth="1000.0">
                            <children>
-                              <TableView fx:id="tableView" layoutY="7.0" prefHeight="455.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="tableView" layoutX="107.0" prefHeight="382.0" prefWidth="759.0" AnchorPane.bottomAnchor="73.0" AnchorPane.leftAnchor="107.0" AnchorPane.rightAnchor="134.0" AnchorPane.topAnchor="0.0">
                                  <contextMenu>
                                     <ContextMenu>
                                        <items>
-                                          <MenuItem mnemonicParsing="false" text="Add" />
-                                          <MenuItem mnemonicParsing="false" text="Edit" />
-                                          <MenuItem mnemonicParsing="false" text="Delete" />
+                                          <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+                                          <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditButton" text="Edit" />
+                                          <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
                                        </items>
                                     </ContextMenu>
                                  </contextMenu>

@@ -9,8 +9,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,21 +21,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import main.database.DatabaseHandler;
 import main.model.Customer;
 import main.ui.addcustomer.AddCustomerController;
 import main.ui.alert.CustomAlert;
-import main.ui.main.MainController;
 import main.util.Util;
 
 public class ListCustomerController implements Initializable {
@@ -52,22 +44,19 @@ public class ListCustomerController implements Initializable {
     private AnchorPane root;
 
     @FXML
-    private TableView<Customer> tableView;
-
-    @FXML
-    private MenuItem edit;
-
-    @FXML
-    private MenuItem delete;
-
-    @FXML
-    private Button btnEdit;
-
-    @FXML
     private Button btnAdd;
 
     @FXML
-    private Button btnDelete;
+    private TableView<Customer> tableView;
+
+    @FXML
+    private MenuItem refreshMenu;
+
+    @FXML
+    private MenuItem editMenu;
+
+    @FXML
+    private MenuItem deleteMenu;
 
     // extra elements
     ObservableList<Customer> list = FXCollections.observableArrayList();
@@ -78,11 +67,7 @@ public class ListCustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Util.initCustomerTableColumns(tableView);
-        try {
-            loadData();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        loadData();
     }
 
     private Stage getStage() {
@@ -90,7 +75,7 @@ public class ListCustomerController implements Initializable {
     }
     
 
-    private void loadData() throws SQLException {
+    private void loadData() {
         list.clear();
 
         DatabaseHandler handler = DatabaseHandler.getInstance();
@@ -133,14 +118,14 @@ public class ListCustomerController implements Initializable {
     void handleEditButton(ActionEvent event) {
         System.out.println("editing customer");
 
-         // TODO: add row selected value
         Customer selectedForEdit = tableView.getSelectionModel().getSelectedItem();
+        
+        
         if (selectedForEdit == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để chỉnh sửa");
             return;
         }
-        System.out.println("selected: " + selectedForEdit.getHoTen());
-        
+        System.out.println(selectedForEdit.toString());
         
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/ui/addcustomer/addCustomer.fxml"));
@@ -148,6 +133,7 @@ public class ListCustomerController implements Initializable {
 
             AddCustomerController con = loader.getController();
             con.loadEntries(selectedForEdit);
+                    
 
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
@@ -161,12 +147,17 @@ public class ListCustomerController implements Initializable {
             stage.show();
             Util.setWindowIcon(stage);
 
-//            stage.setOnHiding((e) -> {
-//                handleRefresh(new ActionEvent());
-//            });
+            stage.setOnHiding((e) -> {
+                handleRefresh(new ActionEvent());
+            });
         } catch (IOException ex) {
             Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @FXML
+    private void handleRefresh(ActionEvent event) {
+        loadData();
     }
     
     @FXML
