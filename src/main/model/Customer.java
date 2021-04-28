@@ -115,7 +115,9 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" + "id=" + id + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh + ", SDT=" + SDT + ", CMND=" + CMND + '}';
+        return "Customer:" + "id=" + getId() + ", hoTen=" + getHoTen()
+                + ", gioiTinh=" + getGioiTinh() + ", ngaySinh="+ ngaySinh
+                + ", SDT=" + getSDT() + ", CMND=" + getCMND();
     }
     
     

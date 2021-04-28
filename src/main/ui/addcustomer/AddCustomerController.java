@@ -127,16 +127,19 @@ public class AddCustomerController implements Initializable {
         cmnd.clear();
     }
     
-    private void checkEntries() {
+    private boolean checkEntries() {
         if (name.getText().isBlank()
                 || sex.getSelectedToggle()==null
                 || datePicker.getValue()==null
                 || sdt.getText().isBlank()
                 || cmnd.getText().isBlank()) {
             CustomAlert.showErrorMessage("Hãy điền đủ các trường", "");
-            return;
+            return false;
+        } else {
+            return true;
         }
     }
+    
     @FXML
     private void handleSave(ActionEvent event) {
         
@@ -183,6 +186,7 @@ public class AddCustomerController implements Initializable {
         currentCustomer.setNgaySinh(customerBDay);
         currentCustomer.setSDT(customerSDT);
         currentCustomer.setCMND(customerCMND);
+        
         if(dbHandler.updateCustomer(currentCustomer)) {
             CustomAlert.showSimpleAlert("Đã thêm", "Update thành công");
             currentCustomer = null;

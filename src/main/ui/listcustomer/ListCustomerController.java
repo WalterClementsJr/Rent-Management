@@ -165,7 +165,7 @@ public class ListCustomerController implements Initializable {
         //Fetch the selected row
         Customer selectedForDeletion = tableView.getSelectionModel().getSelectedItem();
         if (selectedForDeletion == null) {
-            CustomAlert.showErrorMessage("No book selected", "Please select a book for deletion.");
+            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để xóa");
             return;
         }
         // TODO make a rent check and uncomment thís line
@@ -175,7 +175,7 @@ public class ListCustomerController implements Initializable {
 //        }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xóa khách");
-        alert.setContentText("Bạn có chắc " + selectedForDeletion.getHoTen() + " ?");
+        alert.setContentText("Bạn có muốn xóa " + selectedForDeletion.getHoTen() + " ?");
         Optional<ButtonType> answer = alert.showAndWait();
         if (answer.get() == ButtonType.OK) {
             Boolean result = DatabaseHandler.getInstance().deleteCustomer(selectedForDeletion);
@@ -183,7 +183,7 @@ public class ListCustomerController implements Initializable {
                 CustomAlert.showSimpleAlert("Đã xóa ", selectedForDeletion.getHoTen() + " was deleted successfully.");
                 list.remove(selectedForDeletion);
             } else {
-                CustomAlert.showSimpleAlert("Thất bại", selectedForDeletion.getHoTen() + " could not be deleted");
+                CustomAlert.showSimpleAlert("Thất bại", selectedForDeletion.getHoTen() + " không thể xóa được");
             }
         } else {
             CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
