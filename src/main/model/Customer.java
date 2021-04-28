@@ -1,7 +1,6 @@
 package main.model;
 
 import java.time.LocalDate;
-import java.util.Date;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -119,6 +118,4 @@ public class Customer {
                 + ", gioiTinh=" + getGioiTinh() + ", ngaySinh="+ ngaySinh
                 + ", SDT=" + getSDT() + ", CMND=" + getCMND();
     }
-    
-    
 }

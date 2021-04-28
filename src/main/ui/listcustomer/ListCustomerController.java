@@ -88,7 +88,6 @@ public class ListCustomerController implements Initializable {
             while (rs.next()) {
                 int id = rs.getInt("MAKH");
                 String hoten = rs.getString("HOTEN");
-                
                 boolean gioiTinh = rs.getBoolean("GIOITINH");
                 LocalDate ngaySinh = Util.SQLDateToLocalDate(rs.getDate("NGAYSINH"));   
                 String cmnd = rs.getString("CMND");

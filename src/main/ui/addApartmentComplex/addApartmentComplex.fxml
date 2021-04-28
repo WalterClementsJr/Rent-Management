@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addApartmentComplex.AddApartmentComplexController">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="581.0">
          <children>
@@ -22,16 +22,16 @@
                         <TextField fx:id="name" />
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="300.0" spacing="10.0">
+                  <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="300.0" spacing="10.0">
                      <children>
-                        <Label text="Đia chỉ" />
-                        <TextArea fx:id="address" prefHeight="200.0" prefWidth="200.0" />
+                        <Label text="Địa chỉ" />
+                        <TextArea fx:id="address" prefHeight="64.0" prefWidth="300.0" />
                      </children>
                   </VBox>
                   <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="284.0" spacing="10.0">
                      <children>
-                        <Button fx:id="save" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
-                        <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
+                        <Button fx:id="save" mnemonicParsing="false" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
+                        <Button fx:id="cancel" mnemonicParsing="false" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
                      </children>
                   </HBox>
                </children>

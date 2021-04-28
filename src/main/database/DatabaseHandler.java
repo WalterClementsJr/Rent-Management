@@ -181,8 +181,7 @@ public final class DatabaseHandler {
             stmt = conn.prepareStatement(
                     "INSERT INTO ROOM(TRONG,MALOAI) VALUES(?,?)");
 
-            stmt.setBoolean(1, room.getStatus());
-            stmt.setInt(2, type);
+            
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -193,11 +192,9 @@ public final class DatabaseHandler {
 
     public boolean updateRoom(Room room, int type) {
         try {
-            String update = "UPDATE PHONG SET TITLE=?, AUTHOR=?, PUBLISHER=? WHERE ID=?";
-
-            stmt = conn.prepareStatement(update);
-            stmt.setBoolean(1, room.getStatus());
-            stmt.setInt(2, type);
+            stmt = conn.prepareStatement(
+                "UPDATE PHONG SET =?, =?, =? WHERE =?");
+            
 
             int res = stmt.executeUpdate();
             return (res > 0);
@@ -210,7 +207,8 @@ public final class DatabaseHandler {
     public boolean deleteRoom(Room room) {
         try {
             stmt = conn.prepareStatement(
-                    "DELETE FROM ROOM WHERE ID=?");
+                    "DELETE FROM PHONG WHERE ID=?");
+            
             stmt.setInt(1, room.getId());
 
             return stmt.executeUpdate() > 0;
