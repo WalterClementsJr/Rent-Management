@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.ui.addApartmentComplex;
+package main.ui.addcomplex;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.util.Util;
 
-public class AddApartmentLoader extends Application {
+public class AddComplexLoader extends Application {
 
     public static void main(String[] args) {
         launch(args);

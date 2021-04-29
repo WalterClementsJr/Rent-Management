@@ -5,10 +5,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-/**
- *
- * @author walker
- */
 public class Complex {
     private IntegerProperty id;
     private StringProperty ten;

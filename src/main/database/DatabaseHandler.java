@@ -1,7 +1,6 @@
 package main.database;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,9 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+import main.model.Complex;
 import main.model.Customer;
 import main.model.Room;
-import main.model.RoomType;
 import main.ui.alert.CustomAlert;
 import main.util.Util;
 
@@ -50,8 +49,7 @@ public final class DatabaseHandler {
             conn = DriverManager.getConnection(DB_URL,"sa","firetrucks");
             System.out.println("da ket noi");
         } catch (Exception e) {
-//            CustomAlert.showErrorMessage("Không load được database", "");
-            System.out.println("Không load đc database");
+            CustomAlert.showErrorMessage("Không load được database", "");
             e.printStackTrace();
             System.exit(0);
         }
@@ -176,6 +174,49 @@ public final class DatabaseHandler {
 //        }
 //        return null;
 //    }
+    
+    public boolean insertNewComplex(Complex c) {
+        try {
+            stmt = conn.prepareStatement(
+                    "INSERT INTO KHU VALUES(?,?)");
+
+            stmt.setNString(1, c.getTen());
+            stmt.setNString(2, c.getDiaChi());
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean updateComplex(Complex c) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE KHU SET TEN=?, DIACHI=? WHERE MAKHU=?");
+            stmt.setNString(1, c.getTen());
+            stmt.setNString(2, c.getDiaChi());
+            stmt.setInt(3, c.getId());
+            
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean deleteComplex(Complex c) {
+        try {
+            stmt = conn.prepareStatement(
+                    "DELETE FROM KHU WHERE MAKHU=?");
+            stmt.setInt(1, c.getId());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public boolean insertNewRoom(Room room, int type) {
         try {
             stmt = conn.prepareStatement(
