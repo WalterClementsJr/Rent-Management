@@ -1,13 +1,16 @@
 package main.ui.addroom;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,20 +19,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.converter.BigDecimalStringConverter;
 import main.database.DatabaseHandler;
 import main.model.Complex;
+import main.model.Room;
 import main.ui.addcomplex.AddComplexController;
 import main.ui.alert.CustomAlert;
-import main.ui.listcustomer.ListCustomerController;
 import main.util.Util;
 
 public class AddRoomController implements Initializable {
@@ -47,7 +53,19 @@ public class AddRoomController implements Initializable {
     private Button editComplex;
 
     @FXML
-    private TextArea name;
+    private TextField name;
+
+    @FXML
+    private Spinner<Integer> nOfPeople;
+
+    @FXML
+    private TextField price;
+
+    @FXML
+    private TextField size;
+
+    @FXML
+    private TextField deposit;
 
     @FXML
     private TextArea desc;
@@ -58,14 +76,57 @@ public class AddRoomController implements Initializable {
     @FXML
     private Button cancel;
 
-    
     // extra elements
     ObservableList<Complex> list = FXCollections.observableArrayList();
     DatabaseHandler dbHandler;
+    Room currentRoom = null;
+
     private boolean isEditing = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // setup UI elements
+        nOfPeople.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1));
+
+        price.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (newValue.matches("\\d{0,15}")) {
+                    String value = newValue;
+                } else {
+                    price.setText(oldValue);
+                    price.positionCaret(price.getLength());
+                }
+            }
+        });
+        
+        size.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (newValue.matches("\\d{0,9}")) {
+                    String value = newValue;
+                } else {
+                    size.setText(oldValue);
+                    size.positionCaret(size.getLength());
+                }
+            }
+        });
+        
+        deposit.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (newValue.matches("\\d{0,15}")) {
+                    String value = newValue;
+                } else {
+                    deposit.setText(oldValue);
+                    deposit.positionCaret(deposit.getLength());
+                }
+            }
+        });
+
         dbHandler = DatabaseHandler.getInstance();
         loadData();
     }
@@ -84,7 +145,7 @@ public class AddRoomController implements Initializable {
                 String ten = rs.getString("TENKHU");
                 String diaChi = rs.getString("DIACHI");
                 list.add(new Complex(id, ten, diaChi));
-                
+
                 System.out.println(id + ten + diaChi);
             }
         } catch (SQLException ex) {
@@ -94,20 +155,12 @@ public class AddRoomController implements Initializable {
     }
 
     @FXML
-    private void handleSave(ActionEvent evt) {
-        // TODO not done saving thís
-        Complex selected = comboBox.getSelectionModel().getSelectedItem();
-        System.out.println(selected.debugString());
-    }
-    
-    @FXML
     private void handleCancel(ActionEvent evt) {
         getStage().close();
     }
-    
+
     @FXML
     private void handleAddComplex(ActionEvent event) {
-        System.out.println("load add complex window");
         Stage stage = (Stage) Util.loadWindow(getClass().getResource(
                 "/main/ui/addcomplex/addComplex.fxml"),
                 "Thêm khu nhà", getStage());
@@ -115,20 +168,18 @@ public class AddRoomController implements Initializable {
             handleRefresh(new ActionEvent());
         });
     }
-    
+
     @FXML
     private void handleEditComplex(ActionEvent event) {
-        System.out.println("editing complex");
-
         Complex selectedForEdit = comboBox.getSelectionModel().getSelectedItem();
 
         if (selectedForEdit == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khu nhà để chỉnh sửa");
             return;
         }
-        
+
         System.out.println(selectedForEdit.debugString());
-        
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "/main/ui/addcomplex/addComplex.fxml"));
@@ -136,7 +187,7 @@ public class AddRoomController implements Initializable {
 
             AddComplexController con = loader.getController();
             con.loadEntries(selectedForEdit);
-            
+
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
             stage.initModality(Modality.WINDOW_MODAL);
@@ -157,36 +208,102 @@ public class AddRoomController implements Initializable {
         }
     }
 
-
-
     @FXML
     private void handleRefresh(ActionEvent event) {
         loadData();
     }
 
+    @FXML
+    private void handleAddRoom(ActionEvent evt) {
+        if (isEditing) {
+            handleEditRoom();
+            return;
+        }
 
-    private void handleEditRoom() {
+        if (!checkField()) {
+            return;
+        }
+
         Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
-        
         String rName = name.getText().trim();
+        int rNOfPeople = nOfPeople.getValue();
+        BigDecimal rPrice = new BigDecimal(price.getText().trim());
+        BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
+        int rSize = Integer.parseInt(size.getText().trim());
         String rDescript = desc.getText().trim();
 
-//        currentCustomer.setHoTen(customerName);
-//        currentCustomer.setGioiTinh(customerSex);
-//        currentCustomer.setNgaySinh(customerBDay);
-//        currentCustomer.setSDT(customerSDT);
-//        currentCustomer.setCMND(customerCMND);
-        
-//        if(dbHandler.updateCustomer(currentCustomer)) {
-//            CustomAlert.showSimpleAlert("Đã thêm", "Update thành công");
+        if (dbHandler.isRoomNameExist(rName, chosenComplex.getId())) {
+            CustomAlert.showSimpleAlert(
+                    "Phòng với tên này đã tồn tại trong khu " + chosenComplex.getTen(), "");
+        }
+
+        Room newRoom = new Room(rName, rNOfPeople, rPrice, rDeposit, rSize, rDescript, chosenComplex.getId());
+
+        if (dbHandler.insertNewRoom(newRoom)) {
+            CustomAlert.showSimpleAlert("Thêm phòng thành công", "");
+        } else {
+            CustomAlert.showErrorMessage("Đã xảy ra lỗi", "Không thể thêm");
+        }
+    }
+
+    private void handleEditRoom() {
+        if (!checkField()) {
+            return;
+        }
+
+        Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
+        String rName = name.getText().trim();
+        int rNOfPeople = nOfPeople.getValue();
+        BigDecimal rPrice = new BigDecimal(price.getText().trim());
+        BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
+        int rSize = Integer.parseInt(size.getText().trim());
+        String rDescript = desc.getText().trim();
+
+        if (dbHandler.isRoomNameExist(rName, chosenComplex.getId())) {
+            CustomAlert.showSimpleAlert("CMND đã tồn tại", "");
+        }
+
+        currentRoom.setTenPhong(rName);
+        currentRoom.setSoNguoi(rNOfPeople);
+        currentRoom.setGiaGoc(rPrice);
+        currentRoom.setTienCoc(rDeposit);
+        currentRoom.setDienTich(rSize);
+        currentRoom.setMoTa(rDescript);
+        currentRoom.setMaKhu(chosenComplex.getId());
+
+//        if(dbHandler.updateRoom(currentRoom)) {
+//            CustomAlert.showSimpleAlert("Phòng sửa thành công", "");
 //            currentCustomer = null;
 //        } else {
-//            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Không thể thực hiện");
+//            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Kiểm tra lại thông tin và thử lại sau");
 //        }
     }
-    
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-    
+
+    private boolean checkField() {
+        if (comboBox.getValue() == null) {
+            CustomAlert.showErrorMessage("Chưa chọn khu nhà", "");
+            return false;
+        } else if (name.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Tên phòng trống", "Hãy nhập tên phòng");
+            return false;
+        } else if (nOfPeople.getValue() == null) {
+            CustomAlert.showErrorMessage("Số người trống", "Hãy nhập số người ở tối đa");
+            return false;
+        } else if (price.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Giá phòng trống", "");
+            return false;
+        } else if (deposit.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Tiền cọc trống", "");
+            return false;
+        } else if (size.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Diện tích trống", "");
+            return false;
+        }
+        return true;
+    }
+
 }

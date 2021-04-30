@@ -18,9 +18,10 @@ import main.model.Complex;
 import main.ui.alert.CustomAlert;
 
 public class AddComplexController implements Initializable {
+
     @FXML
     private StackPane root;
-    
+
     @FXML
     private TextField name;
 
@@ -46,7 +47,7 @@ public class AddComplexController implements Initializable {
         dbHandler = DatabaseHandler.getInstance();
         showDeleteButton(isEditing);
     }
-    
+
     public void showDeleteButton(boolean show) {
         delete.setVisible(show);
     }
@@ -58,12 +59,12 @@ public class AddComplexController implements Initializable {
         isEditing = true;
         currentComplex = c;
     }
-    
+
     public void clearEntries() {
         name.setText("");
         address.setText("");
     }
-    
+
     @FXML
     private void handleSave(ActionEvent event) {
         if (isEditing) {
@@ -71,14 +72,17 @@ public class AddComplexController implements Initializable {
             return;
         }
 
+        if (checkField()) {
+            return;
+        }
+
         String cName = name.getText().trim();
         String cAddr = address.getText().trim();
-        
-        // TODO complex name check
-//        if (dbHandler.isComplexNameExist(cName)) {
-//            CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
-//            return;
-//        }
+
+        if (dbHandler.isComplexExist(cName)) {
+            CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
+            return;
+        }
         
         Complex c = new Complex(
                 cName,
@@ -94,20 +98,29 @@ public class AddComplexController implements Initializable {
 
     @FXML
     private void handleEdit() {
+        if (!checkField()) {
+            return;
+        }
+
         String cName = name.getText().trim();
         String cAddr = address.getText().trim();
         
+        if (dbHandler.isComplexExist(cName)) {
+            CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
+            return;
+        }
+
         currentComplex.setTen(cName);
         currentComplex.setDiaChi(cAddr);
-        
-        if(dbHandler.updateComplex(currentComplex)) {
+
+        if (dbHandler.updateComplex(currentComplex)) {
             CustomAlert.showSimpleAlert("Chỉnh sửa hành công", "");
             currentComplex = null;
         } else {
             CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Không thể thực hiện");
         }
     }
-    
+
     @FXML
     private void handleDeleteComplex(ActionEvent event) {
         // TODO make a check before deleting a complex
@@ -130,10 +143,21 @@ public class AddComplexController implements Initializable {
             CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
         }
     }
-    
+
     @FXML
     private void handleCancel(ActionEvent event) {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
+    }
+
+    private boolean checkField() {
+        if (name.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Tên khu trống", "Hãy nhập tên khu");
+            return false;
+        } else if (address.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Địa chỉ trống", "Hãy nhập địa chỉ");
+            return false;
+        }
+        return true;
     }
 }

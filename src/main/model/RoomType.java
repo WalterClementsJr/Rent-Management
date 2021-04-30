@@ -2,6 +2,11 @@
 package main.model;
 
 public class RoomType {
+    
+    public static void main(String[] args) {
+        String t = "  \t \n  ";
+        System.out.println(t.isBlank());
+    }
 
     private int id;
     private long giaTien;

@@ -82,8 +82,6 @@ public class ListCustomerController implements Initializable {
         String query = "SELECT * FROM KHACH";
         ResultSet rs = handler.execQuery(query);
 
-//        Util.loadCustomerResultSetToTable(list, rs, tableView);
-
         try {
             while (rs.next()) {
                 int id = rs.getInt("MAKH");

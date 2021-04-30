@@ -13,23 +13,31 @@ public class Room {
     private IntegerProperty id;
     private StringProperty tenPhong;
     private IntegerProperty soNguoi;
-
-    private IntegerProperty maKhu;
     private ObjectProperty<BigDecimal> giaGoc;
+    private ObjectProperty<BigDecimal> tienCoc;
+    private IntegerProperty dienTich;
+    private StringProperty moTa;
+    private IntegerProperty maKhu;
 
-    public Room(int id, String tenPhong, int soNguoi, int maKhu, BigDecimal giaGoc) {
+    public Room(int id, String tenPhong, int soNguoi, BigDecimal giaGoc, BigDecimal tienCoc, int dienTich, String moTa, int maKhu) {
         this.id = new SimpleIntegerProperty(id);
         this.tenPhong = new SimpleStringProperty(tenPhong);
-        this.soNguoi = new SimpleIntegerProperty(soNguoi);;
+        this.soNguoi = new SimpleIntegerProperty(soNguoi);
+        this.moTa = new SimpleStringProperty(moTa);
         this.maKhu = new SimpleIntegerProperty(maKhu);
         this.giaGoc = new SimpleObjectProperty<BigDecimal>(giaGoc);
+        this.tienCoc = new SimpleObjectProperty<BigDecimal>(tienCoc);
+        this.dienTich = new SimpleIntegerProperty(dienTich);
     }
 
-    public Room(String tenPhong, int soNguoi, int maKhu, BigDecimal giaGoc) {
+    public Room(String tenPhong, int soNguoi, BigDecimal giaGoc, BigDecimal tienCoc, int dienTich, String moTa, int maKhu) {
         this.tenPhong = new SimpleStringProperty(tenPhong);
-        this.soNguoi = new SimpleIntegerProperty(soNguoi);;
+        this.soNguoi = new SimpleIntegerProperty(soNguoi);
+        this.moTa = new SimpleStringProperty(moTa);
         this.maKhu = new SimpleIntegerProperty(maKhu);
         this.giaGoc = new SimpleObjectProperty<BigDecimal>(giaGoc);
+        this.tienCoc = new SimpleObjectProperty<BigDecimal>(tienCoc);
+        this.dienTich = new SimpleIntegerProperty(dienTich);
     }
 
     public int getId() {
@@ -71,6 +79,30 @@ public class Room {
     public void setGiaGoc(BigDecimal giaGoc) {
         this.giaGoc.set(giaGoc);
     }
+    
+    public int getDienTich() {
+        return dienTich.get();
+    }
+
+    public void setDienTich(int dt) {
+        this.dienTich.set(dt);
+    }
+    
+    public BigDecimal getTienCoc() {
+        return tienCoc.get();
+    }
+
+    public void setTienCoc(BigDecimal tienCoc) {
+        this.tienCoc.set(tienCoc);
+    }
+    
+    public String getMoTa() {
+        return moTa.get();
+    }
+
+    public void setMoTa(String moTa) {
+        this.moTa.set(moTa);
+    }
 
     public IntegerProperty idProperty() {
         return id;
@@ -91,11 +123,20 @@ public class Room {
     public ObjectProperty<BigDecimal> giaGocProperty() {
         return giaGoc;
     }
-
+    
+    public StringProperty moTaProperty() {
+        return moTa;
+    }
+    
     @Override
     public String toString() {
+        return getTenPhong();
+    }
+
+    public String debugString() {
         return "Room{" + "id=" + getId() + ", tenPhong=" + getTenPhong()
-                + ", soNguoi=" + getSoNguoi() + ", maKhu=" + getMaKhu()
-                + ", giaGoc=" + getGiaGoc() + '}';
+                + ", soNguoi=" + getSoNguoi() + ", giaGoc=" + getGiaGoc()
+                + ", tienCoc=" + getTienCoc() + ", dienTich=" + getDienTich()
+                + ", maKhu=" + getMaKhu() + '}';
     }
 }

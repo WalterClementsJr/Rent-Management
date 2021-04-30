@@ -4,6 +4,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,14 +59,14 @@ public class AddCustomerController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         dbHandler = DatabaseHandler.getInstance();
         
+        // setup UI elements
         sex = new ToggleGroup();
         btnMale.setToggleGroup(sex);
         btnFemale.setToggleGroup(sex);
         
-        // set datePicker format
+        // datePicker format
         datePicker.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             {
@@ -84,6 +86,32 @@ public class AddCustomerController implements Initializable {
                     return LocalDate.parse(string, dateFormatter);
                 } else {
                     return null;
+                }
+            }
+        });
+        
+        // sdt, cmnd number only text area
+        sdt.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (newValue.matches("\\d{0,11}")) {
+                    String value = newValue;
+                } else {
+                    sdt.setText(oldValue);
+                    sdt.positionCaret(sdt.getLength());
+                }
+            }
+        });
+        cmnd.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (newValue.matches("\\d{0,12}")) {
+                    String value = newValue;
+                } else {
+                    cmnd.setText(oldValue);
+                    cmnd.positionCaret(cmnd.getLength());
                 }
             }
         });
@@ -134,8 +162,6 @@ public class AddCustomerController implements Initializable {
     
     @FXML
     private void handleSave(ActionEvent event) {
-        
-        
         if (isEditing) {
             handleEdit();
             return;
@@ -172,7 +198,11 @@ public class AddCustomerController implements Initializable {
         LocalDate customerBDay = datePicker.getValue();
         String customerCMND = cmnd.getText().trim();
         String customerSDT = sdt.getText().trim();
-
+        
+        if (dbHandler.isCMNDExist(customerCMND)) {
+            CustomAlert.showSimpleAlert("CMND đã tồn tại", "");
+        }
+        
         currentCustomer.setHoTen(customerName);
         currentCustomer.setGioiTinh(customerSex);
         currentCustomer.setNgaySinh(customerBDay);
@@ -191,6 +221,26 @@ public class AddCustomerController implements Initializable {
     private void handleCancel(ActionEvent event) {
         Stage stage = (Stage) rootAddCustomer.getScene().getWindow();
         stage.close();
+    }
+    
+    private boolean checkField() {
+        if (name.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Tên khách trống", "Hãy nhập tên");
+            return false;
+        } else if (sex.getSelectedToggle() == null) {
+            CustomAlert.showErrorMessage("Chưa chọn giới tính", "");
+            return false;
+        } else if (datePicker.getValue() == null) {
+            CustomAlert.showErrorMessage("Chưa nhập ngày sinh", "");
+            return false;
+        } else if (sdt.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Chưa nhập số điện thoại", "");
+            return false;
+        } else if (cmnd.getText().isBlank()) {
+            CustomAlert.showErrorMessage("Chưa nhập chứng minh nhân dân", "");
+            return false;
+        }
+        return true;
     }
 }
     

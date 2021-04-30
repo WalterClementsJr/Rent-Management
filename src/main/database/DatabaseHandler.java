@@ -1,5 +1,6 @@
 package main.database;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,6 +17,9 @@ import main.ui.alert.CustomAlert;
 import main.util.Util;
 
 public final class DatabaseHandler {
+    public static void main(String[] args) {
+        System.out.println((short) 1654333);
+    }
 
     private static DatabaseHandler dbHandler = null;
 
@@ -93,20 +97,55 @@ public final class DatabaseHandler {
     }
 
     public boolean isCMNDExist(String cmnd) {
-        String check = "SELECT COUNT(*) FROM KHACH WHERE CMND=?";
         try {
-            stmt = conn.prepareStatement(check);
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM KHACH WHERE CMND=?");
             stmt.setString(1, cmnd);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                int count = rs.getInt(1);
-                System.out.println("" + count);
-                return (count > 0);
+            if (!rs.next()) {
+                return false;
+            } else {
+                return true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        return true;
+    }
+    
+    public boolean isRoomNameExist(String name, int complexId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM PHONG WHERE TENPHONG=? AND MAKHU=?");
+            stmt.setNString(1, name);
+            stmt.setInt(2, complexId);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+    
+    public boolean isComplexExist(String name) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM KHU WHERE TENKHU=?");
+            stmt.setNString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
     }
 
     public boolean insertNewCustomer(Customer customer) {
@@ -125,13 +164,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-
-    /**
-     *
-     * @param customer (with id)
-     * @return true if update success, false if fails
-     *
-     */
+    
     public boolean updateCustomer(Customer customer) {
         try {
             stmt = conn.prepareStatement(
@@ -217,13 +250,25 @@ public final class DatabaseHandler {
         return false;
     }
 
-    public boolean insertNewRoom(Room room, int type) {
+    public boolean insertNewRoom(Room room) {
         try {
             stmt = conn.prepareStatement(
-                    "INSERT INTO ROOM(TRONG,MALOAI) VALUES(?,?)");
-
+                    "INSERT INTO PHONG VALUES(?,?,?,?,?,?,?)");
+            stmt.setNString(
+                    1, room.getTenPhong());
+            stmt.setShort(
+                    2, (short) room.getSoNguoi());
+            stmt.setInt(
+                    3, room.getMaKhu());
+            stmt.setBigDecimal(
+                    4, room.getGiaGoc());
+            stmt.setBigDecimal(
+                    5, room.getTienCoc());
+            stmt.setInt(
+                    6, room.getDienTich());
+            stmt.setNString(
+                    7, room.getMoTa());
             
-
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -231,12 +276,26 @@ public final class DatabaseHandler {
         return false;
     }
 
-    public boolean updateRoom(Room room, int type) {
+    public boolean updateRoom(Room room) {
         try {
             stmt = conn.prepareStatement(
-                "UPDATE PHONG SET =?, =?, =? WHERE =?");
-            
-
+                "UPDATE PHONG SET TENPHONG=? SONGUOI=? MAKHU=? GIAGOC=? TIENCOC=? DIENTICH=? MOTA=? WHERE MAPHONG=?");
+            stmt.setNString(
+                    1, room.getTenPhong());
+            stmt.setShort(
+                    2, (short) room.getSoNguoi());
+            stmt.setInt(
+                    3, room.getMaKhu());
+            stmt.setBigDecimal(
+                    4, room.getGiaGoc());
+            stmt.setBigDecimal(
+                    5, room.getTienCoc());
+            stmt.setInt(
+                    6, room.getDienTich());
+            stmt.setNString(
+                    7, room.getMoTa());
+            stmt.setInt(
+                    8, room.getId());
             int res = stmt.executeUpdate();
             return (res > 0);
         } catch (SQLException ex) {
@@ -248,7 +307,7 @@ public final class DatabaseHandler {
     public boolean deleteRoom(Room room) {
         try {
             stmt = conn.prepareStatement(
-                    "DELETE FROM PHONG WHERE ID=?");
+                    "DELETE FROM PHONG WHERE MAPHONG=?");
             
             stmt.setInt(1, room.getId());
 
