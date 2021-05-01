@@ -1,6 +1,5 @@
 package main.database;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -49,8 +48,8 @@ public final class DatabaseHandler {
     
     public void createConnection() {
         try {
-            conn = DriverManager.getConnection(DB_URL,"sa","firetrucks");
-            System.out.println("da ket noi");
+            conn = DriverManager.getConnection(DB_URL,"dummy","dummy");
+            System.out.println("Connected to database");
         } catch (Exception e) {
             CustomAlert.showErrorMessage("Không load được database", "");
             e.printStackTrace();
@@ -70,7 +69,7 @@ public final class DatabaseHandler {
             stmt = conn.prepareStatement(query);
             result = stmt.executeQuery();
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return result;
@@ -350,6 +349,18 @@ public final class DatabaseHandler {
         return false;
     }
 
+    public ResultSet getRoomsFromComplex(int complexId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM PHONG WHERE MAKHU=?");
+            stmt.setInt(1, complexId);
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 //    public ResultSet getAvailableRooms() {
 //        try {
 //            stmt = conn.prepareStatement(

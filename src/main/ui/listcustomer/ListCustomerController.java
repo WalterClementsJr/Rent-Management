@@ -232,7 +232,6 @@ public class ListCustomerController implements Initializable {
         
         tableView.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
         idCol.setVisible(false);
-        System.out.println("added columns");
     }
 
 }

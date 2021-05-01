@@ -1,12 +1,16 @@
 package main.util;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,17 +18,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import main.model.Customer;
 import main.ui.main.MainController;
 
 public class Util {
@@ -37,8 +38,14 @@ public class Util {
     
     
     public static void main(String[] args) {
-        LocalDate d = stringToLocalDate("21-2-2020");
-        System.out.println(d.toString());
+        BigDecimal d = new BigDecimal("120000");
+        String str = d.toString();
+        DecimalFormat formatter = new DecimalFormat("###,###,###");
+        String output = formatter.format(d);
+        System.out.println(output);
+        System.out.println();
+        System.out.println();
+        
     }
     
     public static void setWindowIcon(Stage stage) {
