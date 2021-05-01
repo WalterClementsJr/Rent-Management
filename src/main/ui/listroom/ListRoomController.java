@@ -9,9 +9,6 @@ import javafx.fxml.Initializable;
 
 public class ListRoomController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -30,6 +27,25 @@ public class ListRoomController implements Initializable {
     @FXML
     private void handleAddButton(ActionEvent event) {
         System.out.println("add in list room");
+    }
+    
+    @FXML
+    private void handleRefresh(ActionEvent event) {
+        loadData();
+    }
+    
+    /**
+     * 
+     * @param event 
+     * TODO remove this later
+     */
+    @FXML
+    private void doSomething(ActionEvent event) {
+        System.out.println("Doing something");
+    }
+    
+    private void loadData() {
+        System.out.println("Load data");
     }
 
 }

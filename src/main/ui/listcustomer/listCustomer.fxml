@@ -27,7 +27,7 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="438.0" prefWidth="1000.0">
                            <children>
-                              <TableView fx:id="tableView" layoutX="107.0" prefHeight="382.0" prefWidth="759.0" AnchorPane.bottomAnchor="73.0" AnchorPane.leftAnchor="107.0" AnchorPane.rightAnchor="134.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="tableView" layoutX="107.0" prefHeight="455.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <contextMenu>
                                     <ContextMenu>
                                        <items>

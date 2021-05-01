@@ -18,7 +18,6 @@ import main.util.Util;
 
 public final class DatabaseHandler {
     public static void main(String[] args) {
-        System.out.println((short) 1654333);
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -96,16 +95,27 @@ public final class DatabaseHandler {
         }
     }
 
-    public boolean isCMNDExist(String cmnd) {
+    public boolean isCMNDExist(int id, String cmnd) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM KHACH WHERE CMND=?");
+                    "SELECT MAKH FROM KHACH WHERE CMND=?");
             stmt.setString(1, cmnd);
             ResultSet rs = stmt.executeQuery();
-            if (!rs.next()) {
-                return false;
-            } else {
+            int makh;
+            
+            if (rs.next()) {
+                if(id == -1) return true;
+                
+                do {
+                    makh = rs.getInt("MAKH");
+                    if (id == makh) {
+                        return false;
+                    }
+                } while (rs.next());
+                
                 return true;
+            } else {
+                return false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,17 +123,28 @@ public final class DatabaseHandler {
         return true;
     }
     
-    public boolean isRoomNameExist(String name, int complexId) {
+    public boolean isRoomNameExist(int roomId, int complexId, String rName) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM PHONG WHERE TENPHONG=? AND MAKHU=?");
-            stmt.setNString(1, name);
+                    "SELECT MAPHONG FROM PHONG WHERE TENPHONG=? AND MAKHU=?");
+            stmt.setNString(1, rName);
             stmt.setInt(2, complexId);
             ResultSet rs = stmt.executeQuery();
-            if (!rs.next()) {
-                return false;
-            } else {
+            int maphong;
+            
+            if (rs.next()) {
+                if(roomId == -1) return true;
+                
+                do {
+                    maphong = rs.getInt("MAPHONG");
+                    if (roomId == maphong) {
+                        return false;
+                    }
+                    
+                } while (rs.next());
                 return true;
+            } else {
+                return false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,16 +152,27 @@ public final class DatabaseHandler {
         return true;
     }
     
-    public boolean isComplexExist(String name) {
+    public boolean isComplexExist(int complexId, String complexName) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM KHU WHERE TENKHU=?");
-            stmt.setNString(1, name);
+                    "SELECT MAKHU FROM KHU WHERE TENKHU=?");
+            stmt.setNString(1, complexName);
             ResultSet rs = stmt.executeQuery();
-            if (!rs.next()) {
-                return false;
-            } else {
+            int makhu;
+            
+            if (rs.next()) {
+                if(complexId == -1) return true;
+                
+                do {
+                    makhu = rs.getInt("MAKHU");
+                    if (complexId == makhu) {
+                        return false;
+                    }
+                } while (rs.next());
+                
                 return true;
+            } else {
+                return false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);

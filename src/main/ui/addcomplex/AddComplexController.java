@@ -78,8 +78,8 @@ public class AddComplexController implements Initializable {
 
         String cName = name.getText().trim();
         String cAddr = address.getText().trim();
-
-        if (dbHandler.isComplexExist(cName)) {
+        
+        if (dbHandler.isComplexExist(-1, cName)) {
             CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
             return;
         }
@@ -87,9 +87,9 @@ public class AddComplexController implements Initializable {
         Complex c = new Complex(
                 cName,
                 cAddr);
-
+        
         if (dbHandler.insertNewComplex(c)) {
-            CustomAlert.showSimpleAlert("Khu ", cName + " đã được thêm");
+            CustomAlert.showSimpleAlert("Thành công", "Khu " + cName + " đã được thêm");
             clearEntries();
         } else {
             CustomAlert.showErrorMessage("Không thêm được khu", "Hãy kiểm lại tra thông tin và thử lại");
@@ -105,7 +105,7 @@ public class AddComplexController implements Initializable {
         String cName = name.getText().trim();
         String cAddr = address.getText().trim();
         
-        if (dbHandler.isComplexExist(cName)) {
+        if (dbHandler.isComplexExist(currentComplex.getId(), cName)) {
             CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
             return;
         }
@@ -114,7 +114,7 @@ public class AddComplexController implements Initializable {
         currentComplex.setDiaChi(cAddr);
 
         if (dbHandler.updateComplex(currentComplex)) {
-            CustomAlert.showSimpleAlert("Chỉnh sửa hành công", "");
+            CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
             currentComplex = null;
         } else {
             CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Không thể thực hiện");

@@ -173,7 +173,7 @@ public class AddCustomerController implements Initializable {
         String customerCMND = sdt.getText().trim();
         String customerSDT = cmnd.getText().trim();
         
-        if (dbHandler.isCMNDExist(customerCMND)) {
+        if (dbHandler.isCMNDExist(-1, customerCMND)) {
             CustomAlert.showErrorMessage("CMND đã tồn tại", "Số CMND của %s đã tồn tại.".formatted(customerName));
             return;
         }
@@ -199,7 +199,7 @@ public class AddCustomerController implements Initializable {
         String customerCMND = cmnd.getText().trim();
         String customerSDT = sdt.getText().trim();
         
-        if (dbHandler.isCMNDExist(customerCMND)) {
+        if (dbHandler.isCMNDExist(currentCustomer.getId(), customerCMND)) {
             CustomAlert.showSimpleAlert("CMND đã tồn tại", "");
         }
         

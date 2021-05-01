@@ -8,7 +8,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -25,12 +24,10 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.converter.BigDecimalStringConverter;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.model.Room;
@@ -80,7 +77,6 @@ public class AddRoomController implements Initializable {
     ObservableList<Complex> list = FXCollections.observableArrayList();
     DatabaseHandler dbHandler;
     Room currentRoom = null;
-
     private boolean isEditing = false;
 
     @Override
@@ -220,7 +216,7 @@ public class AddRoomController implements Initializable {
             return;
         }
 
-        if (!checkField()) {
+        if (!checkEntries()) {
             return;
         }
 
@@ -231,23 +227,23 @@ public class AddRoomController implements Initializable {
         BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
         int rSize = Integer.parseInt(size.getText().trim());
         String rDescript = desc.getText().trim();
-
-        if (dbHandler.isRoomNameExist(rName, chosenComplex.getId())) {
-            CustomAlert.showSimpleAlert(
-                    "Phòng với tên này đã tồn tại trong khu " + chosenComplex.getTen(), "");
-        }
-
+        
         Room newRoom = new Room(rName, rNOfPeople, rPrice, rDeposit, rSize, rDescript, chosenComplex.getId());
-
+        
+        if (dbHandler.isRoomNameExist(-1, chosenComplex.getId(), rName)) {
+            CustomAlert.showSimpleAlert(
+                    "Lỗi", "Phòng với tên này đã tồn tại trong khu " + chosenComplex.getTen());
+        }
+        
         if (dbHandler.insertNewRoom(newRoom)) {
-            CustomAlert.showSimpleAlert("Thêm phòng thành công", "");
+            CustomAlert.showSimpleAlert("Thành công", "Đã thêm phòng");
         } else {
-            CustomAlert.showErrorMessage("Đã xảy ra lỗi", "Không thể thêm");
+            CustomAlert.showErrorMessage("Lỗi", "Không thể thêm");
         }
     }
 
     private void handleEditRoom() {
-        if (!checkField()) {
+        if (!checkEntries()) {
             return;
         }
 
@@ -258,10 +254,6 @@ public class AddRoomController implements Initializable {
         BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
         int rSize = Integer.parseInt(size.getText().trim());
         String rDescript = desc.getText().trim();
-
-        if (dbHandler.isRoomNameExist(rName, chosenComplex.getId())) {
-            CustomAlert.showSimpleAlert("CMND đã tồn tại", "");
-        }
 
         currentRoom.setTenPhong(rName);
         currentRoom.setSoNguoi(rNOfPeople);
@@ -270,6 +262,10 @@ public class AddRoomController implements Initializable {
         currentRoom.setDienTich(rSize);
         currentRoom.setMoTa(rDescript);
         currentRoom.setMaKhu(chosenComplex.getId());
+        
+        if (dbHandler.isRoomNameExist(currentRoom.getId(), chosenComplex.getId(), rName)) {
+            CustomAlert.showSimpleAlert("Lỗi", "Tên phòng đã tồn tại trong khu " + chosenComplex.getTen());
+        }
 
 //        if(dbHandler.updateRoom(currentRoom)) {
 //            CustomAlert.showSimpleAlert("Phòng sửa thành công", "");
@@ -283,7 +279,7 @@ public class AddRoomController implements Initializable {
         return (Stage) root.getScene().getWindow();
     }
 
-    private boolean checkField() {
+    private boolean checkEntries() {
         if (comboBox.getValue() == null) {
             CustomAlert.showErrorMessage("Chưa chọn khu nhà", "");
             return false;
@@ -304,6 +300,20 @@ public class AddRoomController implements Initializable {
             return false;
         }
         return true;
+    }
+    
+    private void loadEntries() {
+        for (Complex c : list) {
+            if (c.getId()==currentRoom.getMaKhu()) {
+                comboBox.setValue(c);
+            }
+        }
+        name.setText(currentRoom.getTenPhong());
+        nOfPeople.getValueFactory().setValue(currentRoom.getSoNguoi());
+        size.setText(""+ currentRoom.getDienTich());
+        deposit.setText(""+currentRoom.getTienCoc());
+        price.setText(""+currentRoom.getGiaGoc());
+        desc.setText(currentRoom.getMoTa());
     }
 
 }

@@ -4,17 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
@@ -27,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import main.database.DatabaseHandler;
 import main.model.Customer;
 import main.ui.main.MainController;
 
@@ -123,80 +119,9 @@ public class Util {
         else return "Nam";
     }
     
-    /**
-     * 
-     * @param list
-     * @param tableView
-     * @param rs
-     * @throws SQLException
-     * load data lên tableView
-     */
-    public static void initCustomerTableColumns(TableView tableView) {
-        TableColumn<Customer, Integer> idCol = new TableColumn<Customer, Integer>("ID");
-        TableColumn<Customer, String> hotenCol = new TableColumn<Customer, String>("Họ tên");
-        TableColumn<Customer, Boolean> gioitinhCol = new TableColumn<Customer, Boolean>("Giới tính");
-        TableColumn<Customer, LocalDate> ngaysinhCol = new TableColumn<Customer, LocalDate>("Ngày sinh");
-        TableColumn<Customer, String> sdtCol = new TableColumn<Customer, String>("SDT");
-        TableColumn<Customer, String> cmndCol = new TableColumn<Customer, String>("CMND");
-
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        hotenCol.setCellValueFactory(new PropertyValueFactory<>("hoTen"));
-        gioitinhCol.setCellValueFactory(new PropertyValueFactory<>("gioiTinh"));
-        ngaysinhCol.setCellValueFactory(new PropertyValueFactory<>("ngaySinh"));
-        sdtCol.setCellValueFactory(new PropertyValueFactory<>("SDT"));
-        cmndCol.setCellValueFactory(new PropertyValueFactory<>("CMND"));
-
-        gioitinhCol.setCellFactory(column -> {
-            return new TableCell<Customer, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, true);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        setText(Util.bitToGender(item));
-                    }
-                }
-            };
-        });
-        
-        ngaysinhCol.setCellFactory(column -> {
-            return new TableCell<Customer, LocalDate>() {
-                @Override
-                protected void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, true);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        setText(Util.DATE_TIME_FORMATTER.format(item));
-                    }
-                }
-            };
-        });
-        
-        tableView.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
-        idCol.setVisible(false);
-        System.out.println("added columns");
-    }
-    
-    public static void loadCustomerResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {
+    public static void loadResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {
         list.clear();
-        
-//        ObservableList<Person> list = null;
-//        TableView<Person> tableView = new TableView<Person>(list);
-//
-//        TableColumn<Person, String> firstNameCol = new TableColumn<Person, String>("First Name");
-//        firstNameCol.setCellValueFactory(new Callback<CellDataFeatures<Person, String>, ObservableValue<String>>() {
-//            public ObservableValue<String> call(CellDataFeatures<Person, String> p) {
-//                // p.getValue() returns the Person instance for a particular TableView row
-//                return p.getValue().firstNameProperty();
-//            }
-//        });
-//        
+
         for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
             final int j = i;
             TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));

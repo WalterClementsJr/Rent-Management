@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -11,14 +15,61 @@
    <children>
       <Pane prefHeight="700.0" prefWidth="1000.0">
          <children>
-            <TableView layoutX="6.0" layoutY="221.0" prefHeight="339.0" prefWidth="990.0" />
-            <HBox alignment="CENTER" layoutX="500.0" layoutY="588.0" prefHeight="64.0" prefWidth="443.0" spacing="15.0">
+            <HBox alignment="CENTER_RIGHT" layoutX="500.0" layoutY="612.0" prefHeight="64.0" prefWidth="443.0" spacing="15.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleEditButton" prefHeight="32.0" prefWidth="122.0" text="Edit" />
-                  <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="122.0" text="Add" />
-                  <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="122.0" text="Delete" />
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="32.0" prefWidth="122.0" styleClass="success" text="Thêm phòng" />
                </children>
             </HBox>
+            <TabPane layoutY="110.0" prefHeight="492.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab text="Tất cả">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="438.0" prefWidth="1000.0">
+                           <children>
+                              <TableView fx:id="tableView" layoutX="107.0" prefHeight="455.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                       <items>
+                                          <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+                                          <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditButton" text="Edit" />
+                                          <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Delete" />
+                                       </items>
+                                    </ContextMenu>
+                                 </contextMenu>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Chưa có phòng">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="438.0" prefWidth="1000.0">
+                           <children>
+                              <TableView layoutY="7.0" prefHeight="455.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Đã có phòng">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView prefHeight="455.0" prefWidth="1000.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Đã thanh lý">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView prefHeight="455.0" prefWidth="1000.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
             <Label prefHeight="64.0" prefWidth="142.0" style="-fx-background-color: lightgreen;" text="ListRoom" />
          </children>
       </Pane>
