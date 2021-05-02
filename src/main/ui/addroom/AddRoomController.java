@@ -122,7 +122,7 @@ public class AddRoomController implements Initializable {
                 }
             }
         });
-
+        
         dbHandler = DatabaseHandler.getInstance();
         loadData();
     }
@@ -266,12 +266,12 @@ public class AddRoomController implements Initializable {
             CustomAlert.showSimpleAlert("Lỗi", "Tên phòng đã tồn tại trong khu " + chosenComplex.getTen());
         }
 
-//        if(dbHandler.updateRoom(currentRoom)) {
-//            CustomAlert.showSimpleAlert("Phòng sửa thành công", "");
-//            currentCustomer = null;
-//        } else {
-//            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Kiểm tra lại thông tin và thử lại sau");
-//        }
+        if(dbHandler.updateRoom(currentRoom)) {
+            CustomAlert.showSimpleAlert("Phòng sửa thành công", "");
+            currentRoom = null;
+        } else {
+            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Kiểm tra lại thông tin và thử lại sau");
+        }
     }
 
     private Stage getStage() {
@@ -301,18 +301,23 @@ public class AddRoomController implements Initializable {
         return true;
     }
     
-    private void loadEntries() {
+    public void loadEntries(Room r) {
+        System.out.println(r.debugString());
         for (Complex c : list) {
-            if (c.getId()==currentRoom.getMaKhu()) {
+            if (r.getMaKhu() == c.getId()) {
                 comboBox.setValue(c);
             }
         }
-        name.setText(currentRoom.getTenPhong());
-        nOfPeople.getValueFactory().setValue(currentRoom.getSoNguoi());
-        size.setText(""+ currentRoom.getDienTich());
-        deposit.setText(""+currentRoom.getTienCoc());
-        price.setText(""+currentRoom.getGiaGoc());
-        desc.setText(currentRoom.getMoTa());
+        
+        name.setText(r.getTenPhong().trim());
+        nOfPeople.getValueFactory().setValue(r.getSoNguoi());
+        size.setText("" + r.getDienTich());
+        deposit.setText(r.getTienCoc().stripTrailingZeros().toPlainString());
+        price.setText(r.getGiaGoc().stripTrailingZeros().toPlainString());
+        desc.setText(r.getMoTa());
+        
+        isEditing = true;
+        currentRoom = r;
     }
-
+    
 }

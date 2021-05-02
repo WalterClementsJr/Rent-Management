@@ -310,7 +310,7 @@ public final class DatabaseHandler {
     public boolean updateRoom(Room room) {
         try {
             stmt = conn.prepareStatement(
-                "UPDATE PHONG SET TENPHONG=? SONGUOI=? MAKHU=? GIAGOC=? TIENCOC=? DIENTICH=? MOTA=? WHERE MAPHONG=?");
+                "UPDATE PHONG SET TENPHONG=?, SONGUOI=?, MAKHU=?, GIAGOC=?, TIENCOC=?, DIENTICH=?, MOTA=? WHERE MAPHONG=?");
             stmt.setNString(
                     1, room.getTenPhong());
             stmt.setShort(
