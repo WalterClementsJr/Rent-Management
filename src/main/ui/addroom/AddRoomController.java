@@ -127,7 +127,6 @@ public class AddRoomController implements Initializable {
         loadData();
     }
 
-    @FXML
     private void loadData() {
         list.clear();
         comboBox.getItems().clear();

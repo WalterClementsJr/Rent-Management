@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
@@ -22,7 +23,7 @@
             </HBox>
             <TabPane layoutY="110.0" prefHeight="492.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
-                  <Tab text="Tất cả">
+                  <Tab fx:id="allTab" onSelectionChanged="#doSomething" text="Tất cả">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="438.0" prefWidth="1000.0">
                            <children>
@@ -41,7 +42,7 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab text="Chưa có phòng">
+                  <Tab fx:id="emptyTab" onSelectionChanged="#doSomething" text="Trống">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="438.0" prefWidth="1000.0">
                            <children>
@@ -50,16 +51,7 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab text="Đã có phòng">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TableView prefHeight="455.0" prefWidth="1000.0" />
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </Tab>
-                  <Tab text="Đã thanh lý">
+                  <Tab fx:id="occupiedTab" onSelectionChanged="#doSomething" text="Đã có người">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -70,7 +62,14 @@
                   </Tab>
                </tabs>
             </TabPane>
-            <Label prefHeight="64.0" prefWidth="142.0" style="-fx-background-color: lightgreen;" text="ListRoom" />
+            <HBox alignment="CENTER_LEFT" layoutX="49.0" prefHeight="116.0" prefWidth="903.0" spacing="10.0">
+               <children>
+                  <Label text="Khu nhà" />
+                  <ComboBox fx:id="comboBox" onAction="#loadRoom" prefWidth="143.0" />
+                  <Button fx:id="addComplex" mnemonicParsing="false" onAction="#handleAddComplex" prefHeight="32.0" prefWidth="40.0" styleClass="success" text="+" textAlignment="CENTER" />
+                  <Button fx:id="editComplex" mnemonicParsing="false" onAction="#handleEditComplex" prefHeight="32.0" prefWidth="40.0" styleClass="warning" text="/" textAlignment="CENTER" />
+               </children>
+            </HBox>
          </children>
       </Pane>
    </children>
