@@ -236,6 +236,7 @@ public class AddRoomController implements Initializable {
         
         if (dbHandler.insertNewRoom(newRoom)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã thêm phòng");
+            clearEntries();
         } else {
             CustomAlert.showErrorMessage("Lỗi", "Không thể thêm");
         }
@@ -318,6 +319,16 @@ public class AddRoomController implements Initializable {
         
         isEditing = true;
         currentRoom = r;
+    }
+    
+    public void clearEntries() {
+        comboBox.setValue(null);
+        name.setText("");
+        nOfPeople.getValueFactory().setValue(1);
+        size.setText("");
+        deposit.setText("");
+        price.setText("");
+        desc.setText("");
     }
     
 }

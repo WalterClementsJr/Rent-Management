@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import main.util.Util;
 
 /**
  *
@@ -27,7 +28,7 @@ public class Customer {
         this.id = new SimpleIntegerProperty(id);
         this.hoTen = new SimpleStringProperty(hoTen);
         this.gioiTinh = new SimpleBooleanProperty(gioiTinh);
-        this.ngaySinh = new SimpleObjectProperty<LocalDate>(ngaySinh);
+        this.ngaySinh = new SimpleObjectProperty<>(ngaySinh);
         this.SDT = new SimpleStringProperty(SDT);
         this.CMND = new SimpleStringProperty(CMND);
     }
@@ -35,7 +36,7 @@ public class Customer {
     public Customer(String hoTen, boolean gioiTinh, LocalDate ngaySinh, String SDT, String CMND) {
         this.hoTen = new SimpleStringProperty(hoTen);
         this.gioiTinh = new SimpleBooleanProperty(gioiTinh);
-        this.ngaySinh = new SimpleObjectProperty<LocalDate>(ngaySinh);
+        this.ngaySinh = new SimpleObjectProperty<>(ngaySinh);
         this.SDT = new SimpleStringProperty(SDT);
         this.CMND = new SimpleStringProperty(CMND);
     }
@@ -61,6 +62,7 @@ public class Customer {
     }
 
     public LocalDate getNgaySinh() {
+//        return ngaySinh.get();
         return ngaySinh.get();
     }
 
@@ -114,8 +116,13 @@ public class Customer {
 
     @Override
     public String toString() {
+        return this.getHoTen() + ", " + this.getSDT();
+    }
+    
+    public String debugString() {
         return "Customer:" + "id=" + getId() + ", hoTen=" + getHoTen()
-                + ", gioiTinh=" + getGioiTinh() + ", ngaySinh="+ ngaySinh
+                + ", gioiTinh=" + getGioiTinh() + ", ngaySinh="+ getNgaySinh().format(Util.DATE_TIME_FORMATTER)
                 + ", SDT=" + getSDT() + ", CMND=" + getCMND();
     }
+        
 }

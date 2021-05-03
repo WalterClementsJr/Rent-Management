@@ -132,8 +132,8 @@ public class AddCustomerController implements Initializable {
         }
         
         datePicker.setValue(customer.getNgaySinh());
-        sdt.setText(customer.getSDT());
-        cmnd.setText(customer.getCMND());
+        sdt.setText(customer.getSDT().trim());
+        cmnd.setText(customer.getCMND().trim());
         isEditing = true;
         currentCustomer = customer;
     }
@@ -145,19 +145,6 @@ public class AddCustomerController implements Initializable {
         datePicker.setValue(null);
         sdt.clear();
         cmnd.clear();
-    }
-    
-    private boolean checkEntries() {
-        if (name.getText().isBlank()
-                || sex.getSelectedToggle()==null
-                || datePicker.getValue()==null
-                || sdt.getText().isBlank()
-                || cmnd.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Hãy điền đủ các trường", "");
-            return false;
-        } else {
-            return true;
-        }
     }
     
     @FXML
@@ -223,7 +210,7 @@ public class AddCustomerController implements Initializable {
         stage.close();
     }
     
-    private boolean checkField() {
+    private boolean checkEntries() {
         if (name.getText().isBlank()) {
             CustomAlert.showErrorMessage("Tên khách trống", "Hãy nhập tên");
             return false;

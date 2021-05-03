@@ -79,7 +79,10 @@ public class ListRoomController implements Initializable {
     private Button editComplex;
 
     // Extra elements
-    ObservableList<Room> roomList = FXCollections.observableArrayList();
+    public static ObservableList<Room> allRoomList = FXCollections.observableArrayList();
+    public static ObservableList<Room> emptyRoomList = FXCollections.observableArrayList();
+    public static ObservableList<Room> availableRoomList = FXCollections.observableArrayList();
+    
     ObservableList<Complex> complexList = FXCollections.observableArrayList();
     
     DatabaseHandler handler = null;
@@ -114,7 +117,7 @@ public class ListRoomController implements Initializable {
     }
     
     private void loadRoomData(int complexId) {
-        roomList.clear();
+        allRoomList.clear();
         
         ResultSet rs = handler.getRoomsFromComplex(complexId);
 
@@ -129,12 +132,12 @@ public class ListRoomController implements Initializable {
                 int dt = rs.getInt("DIENTICH");
                 int makhu = rs.getInt("MAKHU");
                 
-                roomList.add(new Room(id, ten, soNguoi, giaGoc, tienCoc, dt, moTa, makhu));
+                allRoomList.add(new Room(id, ten, soNguoi, giaGoc, tienCoc, dt, moTa, makhu));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tableView.setItems(roomList);
+        tableView.setItems(allRoomList);
     }
     
     private void loadComplexData() {
@@ -161,7 +164,6 @@ public class ListRoomController implements Initializable {
     
     @FXML
     private void handleRefresh(ActionEvent event) {
-        // TODO get current complex
         loadRoomData(comboBox.getSelectionModel().getSelectedItem().getId());
     }
     
@@ -344,7 +346,7 @@ public class ListRoomController implements Initializable {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
             return;
         }
-        // TODO check for existing contracts before deleting
+        // TODO check for existing contracts before deleting a room
         if (handler.deleteRoom(selected)) {
             CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa phòng");
             

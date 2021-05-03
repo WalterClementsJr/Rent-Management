@@ -62,7 +62,8 @@ public class ListCustomerController implements Initializable {
     private MenuItem deleteMenu;
 
     // extra elements
-    ObservableList<Customer> list = FXCollections.observableArrayList();
+    public static ObservableList<Customer> listOfAllCustomer = FXCollections.observableArrayList();
+    public static ObservableList<Customer> listOfCustomerWithNoRoom = FXCollections.observableArrayList();
 
     public static void main(String[] args) {
     }
@@ -70,7 +71,7 @@ public class ListCustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initCustomerTableColumns(tableView);
-        loadData();
+        loadData(listOfAllCustomer, tableView);
     }
 
     private Stage getStage() {
@@ -78,7 +79,7 @@ public class ListCustomerController implements Initializable {
     }
     
 
-    private void loadData() {
+    private void loadData(ObservableList list, TableView table) {
         list.clear();
 
         DatabaseHandler handler = DatabaseHandler.getInstance();
@@ -94,12 +95,12 @@ public class ListCustomerController implements Initializable {
                 String cmnd = rs.getString("CMND");
                 String sdt = rs.getString("SDT");
                 
-                list.add(new Customer(id, hoten, gioiTinh, ngaySinh, sdt, cmnd));
+                listOfAllCustomer.add(new Customer(id, hoten, gioiTinh, ngaySinh, sdt, cmnd));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tableView.setItems(list);
+        table.setItems(listOfAllCustomer);
     }
 
     @FXML
@@ -149,12 +150,11 @@ public class ListCustomerController implements Initializable {
     
     @FXML
     private void handleRefresh(ActionEvent event) {
-        loadData();
+        loadData(listOfAllCustomer, tableView);
     }
     
     @FXML
     private void handleDelete(ActionEvent event) {
-        //Fetch the selected row
         Customer selectedForDeletion = tableView.getSelectionModel().getSelectedItem();
         if (selectedForDeletion == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để xóa");
@@ -173,7 +173,7 @@ public class ListCustomerController implements Initializable {
             Boolean result = DatabaseHandler.getInstance().deleteCustomer(selectedForDeletion);
             if (result) {
                 CustomAlert.showSimpleAlert("Đã xóa ", selectedForDeletion.getHoTen() + " was deleted successfully.");
-                list.remove(selectedForDeletion);
+                listOfAllCustomer.remove(selectedForDeletion);
             } else {
                 CustomAlert.showSimpleAlert("Thất bại", selectedForDeletion.getHoTen() + " không thể xóa được");
             }

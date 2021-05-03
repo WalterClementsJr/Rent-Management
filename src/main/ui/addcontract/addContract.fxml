@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addcontract.AddContractController">
+   <children>
+      <Pane layoutX="259.0" layoutY="108.0" prefHeight="700.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox layoutX="107.0" prefHeight="700.0" prefWidth="787.0">
+               <children>
+                  <HBox fx:id="box" alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="915.0" spacing="10.0">
+                     <children>
+                        <Label text="Khách" />
+                     </children>
+                  </HBox>
+                  <VBox prefHeight="159.0" prefWidth="787.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="141.0" prefWidth="787.0" spacing="20.0">
+                           <children>
+                              <VBox prefHeight="116.0" prefWidth="203.0">
+                                 <children>
+                                    <Label text="Ngày nhận phòng" />
+                                    <DatePicker fx:id="startDate" prefHeight="25.0" prefWidth="201.0" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="116.0" prefWidth="202.0">
+                                 <children>
+                                    <Label text="Ngày trả phòng" />
+                                    <DatePicker fx:id="endDate" prefHeight="25.0" prefWidth="201.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Label fx:id="tip" prefHeight="67.0" prefWidth="787.0" text="Chú ý:" />
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="915.0" spacing="10.0">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="230.0" spacing="10.0">
+                           <children>
+                              <Label text="Tiền cọc" />
+                              <TextField fx:id="deposit" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="915.0" spacing="10.0" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
