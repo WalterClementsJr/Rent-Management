@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -47,13 +48,13 @@ public class ListCustomerController implements Initializable {
     private AnchorPane root;
 
     @FXML
+    private ComboBox<String> comboBox;
+
+    @FXML
     private Button btnAdd;
 
     @FXML
-    private TableView<Customer> tableView;
-
-    @FXML
-    private MenuItem refreshMenu;
+    private TableView<Customer> customerTable;
 
     @FXML
     private MenuItem editMenu;
@@ -61,59 +62,115 @@ public class ListCustomerController implements Initializable {
     @FXML
     private MenuItem deleteMenu;
 
-    // extra elements
-    public static ObservableList<Customer> listOfAllCustomer = FXCollections.observableArrayList();
-    public static ObservableList<Customer> listOfCustomerWithNoRoom = FXCollections.observableArrayList();
+    @FXML
+    private MenuItem refreshMenu;
 
+    // extra elements
+    public static ObservableList<Customer> listOfAllCustomers = FXCollections.observableArrayList();
+    public static ObservableList<Customer> listOfCustomersWithNoRoom = FXCollections.observableArrayList();
+    public static ObservableList<Customer> listOfCustomersWithRoom = FXCollections.observableArrayList();
+    public static ObservableList<Customer> listOfOldCustomers = FXCollections.observableArrayList();
+
+    
+    DatabaseHandler handler;
+    
     public static void main(String[] args) {
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initCustomerTableColumns(tableView);
-        loadData(listOfAllCustomer, tableView);
+        handler = DatabaseHandler.getInstance();
+        
+        initCustomerTableColumns();
+        
+        comboBox.getItems().addAll("Tất cả", "Chưa có phòng", "Đã có phòng", "Đã chuyển đi");
+        comboBox.getSelectionModel().selectFirst();
+        
+        loadData();
     }
 
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
     
+    @FXML
+    private void handleComboBoxChange(ActionEvent event) {
+        loadData();
+    }
+    
+    private void loadData() {
+        switch (comboBox.getSelectionModel().getSelectedItem()) {
+            case "Tất cả":
+                loadAllCustomers();
+                break;
+            case "Chưa có phòng":
+                loadCustomersWithNoRoom();
+                break;
+            case "Đã có phòng":
+                loadCustomersWithRoom();
+                break;
+            case "Đã chuyển đi":
+                loadOldCustomers();
+                break;
+            default:
+                System.out.println("... selected");
+        }
+    }
 
-    private void loadData(ObservableList list, TableView table) {
+    private void loadDataToTable(ResultSet rs, ObservableList list) {
         list.clear();
-
-        DatabaseHandler handler = DatabaseHandler.getInstance();
-        String query = "SELECT * FROM KHACH";
-        ResultSet rs = handler.execQuery(query);
 
         try {
             while (rs.next()) {
-                int id = rs.getInt("MAKH");
-                String hoten = rs.getString("HOTEN");
-                boolean gioiTinh = rs.getBoolean("GIOITINH");
-                LocalDate ngaySinh = Util.SQLDateToLocalDate(rs.getDate("NGAYSINH"));   
-                String cmnd = rs.getString("CMND");
-                String sdt = rs.getString("SDT");
-                
-                listOfAllCustomer.add(new Customer(id, hoten, gioiTinh, ngaySinh, sdt, cmnd));
+                list.add(
+                        new Customer(
+                                rs.getInt("MAKH"),
+                                rs.getString("HOTEN"),
+                                rs.getBoolean("GIOITINH"),
+                                Util.SQLDateToLocalDate(rs.getDate("NGAYSINH")),
+                                rs.getString("CMND"),
+                                rs.getString("SDT")));
             }
+            
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        table.setItems(listOfAllCustomer);
+        customerTable.setItems(list);
+    }
+    
+    private void loadAllCustomers() {
+        String query = "SELECT * FROM KHACH";
+
+        loadDataToTable(handler.execQuery(query), listOfAllCustomers);
     }
 
+    private void loadCustomersWithNoRoom() {
+        loadDataToTable(handler.getCustomersWithNoRoom(), listOfCustomersWithNoRoom);
+    }
+
+    private void loadCustomersWithRoom() {
+        loadDataToTable(handler.getCustomersWithRoom(), listOfCustomersWithRoom);
+    }
+
+    private void loadOldCustomers() {
+        loadDataToTable(handler.getOldCustomers(), listOfCustomersWithRoom);
+    }
+    
     @FXML
     private void handleAddButton(ActionEvent event) {
         System.out.println("load add customer window");
         Stage stage = (Stage) Util.loadWindow(getClass().getResource(
                 "/main/ui/addcustomer/addCustomer.fxml"),
                 "Add New Customer", getStage());
+        stage.setOnHiding((e) -> {
+                handleRefresh(new ActionEvent());
+            });
     }
 
     @FXML
     void handleEditButton(ActionEvent event) {
-        Customer selectedForEdit = tableView.getSelectionModel().getSelectedItem();
+        Customer selectedForEdit = customerTable.getSelectionModel().getSelectedItem();
         
         if (selectedForEdit == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để chỉnh sửa");
@@ -150,12 +207,12 @@ public class ListCustomerController implements Initializable {
     
     @FXML
     private void handleRefresh(ActionEvent event) {
-        loadData(listOfAllCustomer, tableView);
+        loadData();
     }
     
     @FXML
     private void handleDelete(ActionEvent event) {
-        Customer selectedForDeletion = tableView.getSelectionModel().getSelectedItem();
+        Customer selectedForDeletion = customerTable.getSelectionModel().getSelectedItem();
         if (selectedForDeletion == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để xóa");
             return;
@@ -170,10 +227,10 @@ public class ListCustomerController implements Initializable {
         alert.setContentText("Bạn có muốn xóa " + selectedForDeletion.getHoTen() + " ?");
         Optional<ButtonType> answer = alert.showAndWait();
         if (answer.get() == ButtonType.OK) {
-            Boolean result = DatabaseHandler.getInstance().deleteCustomer(selectedForDeletion);
+            Boolean result = handler.deleteCustomer(selectedForDeletion);
             if (result) {
                 CustomAlert.showSimpleAlert("Đã xóa ", selectedForDeletion.getHoTen() + " was deleted successfully.");
-                listOfAllCustomer.remove(selectedForDeletion);
+                listOfAllCustomers.remove(selectedForDeletion);
             } else {
                 CustomAlert.showSimpleAlert("Thất bại", selectedForDeletion.getHoTen() + " không thể xóa được");
             }
@@ -183,7 +240,7 @@ public class ListCustomerController implements Initializable {
     }
 
     
-    public void initCustomerTableColumns(TableView tableView) {
+    public void initCustomerTableColumns() {
         TableColumn<Customer, Integer> idCol = new TableColumn<Customer, Integer>("ID");
         TableColumn<Customer, String> hotenCol = new TableColumn<Customer, String>("Họ tên");
         TableColumn<Customer, Boolean> gioitinhCol = new TableColumn<Customer, Boolean>("Giới tính");
@@ -230,8 +287,8 @@ public class ListCustomerController implements Initializable {
             };
         });
         
-        tableView.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
+        customerTable.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
         idCol.setVisible(false);
     }
-
+    
 }

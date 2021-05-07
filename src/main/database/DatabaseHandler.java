@@ -17,6 +17,7 @@ import main.util.Util;
 
 public final class DatabaseHandler {
     public static void main(String[] args) {
+        System.out.println(DatabaseHandler.getInstance().getNumberOfCustomersInRoom(2));
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -151,6 +152,7 @@ public final class DatabaseHandler {
         return true;
     }
     
+    
     public boolean isComplexExist(int complexId, String complexName) {
         try {
             stmt = conn.prepareStatement(
@@ -226,18 +228,72 @@ public final class DatabaseHandler {
         return false;
     }
 
-//    public ResultSet customerWithRoom(Customer customer) {
-//        try {
-//            stmt = conn.prepareStatement(
-//                    "SELECT MAKH, MAPHONG FROM HDONG WHERE MAKH=? AND NGAYTRA>GETDATE()");
-//            stmt.setInt(1, customer.getId());
-//
-//            return stmt.executeUpdate() > 0;
-//        } catch (SQLException ex) { 
-//            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
-//    }
+    public ResultSet getCustomersInRoom(int roomId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "select * from GetKhachTrongPhong(?)");
+            stmt.setInt(1, roomId);
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public int getNumberOfCustomersInRoom(int roomId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM GetSoKhachTrongPhong(?)");
+            stmt.setInt(1, roomId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                System.out.println("no data");
+                return -1;
+            } else {
+                int t = rs.getInt("songuoi");
+                rs.close();
+                return t;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+    
+    public ResultSet getCustomersWithRoom() {
+        try {
+            stmt = conn.prepareStatement(
+                    "select * from ViewKhachCoPhong");
+            return stmt.executeQuery();
+        } catch (SQLException ex) { 
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public ResultSet getOldCustomers() {
+        try {
+            stmt = conn.prepareStatement(
+                    "select * from ViewKhachCu");
+            return stmt.executeQuery();
+        } catch (SQLException ex) { 
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public ResultSet getCustomersWithNoRoom() {
+        try {
+            stmt = conn.prepareStatement(
+                    "select * from ViewKhachKhongCoPhong");
+            return stmt.executeQuery();
+        } catch (SQLException ex) { 
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     
     public boolean insertNewComplex(Complex c) {
         try {
@@ -349,10 +405,10 @@ public final class DatabaseHandler {
         return false;
     }
 
-    public ResultSet getRoomsFromComplex(int complexId) {
+    public ResultSet getAllRoomsFromComplex(int complexId) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM PHONG WHERE MAKHU=?");
+                    "select * from getphongthuockhu(?)");
             stmt.setInt(1, complexId);
 
             return stmt.executeQuery();
@@ -361,16 +417,30 @@ public final class DatabaseHandler {
         }
         return null;
     }
-//    public ResultSet getAvailableRooms() {
-//        try {
-//            stmt = conn.prepareStatement(
-//                    "SELECT PHONG WHERE");
-//            stmt.setInt(1, customer.getId());
-//
-//            return stmt.executeUpdate() > 0;
-//        } catch (SQLException ex) {
-//            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
-//    }
+    
+    public ResultSet getEmptyRoomsFromComplex(int complexId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM GETPHONGTRONGTHUOCKHU(?)");
+            stmt.setInt(1, complexId);
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public ResultSet getOccuppiedRoomsFromComplex(int complexId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM GETPHONGCONGUOITHUOCKHU(?)");
+            stmt.setInt(1, complexId);
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

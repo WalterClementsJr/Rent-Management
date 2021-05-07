@@ -35,8 +35,8 @@ public class Room {
         this.soNguoi = new SimpleIntegerProperty(soNguoi);
         this.moTa = new SimpleStringProperty(moTa);
         this.maKhu = new SimpleIntegerProperty(maKhu);
-        this.giaGoc = new SimpleObjectProperty<BigDecimal>(giaGoc);
-        this.tienCoc = new SimpleObjectProperty<BigDecimal>(tienCoc);
+        this.giaGoc = new SimpleObjectProperty<>(giaGoc);
+        this.tienCoc = new SimpleObjectProperty<>(tienCoc);
         this.dienTich = new SimpleIntegerProperty(dienTich);
     }
 

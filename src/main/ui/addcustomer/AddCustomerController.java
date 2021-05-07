@@ -98,6 +98,7 @@ public class AddCustomerController implements Initializable {
                 if (newValue.matches("\\d{0,11}")) {
                     String value = newValue;
                 } else {
+//                    sdt.setText(newValue.replaceAll("[^\\d]", ""));
                     sdt.setText(oldValue);
                     sdt.positionCaret(sdt.getLength());
                 }
@@ -153,6 +154,10 @@ public class AddCustomerController implements Initializable {
             handleEdit();
             return;
         }
+        
+        if (!checkEntries()) {
+            return;
+        }
 
         String customerName = name.getText().trim();
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
@@ -180,6 +185,10 @@ public class AddCustomerController implements Initializable {
     }
 
     private void handleEdit() {
+        if (!checkEntries()) {
+            return;
+        }
+        
         String customerName = name.getText().trim();
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
         LocalDate customerBDay = datePicker.getValue();
@@ -215,16 +224,16 @@ public class AddCustomerController implements Initializable {
             CustomAlert.showErrorMessage("Tên khách trống", "Hãy nhập tên");
             return false;
         } else if (sex.getSelectedToggle() == null) {
-            CustomAlert.showErrorMessage("Chưa chọn giới tính", "");
+            CustomAlert.showErrorMessage("Chưa chọn giới tính", "Hãy nhập đầy đủ thông tin");
             return false;
         } else if (datePicker.getValue() == null) {
-            CustomAlert.showErrorMessage("Chưa nhập ngày sinh", "");
+            CustomAlert.showErrorMessage("Chưa nhập ngày sinh", "Hãy nhập đầy đủ thông tin");
             return false;
         } else if (sdt.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Chưa nhập số điện thoại", "");
+            CustomAlert.showErrorMessage("Chưa nhập số điện thoại", "Hãy nhập đầy đủ thông tin");
             return false;
         } else if (cmnd.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Chưa nhập chứng minh nhân dân", "");
+            CustomAlert.showErrorMessage("Chưa nhập chứng minh nhân dân", "Hãy nhập đầy đủ thông tin");
             return false;
         }
         return true;

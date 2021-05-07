@@ -36,7 +36,6 @@ import main.model.Room;
 import main.ui.addcomplex.AddComplexController;
 import main.ui.addroom.AddRoomController;
 import main.ui.alert.CustomAlert;
-import main.ui.listcustomer.ListCustomerController;
 import main.util.Util;
 
 
@@ -52,7 +51,7 @@ public class ListRoomController implements Initializable {
     private Tab allTab;
 
     @FXML
-    private TableView<Room> tableView;
+    private TableView<Room> roomTable;
 
     @FXML
     private MenuItem refreshMenu;
@@ -73,19 +72,22 @@ public class ListRoomController implements Initializable {
     private ComboBox<Complex> comboBox;
 
     @FXML
+    private ComboBox<String> filter;
+    
+    @FXML
     private Button addComplex;
 
     @FXML
     private Button editComplex;
 
     // Extra elements
-    public static ObservableList<Room> allRoomList = FXCollections.observableArrayList();
-    public static ObservableList<Room> emptyRoomList = FXCollections.observableArrayList();
-    public static ObservableList<Room> availableRoomList = FXCollections.observableArrayList();
+    public static ObservableList<Room> listOfAllRooms = FXCollections.observableArrayList();
+    public static ObservableList<Room> listOfEmptyRooms = FXCollections.observableArrayList();
+    public static ObservableList<Room> listOfAvailableRooms = FXCollections.observableArrayList();
     
     ObservableList<Complex> complexList = FXCollections.observableArrayList();
     
-    DatabaseHandler handler = null;
+    DatabaseHandler handler;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -93,51 +95,73 @@ public class ListRoomController implements Initializable {
         handler = DatabaseHandler.getInstance();
         
         // setup UI elements
-        initRoomTableColumns(tableView);
+        initRoomTableColumns(roomTable);
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
-        loadRoomData(comboBox.getSelectionModel().getSelectedItem().getId());
         
+        filter.getItems().addAll("Tất cả", "Trống", "Đã có người");
+        filter.getSelectionModel().selectFirst();
+
+        loadData();
     }
     
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
     
-    @FXML
-    private void loadRoom(ActionEvent event) {
-        System.out.println("Complex changed");
-        Complex c = comboBox.getSelectionModel().getSelectedItem();
-        if (c == null) {
-            return;
-        } else {
-            System.out.println("complex selected " + c.getTen());
-            loadRoomData(c.getId());
+    private void loadData() {
+        Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
+        
+        switch (filter.getSelectionModel().getSelectedItem()) {
+            case "Tất cả":
+                loadAllRooms(chosenComplex.getId());
+                break;
+            case "Trống":
+                loadEmptyRooms(chosenComplex.getId());
+                break;
+            case "Đã có người":
+                loadOccupiedRooms(chosenComplex.getId());
+                break;
         }
     }
     
-    private void loadRoomData(int complexId) {
-        allRoomList.clear();
-        
-        ResultSet rs = handler.getRoomsFromComplex(complexId);
+    @FXML
+    private void loadRoom(ActionEvent event) {
+        loadData();
+    }
+    
+    private void loadAllRooms(int complexId) {
+        loadDataToTable(handler.getAllRoomsFromComplex(complexId), listOfAllRooms);
+    }
+    
+    private void loadEmptyRooms(int complexId) {
+        loadDataToTable(handler.getEmptyRoomsFromComplex(complexId), listOfEmptyRooms);
+    }
+    
+    private void loadOccupiedRooms(int complexId) {
+        loadDataToTable(handler.getOccuppiedRoomsFromComplex(complexId), listOfAvailableRooms);
+    }
+    
+    private void loadDataToTable(ResultSet rs, ObservableList list) {
+        list.clear();
 
         try {
             while (rs.next()) {
-                int id = rs.getInt("MAPHONG");
-                String ten = rs.getString("TENPHONG");
-                int soNguoi = rs.getInt("SONGUOI");  
-                String moTa = rs.getString("MOTA");
-                BigDecimal giaGoc = rs.getBigDecimal("GIAGOC");
-                BigDecimal tienCoc = rs.getBigDecimal("TIENCOC");
-                int dt = rs.getInt("DIENTICH");
-                int makhu = rs.getInt("MAKHU");
-                
-                allRoomList.add(new Room(id, ten, soNguoi, giaGoc, tienCoc, dt, moTa, makhu));
+                list.add(new Room(
+                        rs.getInt("MAPHONG"),
+                        rs.getString("TENPHONG"),
+                        rs.getInt("SONGUOI"),
+                        rs.getBigDecimal("GIAGOC"),
+                        rs.getBigDecimal("TIENCOC"),
+                        rs.getInt("DIENTICH"),
+                        rs.getString("MOTA"),
+                        rs.getInt("MAKHU")));
             }
+            rs.close();
         } catch (SQLException ex) {
-            Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tableView.setItems(allRoomList);
+        roomTable.setItems(list);
     }
     
     private void loadComplexData() {
@@ -156,6 +180,7 @@ public class ListRoomController implements Initializable {
 
                 System.out.println(id + ten + diaChi);
             }
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -164,7 +189,7 @@ public class ListRoomController implements Initializable {
     
     @FXML
     private void handleRefresh(ActionEvent event) {
-        loadRoomData(comboBox.getSelectionModel().getSelectedItem().getId());
+        loadAllRooms(comboBox.getSelectionModel().getSelectedItem().getId());
     }
     
 //     TODO remove this later
@@ -175,23 +200,21 @@ public class ListRoomController implements Initializable {
     
     public void initRoomTableColumns(TableView tableView) {
         TableColumn<Room, Integer> idCol =
-                new TableColumn<Room, Integer>("Mã phòng");
+                new TableColumn<>("Mã phòng");
         TableColumn<Room, String> tenPhongCol =
-                new TableColumn<Room, String>("Tên phòng");
+                new TableColumn<>("Tên phòng");
         TableColumn<Room, Short> soNguoiCol =
-                new TableColumn<Room, Short>("Số người");
+                new TableColumn<>("Số người tối đa");
         TableColumn<Room, BigDecimal> giaGocCol =
-                new TableColumn<Room, BigDecimal>("Giá gốc");
+                new TableColumn<>("Giá gốc");
         TableColumn<Room, BigDecimal> tienCocCol =
-                new TableColumn<Room, BigDecimal>("Tiền cọc");
+                new TableColumn<>("Tiền cọc");
         TableColumn<Room, Integer> dtCol =
-                new TableColumn<Room, Integer>("Diện tích");
+                new TableColumn<>("Diện tích");
         TableColumn<Room, String> moTaCol =
-                new TableColumn<Room, String>("Mô tả");
+                new TableColumn<>("Mô tả");
         TableColumn<Room, Integer> makhuCol =
-                new TableColumn<Room, Integer>("Mã khu");
-
-
+                new TableColumn<>("Mã khu");
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         tenPhongCol.setCellValueFactory(new PropertyValueFactory<>("tenPhong"));
@@ -300,7 +323,7 @@ public class ListRoomController implements Initializable {
     
     @FXML
     private void handleEditRoom(ActionEvent event){
-        Room selectedForEdit = tableView.getSelectionModel().getSelectedItem();
+        Room selectedForEdit = roomTable.getSelectionModel().getSelectedItem();
         
         if (selectedForEdit == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
@@ -340,13 +363,13 @@ public class ListRoomController implements Initializable {
     
     @FXML
     private void handleDeleteButton(ActionEvent event) {
-        Room selected= tableView.getSelectionModel().getSelectedItem();
+        Room selected= roomTable.getSelectionModel().getSelectedItem();
         
         if (selected == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
             return;
         }
-        // TODO check for existing contracts before deleting a room
+        // TODO check for active contracts before deleting a room
         if (handler.deleteRoom(selected)) {
             CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa phòng");
             
