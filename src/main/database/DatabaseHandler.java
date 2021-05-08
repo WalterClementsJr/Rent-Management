@@ -5,11 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import main.model.Complex;
+import main.model.Contract;
 import main.model.Customer;
 import main.model.Room;
 import main.ui.alert.CustomAlert;
@@ -17,7 +19,9 @@ import main.util.Util;
 
 public final class DatabaseHandler {
     public static void main(String[] args) {
-        System.out.println(DatabaseHandler.getInstance().getNumberOfCustomersInRoom(2));
+        System.out.println(DatabaseHandler.getInstance().getLatestPayDate(6));
+        System.out.println(DatabaseHandler.getInstance().getLatestPayDate(7));
+        
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -112,7 +116,7 @@ public final class DatabaseHandler {
                         return false;
                     }
                 } while (rs.next());
-                
+                rs.close();
                 return true;
             } else {
                 return false;
@@ -140,8 +144,8 @@ public final class DatabaseHandler {
                     if (roomId == maphong) {
                         return false;
                     }
-                    
                 } while (rs.next());
+                rs.close();
                 return true;
             } else {
                 return false;
@@ -170,7 +174,7 @@ public final class DatabaseHandler {
                         return false;
                     }
                 } while (rs.next());
-                
+                rs.close();
                 return true;
             } else {
                 return false;
@@ -244,7 +248,7 @@ public final class DatabaseHandler {
     public int getNumberOfCustomersInRoom(int roomId) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM GetSoKhachTrongPhong(?)");
+                    "SELECT * FROM dbo.GetSoKhachTrongPhong(?)");
             stmt.setInt(1, roomId);
 
             ResultSet rs = stmt.executeQuery();
@@ -438,6 +442,76 @@ public final class DatabaseHandler {
             stmt.setInt(1, complexId);
 
             return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public boolean insertNewContract(Contract c) {
+        try {
+            stmt = conn.prepareStatement(
+                "INSERT INTO HOPDONG VALUES(?,?,?,?,?)");
+            stmt.setInt(
+                    1, c.getMaPhong());
+            stmt.setInt(
+                    2, c.getMaKH());
+            stmt.setDate(
+                    3, Util.LocalDateToSQLDate(c.getNgayTra()));
+            stmt.setDate(
+                    4, Util.LocalDateToSQLDate(c.getNgayNhan()));
+            stmt.setBigDecimal(
+                    5, c.getTienCoc());
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean updateContract(Contract c) {
+        try {
+            stmt = conn.prepareStatement(
+                "UPDATE hopdong SET ngaytra=?, TIENCOC=? WHERE MAHDONG=?");
+            stmt.setDate(
+                    1, Util.LocalDateToSQLDate(c.getNgayTra()));
+            stmt.setBigDecimal(
+                    2, c.getTienCoc());
+            stmt.setInt(
+                    3, c.getId());
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean deleteContract(Contract c) {
+        try {
+            stmt = conn.prepareStatement(
+                    "DELETE FROM HOPDONG WHERE MAHDONG=?");
+            stmt.setInt(1, c.getId());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public LocalDate getLatestPayDate(int conId) throws NullPointerException {
+        try {
+            stmt = conn.prepareStatement(
+                    "select dbo.getlatestpaydate(?) as date");
+            stmt.setInt(1, conId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                throw new NullPointerException("No latest paydate is associated with this contract");
+            } else {
+                java.sql.Date date = rs.getDate("date");
+                rs.close();
+                return Util.SQLDateToLocalDate(date);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

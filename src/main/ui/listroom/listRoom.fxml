@@ -22,13 +22,13 @@
             <HBox alignment="CENTER_RIGHT" layoutX="49.0" prefHeight="116.0" prefWidth="903.0" spacing="10.0">
                <children>
                   <Label text="Khu nhà" />
-                  <ComboBox fx:id="comboBox" onAction="#loadRoom" prefWidth="143.0" />
+                  <ComboBox fx:id="comboBox" onAction="#complexChanged" prefWidth="143.0" />
                   <Button fx:id="addComplex" mnemonicParsing="false" onAction="#handleAddComplex" prefHeight="32.0" prefWidth="40.0" styleClass="success" text="+" textAlignment="CENTER" />
                   <Button fx:id="editComplex" mnemonicParsing="false" onAction="#handleEditComplex" prefHeight="32.0" prefWidth="40.0" styleClass="warning" text="/" textAlignment="CENTER" />
                   <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="581.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="43.0" text="Lọc" />
-                        <ComboBox fx:id="filter" onAction="#loadRoom" prefWidth="143.0" />
+                        <ComboBox fx:id="filter" onAction="#filterChanged" prefWidth="143.0" />
                      </children>
                   </HBox>
                </children>

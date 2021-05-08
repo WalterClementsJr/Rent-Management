@@ -46,7 +46,8 @@ public class Setting {
     }
 
     public boolean checkPassword(String password) {
-        return new String(DIGEST.digest(password.getBytes(StandardCharsets.UTF_16))).equals(getPwd());
+        return new String(
+                DIGEST.digest(password.getBytes(StandardCharsets.UTF_16))).equals(getPwd());
     }
     
     public static void initSetting() {
@@ -94,10 +95,12 @@ public class Setting {
             System.out.println("write to file success!");
         } catch (IOException ex) {
             Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("write to file faled!");
+            //TODO same thing
             CustomAlert.showErrorMessage(ex, "Failed", "Cant save configuration file");
         } finally {
             try {
-                writer.close();
+                if (writer != null) writer.close();
             } catch (IOException ex) {
                 Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
             }

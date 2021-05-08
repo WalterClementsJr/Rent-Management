@@ -71,7 +71,7 @@ public class ListCustomerController implements Initializable {
     public static ObservableList<Customer> listOfCustomersWithRoom = FXCollections.observableArrayList();
     public static ObservableList<Customer> listOfOldCustomers = FXCollections.observableArrayList();
 
-    
+    private boolean datachanged = false;
     DatabaseHandler handler;
     
     public static void main(String[] args) {
@@ -289,6 +289,9 @@ public class ListCustomerController implements Initializable {
         
         customerTable.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
         idCol.setVisible(false);
+        
+        hotenCol.setMinWidth(150);
+
     }
     
 }

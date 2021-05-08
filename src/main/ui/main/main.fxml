@@ -10,12 +10,22 @@
    <left>
       <VBox fx:id="menu" alignment="TOP_CENTER" prefHeight="700.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="98.0" prefWidth="260.0" text="Something" />
-            <Button fx:id="menuBtnHome" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Home" textAlignment="CENTER" />
-            <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Customer" textAlignment="CENTER" />
-            <Button fx:id="menuBtnRoom" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListRoom" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Room" textAlignment="CENTER" />
-            <Button fx:id="menuBtnPayment" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Payment" textAlignment="CENTER" />
-            <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Settings" textAlignment="CENTER" />
+            <Label prefHeight="127.0" prefWidth="200.0" />
+            <VBox prefHeight="437.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="menuBtnHome" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Trang chủ" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý khách" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnRoom" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListRoom" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý phòng" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnContract" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý hợp đồng" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnBill" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý hóa đơn" textAlignment="CENTER" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="135.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="menuBtnSetting" mnemonicParsing="false" prefHeight="32.0" prefWidth="217.0" text="Cài đặt" />
+                  <Button fx:id="menuBtnHelp" mnemonicParsing="false" prefHeight="32.0" prefWidth="217.0" text="Hướng dẫn" />
+               </children>
+            </VBox>
          </children></VBox>
    </left>
    <center>

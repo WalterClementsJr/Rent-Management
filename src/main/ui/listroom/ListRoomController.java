@@ -83,10 +83,12 @@ public class ListRoomController implements Initializable {
     // Extra elements
     public static ObservableList<Room> listOfAllRooms = FXCollections.observableArrayList();
     public static ObservableList<Room> listOfEmptyRooms = FXCollections.observableArrayList();
-    public static ObservableList<Room> listOfAvailableRooms = FXCollections.observableArrayList();
+    public static ObservableList<Room> listOfOccupiedRooms = FXCollections.observableArrayList();
+    
+//    private boolean filterchanged = false;
+//    private boolean complexchanged = false;
     
     ObservableList<Complex> complexList = FXCollections.observableArrayList();
-    
     DatabaseHandler handler;
     
     @Override
@@ -101,7 +103,7 @@ public class ListRoomController implements Initializable {
         
         filter.getItems().addAll("Tất cả", "Trống", "Đã có người");
         filter.getSelectionModel().selectFirst();
-
+        
         loadData();
     }
     
@@ -109,40 +111,61 @@ public class ListRoomController implements Initializable {
         return (Stage) root.getScene().getWindow();
     }
     
+    @FXML
+    private void complexChanged(ActionEvent event) {
+//        filterchanged = true;
+        
+        listOfAllRooms.clear();
+        listOfEmptyRooms.clear();
+        listOfOccupiedRooms.clear();
+        
+        loadData();
+    }
+    @FXML
+    private void filterChanged(ActionEvent event) {
+        loadListToTable();
+    }
+    
     private void loadData() {
         Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
         
+        listOfAllRooms.clear();
+        listOfEmptyRooms.clear();
+        listOfOccupiedRooms.clear();
+        
+        loadAllRooms(chosenComplex.getId());
+        loadEmptyRooms(chosenComplex.getId());
+        loadOccupiedRooms(chosenComplex.getId());
+        
+        loadListToTable();
+    }
+    
+    private void loadListToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
             case "Tất cả":
-                loadAllRooms(chosenComplex.getId());
+                roomTable.setItems(listOfAllRooms);
                 break;
             case "Trống":
-                loadEmptyRooms(chosenComplex.getId());
+                roomTable.setItems(listOfEmptyRooms);
                 break;
             case "Đã có người":
-                loadOccupiedRooms(chosenComplex.getId());
+                roomTable.setItems(listOfOccupiedRooms);
                 break;
         }
-    }
-    
-    @FXML
-    private void loadRoom(ActionEvent event) {
-        loadData();
-    }
-    
+    }    
     private void loadAllRooms(int complexId) {
-        loadDataToTable(handler.getAllRoomsFromComplex(complexId), listOfAllRooms);
+        loadResultSetToList(handler.getAllRoomsFromComplex(complexId), listOfAllRooms);
     }
     
     private void loadEmptyRooms(int complexId) {
-        loadDataToTable(handler.getEmptyRoomsFromComplex(complexId), listOfEmptyRooms);
+        loadResultSetToList(handler.getEmptyRoomsFromComplex(complexId), listOfEmptyRooms);
     }
     
     private void loadOccupiedRooms(int complexId) {
-        loadDataToTable(handler.getOccuppiedRoomsFromComplex(complexId), listOfAvailableRooms);
+        loadResultSetToList(handler.getOccuppiedRoomsFromComplex(complexId), listOfOccupiedRooms);
     }
     
-    private void loadDataToTable(ResultSet rs, ObservableList list) {
+    private void loadResultSetToList(ResultSet rs, ObservableList list) {
         list.clear();
 
         try {
@@ -189,13 +212,126 @@ public class ListRoomController implements Initializable {
     
     @FXML
     private void handleRefresh(ActionEvent event) {
-        loadAllRooms(comboBox.getSelectionModel().getSelectedItem().getId());
+//        filterchanged = true;
+        loadData();
     }
     
-//     TODO remove this later
+
     @FXML
-    private void doSomething(Event event) {
-        System.out.println("Doing something");
+    private void handleAddComplex(ActionEvent event) {
+        Stage stage = (Stage) Util.loadWindow(getClass().getResource(
+                "/main/ui/addcomplex/addComplex.fxml"),
+                "Thêm khu nhà", getStage());
+        stage.setOnHiding((e) -> {
+            handleRefresh(new ActionEvent());
+        });
+    }
+
+    @FXML
+    private void handleEditComplex(ActionEvent event) {
+        Complex selectedForEdit = comboBox.getSelectionModel().getSelectedItem();
+
+        if (selectedForEdit == null) {
+            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khu nhà để chỉnh sửa");
+            return;
+        }
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/main/ui/addcomplex/addComplex.fxml"));
+            Parent parent = loader.load();
+
+            AddComplexController con = loader.getController();
+            con.loadEntries(selectedForEdit);
+
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.initOwner(getStage());
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(parent);
+            scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toString());
+
+            stage.setScene(scene);
+            stage.setTitle("Chỉnh sửa khu nhà");
+            stage.show();
+            Util.setWindowIcon(stage);
+
+            stage.setOnHiding((e) -> {
+                handleRefresh(new ActionEvent());
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void handleAddRoom(ActionEvent event) {
+//        filterchanged = true;
+        Stage stage = (Stage) Util.loadWindow(
+                getClass().getResource("/main/ui/addroom/addRoom.fxml"),
+                "Thêm phòng", getStage());
+        stage.setOnHiding((e) -> {
+                handleRefresh(new ActionEvent());
+            });
+    }
+    
+    @FXML
+    private void handleEditRoom(ActionEvent event){
+        Room selectedForEdit = roomTable.getSelectionModel().getSelectedItem();
+        
+        if (selectedForEdit == null) {
+            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
+            return;
+        }
+//        filterchanged = true;
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/main/ui/addRoom/addRoom.fxml"));
+            Parent parent = loader.load();
+
+            AddRoomController con = loader.getController();
+            con.loadEntries(selectedForEdit);
+            
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.initOwner(getStage());
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(parent);
+            scene.getStylesheets().add(getClass()
+                    .getResource(Util.STYLE_SHEET_LOCATION).toString());
+
+            stage.setScene(scene);
+            stage.setTitle("Sửa phòng");
+            stage.show();
+            Util.setWindowIcon(stage);
+
+            stage.setOnHiding((e) -> {
+                handleRefresh(new ActionEvent());
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    private void handleDeleteButton(ActionEvent event) {
+        Room selected= roomTable.getSelectionModel().getSelectedItem();
+        
+        if (selected == null) {
+            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
+            return;
+        }
+//        filterchanged = true;
+        // TODO check for active contracts before deleting a room
+        if (handler.deleteRoom(selected)) {
+            CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa phòng");
+            
+            complexChanged(new ActionEvent());
+        } else {
+            CustomAlert.showErrorMessage("Không thể xóa phòng", "Phòng đang có hợp đồng hoặc đã có lỗi");
+        }
+        
     }
     
     public void initRoomTableColumns(TableView tableView) {
@@ -263,120 +399,8 @@ public class ListRoomController implements Initializable {
                 tienCocCol, dtCol, moTaCol, makhuCol);
         idCol.setVisible(false);
         makhuCol.setVisible(false);
+        
+        moTaCol.setMinWidth(150);
     }
     
-    @FXML
-    private void handleAddComplex(ActionEvent event) {
-        Stage stage = (Stage) Util.loadWindow(getClass().getResource(
-                "/main/ui/addcomplex/addComplex.fxml"),
-                "Thêm khu nhà", getStage());
-        stage.setOnHiding((e) -> {
-            handleRefresh(new ActionEvent());
-        });
-    }
-
-    @FXML
-    private void handleEditComplex(ActionEvent event) {
-        Complex selectedForEdit = comboBox.getSelectionModel().getSelectedItem();
-
-        if (selectedForEdit == null) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khu nhà để chỉnh sửa");
-            return;
-        }
-
-        System.out.println(selectedForEdit.debugString());
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/main/ui/addcomplex/addComplex.fxml"));
-            Parent parent = loader.load();
-
-            AddComplexController con = loader.getController();
-            con.loadEntries(selectedForEdit);
-
-            Stage stage = new Stage(StageStyle.DECORATED);
-            stage.initOwner(getStage());
-            stage.initModality(Modality.WINDOW_MODAL);
-
-            Scene scene = new Scene(parent);
-            scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toString());
-
-            stage.setScene(scene);
-            stage.setTitle("Chỉnh sửa khu nhà");
-            stage.show();
-            Util.setWindowIcon(stage);
-
-            stage.setOnHiding((e) -> {
-                handleRefresh(new ActionEvent());
-            });
-        } catch (IOException ex) {
-            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @FXML
-    private void handleAddRoom(ActionEvent event) {
-        Stage stage = (Stage) Util.loadWindow(
-                getClass().getResource("/main/ui/addroom/addRoom.fxml"),
-                "Thêm phòng", getStage());
-    }
-    
-    @FXML
-    private void handleEditRoom(ActionEvent event){
-        Room selectedForEdit = roomTable.getSelectionModel().getSelectedItem();
-        
-        if (selectedForEdit == null) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
-            return;
-        }
-        
-        System.out.println(selectedForEdit.debugString());
-        
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass()
-                    .getResource("/main/ui/addRoom/addRoom.fxml"));
-            Parent parent = loader.load();
-
-            AddRoomController con = loader.getController();
-            con.loadEntries(selectedForEdit);
-            
-            Stage stage = new Stage(StageStyle.DECORATED);
-            stage.initOwner(getStage());
-            stage.initModality(Modality.WINDOW_MODAL);
-
-            Scene scene = new Scene(parent);
-            scene.getStylesheets().add(getClass()
-                    .getResource(Util.STYLE_SHEET_LOCATION).toString());
-
-            stage.setScene(scene);
-            stage.setTitle("Sửa phòng");
-            stage.show();
-            Util.setWindowIcon(stage);
-
-            stage.setOnHiding((e) -> {
-                handleRefresh(new ActionEvent());
-            });
-        } catch (IOException ex) {
-            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    @FXML
-    private void handleDeleteButton(ActionEvent event) {
-        Room selected= roomTable.getSelectionModel().getSelectedItem();
-        
-        if (selected == null) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
-            return;
-        }
-        // TODO check for active contracts before deleting a room
-        if (handler.deleteRoom(selected)) {
-            CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa phòng");
-            
-            loadRoom(new ActionEvent());
-        } else {
-            CustomAlert.showErrorMessage("Không thể xóa phòng", "Phòng đang có hợp đồng hoặc đã có lỗi");
-        }
-        
-    }    
 }

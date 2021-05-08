@@ -1,10 +1,14 @@
 package main.ui.main;
 
+import java.awt.Desktop;
+import java.io.File;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -80,6 +84,14 @@ public class MainController implements Initializable {
         stage.setFullScreen(!stage.isFullScreen());
     }
 
+    @FXML
+    private void runCalculator(ActionEvent event) {
+        try {
+            Desktop.getDesktop().open(new File("./src/main/util/Calculator/calc.html"));
+        } catch (IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * 
      * @param nodes
