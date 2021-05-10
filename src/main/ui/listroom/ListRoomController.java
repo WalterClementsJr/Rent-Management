@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -38,7 +36,6 @@ import main.ui.addroom.AddRoomController;
 import main.ui.alert.CustomAlert;
 import main.util.Util;
 
-
 public class ListRoomController implements Initializable {
 
     @FXML
@@ -48,7 +45,16 @@ public class ListRoomController implements Initializable {
     private Button add;
 
     @FXML
-    private Tab allTab;
+    private ComboBox<Complex> comboBox;
+
+    @FXML
+    private Button addComplex;
+
+    @FXML
+    private Button editComplex;
+
+    @FXML
+    private ComboBox<String> filter;
 
     @FXML
     private TableView<Room> roomTable;
@@ -63,83 +69,66 @@ public class ListRoomController implements Initializable {
     private MenuItem deleteMenu;
 
     @FXML
-    private Tab emptyTab;
+    private MenuItem addContract;
 
-    @FXML
-    private Tab occupiedTab;
-
-    @FXML
-    private ComboBox<Complex> comboBox;
-
-    @FXML
-    private ComboBox<String> filter;
-    
-    @FXML
-    private Button addComplex;
-
-    @FXML
-    private Button editComplex;
 
     // Extra elements
     public static ObservableList<Room> listOfAllRooms = FXCollections.observableArrayList();
     public static ObservableList<Room> listOfEmptyRooms = FXCollections.observableArrayList();
     public static ObservableList<Room> listOfOccupiedRooms = FXCollections.observableArrayList();
-    
-//    private boolean filterchanged = false;
-//    private boolean complexchanged = false;
-    
+
     ObservableList<Complex> complexList = FXCollections.observableArrayList();
     DatabaseHandler handler;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // !IMPORTANT
         handler = DatabaseHandler.getInstance();
-        
+
         // setup UI elements
         initRoomTableColumns(roomTable);
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
-        
+
         filter.getItems().addAll("Tất cả", "Trống", "Đã có người");
         filter.getSelectionModel().selectFirst();
-        
+
         loadData();
     }
-    
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-    
+
     @FXML
     private void complexChanged(ActionEvent event) {
-//        filterchanged = true;
-        
+
         listOfAllRooms.clear();
         listOfEmptyRooms.clear();
         listOfOccupiedRooms.clear();
-        
+
         loadData();
     }
+
     @FXML
     private void filterChanged(ActionEvent event) {
         loadListToTable();
     }
-    
+
     private void loadData() {
         Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
-        
+
         listOfAllRooms.clear();
         listOfEmptyRooms.clear();
         listOfOccupiedRooms.clear();
-        
+
         loadAllRooms(chosenComplex.getId());
         loadEmptyRooms(chosenComplex.getId());
         loadOccupiedRooms(chosenComplex.getId());
-        
+
         loadListToTable();
     }
-    
+
     private void loadListToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
             case "Tất cả":
@@ -152,19 +141,25 @@ public class ListRoomController implements Initializable {
                 roomTable.setItems(listOfOccupiedRooms);
                 break;
         }
-    }    
-    private void loadAllRooms(int complexId) {
-        loadResultSetToList(handler.getAllRoomsFromComplex(complexId), listOfAllRooms);
     }
-    
+
+    private void loadAllRooms(int complexId) {
+//        loadResultSetToList(handler.getAllRoomsFromComplex(complexId), listOfAllRooms);
+        loadResultSetToList(handler.getEmptyRoomsFromComplex(complexId), listOfEmptyRooms);
+        loadResultSetToList(handler.getOccuppiedRoomsFromComplex(complexId), listOfOccupiedRooms);
+        listOfAllRooms.clear();
+        listOfAllRooms.addAll(listOfEmptyRooms);
+        listOfAllRooms.addAll(listOfOccupiedRooms);
+    }
+
     private void loadEmptyRooms(int complexId) {
         loadResultSetToList(handler.getEmptyRoomsFromComplex(complexId), listOfEmptyRooms);
     }
-    
+
     private void loadOccupiedRooms(int complexId) {
         loadResultSetToList(handler.getOccuppiedRoomsFromComplex(complexId), listOfOccupiedRooms);
     }
-    
+
     private void loadResultSetToList(ResultSet rs, ObservableList list) {
         list.clear();
 
@@ -184,9 +179,9 @@ public class ListRoomController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        roomTable.setItems(list);
+//        roomTable.setItems(list);
     }
-    
+
     private void loadComplexData() {
         complexList.clear();
         comboBox.getItems().clear();
@@ -209,13 +204,11 @@ public class ListRoomController implements Initializable {
         }
         comboBox.getItems().addAll(complexList);
     }
-    
+
     @FXML
     private void handleRefresh(ActionEvent event) {
-//        filterchanged = true;
         loadData();
     }
-    
 
     @FXML
     private void handleAddComplex(ActionEvent event) {
@@ -235,7 +228,7 @@ public class ListRoomController implements Initializable {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khu nhà để chỉnh sửa");
             return;
         }
-        
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "/main/ui/addcomplex/addComplex.fxml"));
@@ -266,25 +259,23 @@ public class ListRoomController implements Initializable {
 
     @FXML
     private void handleAddRoom(ActionEvent event) {
-//        filterchanged = true;
         Stage stage = (Stage) Util.loadWindow(
                 getClass().getResource("/main/ui/addroom/addRoom.fxml"),
                 "Thêm phòng", getStage());
         stage.setOnHiding((e) -> {
-                handleRefresh(new ActionEvent());
-            });
+            handleRefresh(new ActionEvent());
+        });
     }
-    
+
     @FXML
-    private void handleEditRoom(ActionEvent event){
+    private void handleEditRoom(ActionEvent event) {
         Room selectedForEdit = roomTable.getSelectionModel().getSelectedItem();
-        
+
         if (selectedForEdit == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
             return;
         }
-//        filterchanged = true;
-        
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass()
                     .getResource("/main/ui/addRoom/addRoom.fxml"));
@@ -292,7 +283,7 @@ public class ListRoomController implements Initializable {
 
             AddRoomController con = loader.getController();
             con.loadEntries(selectedForEdit);
-            
+
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
             stage.initModality(Modality.WINDOW_MODAL);
@@ -313,44 +304,96 @@ public class ListRoomController implements Initializable {
             Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    @FXML
+    private void handleAddContract(ActionEvent event) {
+        Room selected = roomTable.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để thêm hợp đồng");
+            return;
+        }
+        for (Room r : listOfEmptyRooms) {
+            if (r.equals(selected)) {
+                System.out.println("found ogey");
+            }
+        }
+//        for (Room r: listOfAllRooms) {
+//            System.out.println(r.hashCode());
+//        }
+
+//        if (!listOfEmptyRooms.contains(selected)) {
+//            CustomAlert.showErrorMessage("Lỗi", "Chỉ có phòng trống mới có thể thêm hợp đồng.\nHãy chọn một phòng trống và thử lại");
+//            return;
+//        }
+        return;
+        
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass()
+//                    .getResource("/main/ui/addcontract/addContract.fxml"));
+//            Parent parent = loader.load();
+//
+//            AddRoomController con = loader.getController();
+//            con.loadEntries(selectedForEdit);
+//
+//            Stage stage = new Stage(StageStyle.DECORATED);
+//            stage.initOwner(getStage());
+//            stage.initModality(Modality.WINDOW_MODAL);
+//
+//            Scene scene = new Scene(parent);
+//            scene.getStylesheets().add(getClass()
+//                    .getResource(Util.STYLE_SHEET_LOCATION).toString());
+//
+//            stage.setScene(scene);
+//            stage.setTitle("Thêm hợp đồng");
+//            stage.show();
+//            Util.setWindowIcon(stage);
+//
+//            stage.setOnHiding((e) -> {
+//                handleRefresh(new ActionEvent());
+//            });
+//        } catch (IOException ex) {
+//            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }
+
     @FXML
     private void handleDeleteButton(ActionEvent event) {
-        Room selected= roomTable.getSelectionModel().getSelectedItem();
-        
+        Room selected = roomTable.getSelectionModel().getSelectedItem();
+
         if (selected == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để chỉnh sửa");
             return;
         }
-//        filterchanged = true;
+
         // TODO check for active contracts before deleting a room
         if (handler.deleteRoom(selected)) {
             CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa phòng");
-            
+
             complexChanged(new ActionEvent());
         } else {
             CustomAlert.showErrorMessage("Không thể xóa phòng", "Phòng đang có hợp đồng hoặc đã có lỗi");
         }
-        
+
     }
-    
+
     public void initRoomTableColumns(TableView tableView) {
-        TableColumn<Room, Integer> idCol =
-                new TableColumn<>("Mã phòng");
-        TableColumn<Room, String> tenPhongCol =
-                new TableColumn<>("Tên phòng");
-        TableColumn<Room, Short> soNguoiCol =
-                new TableColumn<>("Số người tối đa");
-        TableColumn<Room, BigDecimal> giaGocCol =
-                new TableColumn<>("Giá gốc");
-        TableColumn<Room, BigDecimal> tienCocCol =
-                new TableColumn<>("Tiền cọc");
-        TableColumn<Room, Integer> dtCol =
-                new TableColumn<>("Diện tích");
-        TableColumn<Room, String> moTaCol =
-                new TableColumn<>("Mô tả");
-        TableColumn<Room, Integer> makhuCol =
-                new TableColumn<>("Mã khu");
+        TableColumn<Room, Integer> idCol
+                = new TableColumn<>("Mã phòng");
+        TableColumn<Room, String> tenPhongCol
+                = new TableColumn<>("Tên phòng");
+        TableColumn<Room, Short> soNguoiCol
+                = new TableColumn<>("Số người tối đa");
+        TableColumn<Room, BigDecimal> giaGocCol
+                = new TableColumn<>("Giá gốc");
+        TableColumn<Room, BigDecimal> tienCocCol
+                = new TableColumn<>("Tiền cọc");
+        TableColumn<Room, Integer> dtCol
+                = new TableColumn<>("Diện tích");
+        TableColumn<Room, String> moTaCol
+                = new TableColumn<>("Mô tả");
+        TableColumn<Room, Integer> makhuCol
+                = new TableColumn<>("Mã khu");
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         tenPhongCol.setCellValueFactory(new PropertyValueFactory<>("tenPhong"));
@@ -360,7 +403,7 @@ public class ListRoomController implements Initializable {
         dtCol.setCellValueFactory(new PropertyValueFactory<>("dienTich"));
         moTaCol.setCellValueFactory(new PropertyValueFactory<>("moTa"));
         makhuCol.setCellValueFactory(new PropertyValueFactory<>("maKhu"));
-                
+
         tienCocCol.setCellFactory(column -> {
             return new TableCell<Room, BigDecimal>() {
                 @Override
@@ -377,7 +420,7 @@ public class ListRoomController implements Initializable {
                 }
             };
         });
-        
+
         giaGocCol.setCellFactory(column -> {
             return new TableCell<Room, BigDecimal>() {
                 @Override
@@ -394,13 +437,13 @@ public class ListRoomController implements Initializable {
                 }
             };
         });
-        
+
         tableView.getColumns().addAll(idCol, tenPhongCol, soNguoiCol, giaGocCol,
                 tienCocCol, dtCol, moTaCol, makhuCol);
         idCol.setVisible(false);
         makhuCol.setVisible(false);
-        
+
         moTaCol.setMinWidth(150);
     }
-    
+
 }

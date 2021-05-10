@@ -139,4 +139,10 @@ public class Room {
                 + ", tienCoc=" + getTienCoc() + ", dienTich=" + getDienTich()
                 + ", maKhu=" + getMaKhu() + '}';
     }
+
+    public boolean equals(Room other) {
+        return other.getId() == this.getId() && other.getTenPhong().equals(this.getTenPhong());
+    }
+    
+    
 }

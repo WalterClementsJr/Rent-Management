@@ -103,5 +103,11 @@ public class Contract {
     public ObjectProperty<BigDecimal> tienCocProperty() {
         return tienCoc;
     }
+
+    public String debugString() {
+        return "Contract{" + "id=" + id + ", maPhong=" + maPhong
+                + ", maKH=" + maKH + ", ngayNhan=" + getNgayNhan()
+                + ", ngayTra=" + getNgayTra() + ", tienCoc=" + getTienCoc() + '}';
+    }
     
 }

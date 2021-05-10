@@ -241,12 +241,12 @@ public class ListCustomerController implements Initializable {
 
     
     public void initCustomerTableColumns() {
-        TableColumn<Customer, Integer> idCol = new TableColumn<Customer, Integer>("ID");
-        TableColumn<Customer, String> hotenCol = new TableColumn<Customer, String>("Họ tên");
-        TableColumn<Customer, Boolean> gioitinhCol = new TableColumn<Customer, Boolean>("Giới tính");
-        TableColumn<Customer, LocalDate> ngaysinhCol = new TableColumn<Customer, LocalDate>("Ngày sinh");
-        TableColumn<Customer, String> sdtCol = new TableColumn<Customer, String>("SDT");
-        TableColumn<Customer, String> cmndCol = new TableColumn<Customer, String>("CMND");
+        TableColumn<Customer, Integer> idCol = new TableColumn<>("ID");
+        TableColumn<Customer, String> hotenCol = new TableColumn<>("Họ tên");
+        TableColumn<Customer, Boolean> gioitinhCol = new TableColumn<>("Giới tính");
+        TableColumn<Customer, LocalDate> ngaysinhCol = new TableColumn<>("Ngày sinh");
+        TableColumn<Customer, String> sdtCol = new TableColumn<>("SDT");
+        TableColumn<Customer, String> cmndCol = new TableColumn<>("CMND");
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         hotenCol.setCellValueFactory(new PropertyValueFactory<>("hoTen"));

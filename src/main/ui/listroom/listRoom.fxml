@@ -40,6 +40,7 @@
                         <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
                         <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditRoom" text="Edit" />
                         <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Delete" />
+                        <MenuItem fx:id="addContract" mnemonicParsing="false" onAction="#handleAddContract" text="Thêm hợp đồng" />
                      </items>
                   </ContextMenu>
                </contextMenu>

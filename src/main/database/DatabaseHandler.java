@@ -448,6 +448,42 @@ public final class DatabaseHandler {
         return null;
     }
     
+    public ResultSet getAllContractsWithInfo() {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM dbo.viewhopdongvainfo");
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public ResultSet getActiveContractsWithInfo() {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM dbo.viewhopdongvainfo where ngaytra>getdate()");
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public ResultSet getOldContractsWithInfo() {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM dbo.viewhopdongvainfo where ngaytra<=getdate()");
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public boolean insertNewContract(Contract c) {
         try {
             stmt = conn.prepareStatement(
@@ -486,11 +522,11 @@ public final class DatabaseHandler {
         return false;
     }
     
-    public boolean deleteContract(Contract c) {
+    public boolean deleteContract(int contractId) {
         try {
             stmt = conn.prepareStatement(
                     "DELETE FROM HOPDONG WHERE MAHDONG=?");
-            stmt.setInt(1, c.getId());
+            stmt.setInt(1, contractId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);

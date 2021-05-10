@@ -1,7 +1,5 @@
 package main.util;
 
-import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -12,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.DAYS;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
@@ -33,9 +28,8 @@ import javafx.util.Callback;
 import main.ui.main.MainController;
 
 public class Util {
-    public static final SimpleDateFormat DISPLAY_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d-M-yyyy");
-    public static final SimpleDateFormat DATABASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");    
+    public static final DateTimeFormatter SQL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-M-d");
     public static final String APP_ICON_LOCATION    = "main/resources/icons/icon.png";
     public static final String APP_NAME             = "Quản Lý Nhà Trọ";
     public static final String STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
@@ -95,10 +89,6 @@ public class Util {
             java.util.logging.Logger.getLogger(MainController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         return null;
-    }
-    
-    public static String dateToString(java.util.Date date) {
-        return DISPLAY_DATE_FORMAT.format(date);
     }
     
     public static LocalDate stringToLocalDate(String string) {
