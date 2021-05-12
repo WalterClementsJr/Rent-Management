@@ -21,9 +21,8 @@ import main.database.DatabaseHandler;
 import main.model.Customer;
 import main.ui.alert.CustomAlert;
 
-
 public class AddCustomerController implements Initializable {
-    
+
     @FXML
     private StackPane rootAddCustomer;
 
@@ -50,28 +49,30 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     private Button cancel;
-    
+
     // extra elements
     private DatabaseHandler dbHandler;
     private ToggleGroup sex;
     private boolean isEditing = false;
     Customer currentCustomer = null;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dbHandler = DatabaseHandler.getInstance();
-        
+
         // setup UI elements
         sex = new ToggleGroup();
         btnMale.setToggleGroup(sex);
         btnFemale.setToggleGroup(sex);
-        
+
         // datePicker format
         datePicker.setConverter(new StringConverter<LocalDate>() {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d-M-yyyy");
+
             {
                 datePicker.setPromptText("".toLowerCase());
             }
+
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {
@@ -80,6 +81,7 @@ public class AddCustomerController implements Initializable {
                     return "";
                 }
             }
+
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
@@ -89,8 +91,8 @@ public class AddCustomerController implements Initializable {
                 }
             }
         });
-        
-        // sdt, cmnd number only text area
+
+        // sdt, cmnd number-only textArea
         sdt.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -98,7 +100,6 @@ public class AddCustomerController implements Initializable {
                 if (newValue.matches("\\d{0,11}")) {
                     String value = newValue;
                 } else {
-//                    sdt.setText(newValue.replaceAll("[^\\d]", ""));
                     sdt.setText(oldValue);
                     sdt.positionCaret(sdt.getLength());
                 }
@@ -117,28 +118,27 @@ public class AddCustomerController implements Initializable {
             }
         });
     }
-    
+
     /**
-     * 
-     * @param customer 
-     * load thông tin của customer lên cửa sổ edit
+     *
+     * @param customer load thông tin của customer lên cửa sổ edit
      */
     public void loadEntries(Customer customer) {
         name.setText(customer.getHoTen());
-        
-        if(customer.getGioiTinh()) {
+
+        if (customer.getGioiTinh()) {
             sex.selectToggle(btnFemale);
         } else {
             sex.selectToggle(btnMale);
         }
-        
+
         datePicker.setValue(customer.getNgaySinh());
         sdt.setText(customer.getSDT().trim());
         cmnd.setText(customer.getCMND().trim());
         isEditing = true;
         currentCustomer = customer;
     }
-    
+
     @FXML
     public void clearEntries() {
         name.clear();
@@ -147,14 +147,14 @@ public class AddCustomerController implements Initializable {
         sdt.clear();
         cmnd.clear();
     }
-    
+
     @FXML
     private void handleSave(ActionEvent event) {
         if (isEditing) {
             handleEdit();
             return;
         }
-        
+
         if (!checkEntries()) {
             return;
         }
@@ -164,7 +164,7 @@ public class AddCustomerController implements Initializable {
         LocalDate customerBDay = datePicker.getValue();
         String customerCMND = sdt.getText().trim();
         String customerSDT = cmnd.getText().trim();
-        
+
         if (dbHandler.isCMNDExist(-1, customerCMND)) {
             CustomAlert.showErrorMessage("CMND đã tồn tại", "Số CMND của %s đã tồn tại.".formatted(customerName));
             return;
@@ -188,37 +188,38 @@ public class AddCustomerController implements Initializable {
         if (!checkEntries()) {
             return;
         }
-        
+
         String customerName = name.getText().trim();
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
         LocalDate customerBDay = datePicker.getValue();
         String customerCMND = cmnd.getText().trim();
         String customerSDT = sdt.getText().trim();
-        
+
         if (dbHandler.isCMNDExist(currentCustomer.getId(), customerCMND)) {
             CustomAlert.showSimpleAlert("CMND đã tồn tại", "");
+            return;
         }
-        
+
         currentCustomer.setHoTen(customerName);
         currentCustomer.setGioiTinh(customerSex);
         currentCustomer.setNgaySinh(customerBDay);
         currentCustomer.setSDT(customerSDT);
         currentCustomer.setCMND(customerCMND);
-        
-        if(dbHandler.updateCustomer(currentCustomer)) {
-            CustomAlert.showSimpleAlert("Đã thêm", "Update thành công");
+
+        if (dbHandler.updateCustomer(currentCustomer)) {
+            CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
             currentCustomer = null;
         } else {
-            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Không thể thực hiện");
+            CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra");
         }
     }
-    
+
     @FXML
     private void handleCancel(ActionEvent event) {
         Stage stage = (Stage) rootAddCustomer.getScene().getWindow();
         stage.close();
     }
-    
+
     private boolean checkEntries() {
         if (name.getText().isBlank()) {
             CustomAlert.showErrorMessage("Tên khách trống", "Hãy nhập tên");
@@ -239,5 +240,3 @@ public class AddCustomerController implements Initializable {
         return true;
     }
 }
-    
-

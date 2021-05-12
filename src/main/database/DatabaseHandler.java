@@ -1,5 +1,6 @@
 package main.database;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,32 +14,34 @@ import javax.swing.JOptionPane;
 import main.model.Complex;
 import main.model.Contract;
 import main.model.Customer;
+import main.model.Invoice;
+import main.model.Maintenance;
 import main.model.Room;
 import main.ui.alert.CustomAlert;
 import main.util.Util;
 
 public final class DatabaseHandler {
+
     public static void main(String[] args) {
         System.out.println(DatabaseHandler.getInstance().getLatestPayDate(6));
         System.out.println(DatabaseHandler.getInstance().getLatestPayDate(7));
-        
     }
 
     private static DatabaseHandler dbHandler = null;
 
-    private static final String DB_URL =
-            "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=NhaTro";
+    private static final String DB_URL
+            = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=NhaTro";
 
     private static Connection conn = null;
     private static PreparedStatement stmt = null;
-    
+
     public static DatabaseHandler getInstance() {
         if (dbHandler == null) {
             dbHandler = new DatabaseHandler();
         }
         return dbHandler;
     }
-    
+
     public DatabaseHandler() {
         createConnection();
     }
@@ -50,14 +53,13 @@ public final class DatabaseHandler {
     public static PreparedStatement getStmt() {
         return stmt;
     }
-    
+
     public void createConnection() {
         try {
-            conn = DriverManager.getConnection(DB_URL,"dummy","dummy");
+            conn = DriverManager.getConnection(DB_URL, "dummy", "dummy");
             System.out.println("Connected to database");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             CustomAlert.showErrorMessage("Không load được database", "");
-            e.printStackTrace();
             System.exit(0);
         }
     }
@@ -66,7 +68,6 @@ public final class DatabaseHandler {
      *
      * @param query
      * @return
-     * @throws SQLException thực hiện các query trả về ResultSet
      */
     public ResultSet execQuery(String query) {
         ResultSet result;
@@ -83,8 +84,7 @@ public final class DatabaseHandler {
     /**
      *
      * @param query
-     * @return
-     * @throws SQLException thưc hiện các query update data hoặc query không trả
+     * @return thưc hiện các query update data hoặc query không trả
      * về giá trị gì
      */
     public boolean execUpdate(String query) {
@@ -106,10 +106,12 @@ public final class DatabaseHandler {
             stmt.setString(1, cmnd);
             ResultSet rs = stmt.executeQuery();
             int makh;
-            
+
             if (rs.next()) {
-                if(id == -1) return true;
-                
+                if (id == -1) {
+                    return true;
+                }
+
                 do {
                     makh = rs.getInt("MAKH");
                     if (id == makh) {
@@ -126,7 +128,7 @@ public final class DatabaseHandler {
         }
         return true;
     }
-    
+
     public boolean isRoomNameExist(int roomId, int complexId, String rName) {
         try {
             stmt = conn.prepareStatement(
@@ -135,10 +137,12 @@ public final class DatabaseHandler {
             stmt.setInt(2, complexId);
             ResultSet rs = stmt.executeQuery();
             int maphong;
-            
+
             if (rs.next()) {
-                if(roomId == -1) return true;
-                
+                if (roomId == -1) {
+                    return true;
+                }
+
                 do {
                     maphong = rs.getInt("MAPHONG");
                     if (roomId == maphong) {
@@ -155,8 +159,7 @@ public final class DatabaseHandler {
         }
         return true;
     }
-    
-    
+
     public boolean isComplexExist(int complexId, String complexName) {
         try {
             stmt = conn.prepareStatement(
@@ -164,10 +167,12 @@ public final class DatabaseHandler {
             stmt.setNString(1, complexName);
             ResultSet rs = stmt.executeQuery();
             int makhu;
-            
+
             if (rs.next()) {
-                if(complexId == -1) return true;
-                
+                if (complexId == -1) {
+                    return true;
+                }
+
                 do {
                     makhu = rs.getInt("MAKHU");
                     if (complexId == makhu) {
@@ -201,7 +206,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public boolean updateCustomer(Customer customer) {
         try {
             stmt = conn.prepareStatement(
@@ -212,7 +217,7 @@ public final class DatabaseHandler {
             stmt.setString(4, customer.getSDT());
             stmt.setString(5, customer.getCMND());
             stmt.setInt(6, customer.getId());
-            
+
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -244,7 +249,7 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public int getNumberOfCustomersInRoom(int roomId) {
         try {
             stmt = conn.prepareStatement(
@@ -265,40 +270,40 @@ public final class DatabaseHandler {
         }
         return -1;
     }
-    
+
     public ResultSet getCustomersWithRoom() {
         try {
             stmt = conn.prepareStatement(
                     "select * from ViewKhachCoPhong");
             return stmt.executeQuery();
-        } catch (SQLException ex) { 
+        } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     public ResultSet getOldCustomers() {
         try {
             stmt = conn.prepareStatement(
                     "select * from ViewKhachCu");
             return stmt.executeQuery();
-        } catch (SQLException ex) { 
+        } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     public ResultSet getCustomersWithNoRoom() {
         try {
             stmt = conn.prepareStatement(
                     "select * from ViewKhachKhongCoPhong");
             return stmt.executeQuery();
-        } catch (SQLException ex) { 
+        } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     public boolean insertNewComplex(Complex c) {
         try {
             stmt = conn.prepareStatement(
@@ -313,7 +318,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public boolean updateComplex(Complex c) {
         try {
             stmt = conn.prepareStatement(
@@ -321,14 +326,14 @@ public final class DatabaseHandler {
             stmt.setNString(1, c.getTen());
             stmt.setNString(2, c.getDiaChi());
             stmt.setInt(3, c.getId());
-            
+
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
-    
+
     public boolean deleteComplex(Complex c) {
         try {
             stmt = conn.prepareStatement(
@@ -359,7 +364,7 @@ public final class DatabaseHandler {
                     6, room.getDienTich());
             stmt.setNString(
                     7, room.getMoTa());
-            
+
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -370,7 +375,7 @@ public final class DatabaseHandler {
     public boolean updateRoom(Room room) {
         try {
             stmt = conn.prepareStatement(
-                "UPDATE PHONG SET TENPHONG=?, SONGUOI=?, MAKHU=?, GIAGOC=?, TIENCOC=?, DIENTICH=?, MOTA=? WHERE MAPHONG=?");
+                    "UPDATE PHONG SET TENPHONG=?, SONGUOI=?, MAKHU=?, GIAGOC=?, TIENCOC=?, DIENTICH=?, MOTA=? WHERE MAPHONG=?");
             stmt.setNString(
                     1, room.getTenPhong());
             stmt.setShort(
@@ -399,7 +404,7 @@ public final class DatabaseHandler {
         try {
             stmt = conn.prepareStatement(
                     "DELETE FROM PHONG WHERE MAPHONG=?");
-            
+
             stmt.setInt(1, room.getId());
 
             return stmt.executeUpdate() > 0;
@@ -421,7 +426,7 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public ResultSet getEmptyRoomsFromComplex(int complexId) {
         try {
             stmt = conn.prepareStatement(
@@ -434,7 +439,7 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public ResultSet getOccuppiedRoomsFromComplex(int complexId) {
         try {
             stmt = conn.prepareStatement(
@@ -447,11 +452,11 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public ResultSet getAllContractsWithInfo() {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM dbo.viewhopdongvainfo");
+                    "SELECT * FROM dbo.viewhopdongvaextrainfo1");
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
@@ -459,11 +464,11 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public ResultSet getActiveContractsWithInfo() {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM dbo.viewhopdongvainfo where ngaytra>getdate()");
+                    "SELECT * FROM dbo.viewhopdongvaextrainfo1 where ngaytra>getdate()");
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
@@ -471,11 +476,11 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public ResultSet getOldContractsWithInfo() {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM dbo.viewhopdongvainfo where ngaytra<=getdate()");
+                    "SELECT * FROM dbo.viewhopdongvaextrainfo1 where ngaytra<=getdate()");
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
@@ -483,11 +488,23 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
+    public ResultSet getInDebtContractsWithInvoiceInfo() {
+        try {
+            stmt = conn.prepareStatement(
+                    "select * from viewhopdongvaextrainfo1 where songay>0");
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public boolean insertNewContract(Contract c) {
         try {
             stmt = conn.prepareStatement(
-                "INSERT INTO HOPDONG VALUES(?,?,?,?,?)");
+                    "INSERT INTO HOPDONG VALUES(?,?,?,?,?)");
             stmt.setInt(
                     1, c.getMaPhong());
             stmt.setInt(
@@ -504,11 +521,11 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public boolean updateContract(Contract c) {
         try {
             stmt = conn.prepareStatement(
-                "UPDATE hopdong SET ngaytra=?, TIENCOC=? WHERE MAHDONG=?");
+                    "UPDATE hopdong SET ngaytra=?, TIENCOC=? WHERE MAHDONG=?");
             stmt.setDate(
                     1, Util.LocalDateToSQLDate(c.getNgayTra()));
             stmt.setBigDecimal(
@@ -521,7 +538,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public boolean deleteContract(int contractId) {
         try {
             stmt = conn.prepareStatement(
@@ -533,7 +550,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public LocalDate getLatestPayDate(int conId) throws NullPointerException {
         try {
             stmt = conn.prepareStatement(
@@ -553,4 +570,73 @@ public final class DatabaseHandler {
         }
         return null;
     }
+
+    public boolean insertNewInvoice(Invoice invoice) {
+        try {
+            stmt = conn.prepareStatement(
+                    "INSERT INTO HOADON VALUES(?,?,?)");
+            stmt.setInt(
+                    1, invoice.getMahdong());
+            stmt.setBigDecimal(
+                    2, invoice.getSoTien());
+            stmt.setDate(
+                    3, Util.LocalDateToSQLDate(invoice.getNgayTT()));
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean insertNewMaintenance(Maintenance m) {
+        try {
+            stmt = conn.prepareStatement(
+                    "INSERT INTO BAOTRI VALUES(?,?,?,?)");
+            stmt.setInt(
+                    1, m.getMaPhong());
+            stmt.setBigDecimal(
+                    2, m.getChiPhi());
+            stmt.setDate(
+                    3, Util.LocalDateToSQLDate(m.getNgay()));
+            stmt.setNString(
+                    5, m.getMoTa());
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean updateMaintenance(Maintenance m) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE BAOTRI SET CHIPHI=?, NGAY=?, MOTA=? WHERE MABAOTRI=?");
+
+            stmt.setBigDecimal(
+                    1, m.getChiPhi());
+            stmt.setDate(
+                    2, Util.LocalDateToSQLDate(m.getNgay()));
+            stmt.setNString(
+                    3, m.getMoTa());
+            stmt.setInt(
+                    4, m.getId());
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean deleteMaintenance(int maintenanceId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "DELETE FROM BAOTRI WHERE MABAOTRI=?");
+            stmt.setInt(1, maintenanceId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
 }

@@ -6,18 +6,17 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.main.MainController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.main.MainController">
    <left>
       <VBox fx:id="menu" alignment="TOP_CENTER" prefHeight="700.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Label prefHeight="127.0" prefWidth="200.0" />
             <VBox prefHeight="437.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="menuBtnHome" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Trang chủ" textAlignment="CENTER" />
-                  <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý khách" textAlignment="CENTER" />
-                  <Button fx:id="menuBtnRoom" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListRoom" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý phòng" textAlignment="CENTER" />
-                  <Button fx:id="menuBtnContract" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý hợp đồng" textAlignment="CENTER" />
-                  <Button fx:id="menuBtnBill" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Quản lý hóa đơn" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnContract" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListContract" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Trang chủ" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Khách" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnRoom" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListRoom" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Phòng" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnBill" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListInvoice" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Hóa đơn" textAlignment="CENTER" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="135.0" prefWidth="200.0">

@@ -11,10 +11,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import main.util.Util;
 
-/**
- *
- * @author walker
- */
 public class Customer {
 
     private IntegerProperty id;

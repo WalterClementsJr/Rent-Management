@@ -2,6 +2,8 @@ package main.app;
 
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,9 +28,9 @@ public class Main extends Application {
         stage.show();
 
         Util.setWindowIcon(stage);
-        
-        System.out.println(getClass().getResource("bootstrap3.css").toExternalForm());
 
+        stage.setResizable(false);
+        
         new Thread(() -> {
         }).start();
     }

@@ -6,6 +6,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +18,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
@@ -32,8 +35,10 @@ import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.model.Room;
 import main.ui.addcomplex.AddComplexController;
+import main.ui.addcontract.AddContractController;
 import main.ui.addroom.AddRoomController;
 import main.ui.alert.CustomAlert;
+import main.util.MasterController;
 import main.util.Util;
 
 public class ListRoomController implements Initializable {
@@ -71,7 +76,6 @@ public class ListRoomController implements Initializable {
     @FXML
     private MenuItem addContract;
 
-
     // Extra elements
     public static ObservableList<Room> listOfAllRooms = FXCollections.observableArrayList();
     public static ObservableList<Room> listOfEmptyRooms = FXCollections.observableArrayList();
@@ -83,6 +87,7 @@ public class ListRoomController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // !IMPORTANT
+        MasterController.getInstance().registerListRoomController(this);
         handler = DatabaseHandler.getInstance();
 
         // setup UI elements
@@ -144,7 +149,6 @@ public class ListRoomController implements Initializable {
     }
 
     private void loadAllRooms(int complexId) {
-//        loadResultSetToList(handler.getAllRoomsFromComplex(complexId), listOfAllRooms);
         loadResultSetToList(handler.getEmptyRoomsFromComplex(complexId), listOfEmptyRooms);
         loadResultSetToList(handler.getOccuppiedRoomsFromComplex(complexId), listOfOccupiedRooms);
         listOfAllRooms.clear();
@@ -179,7 +183,6 @@ public class ListRoomController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        roomTable.setItems(list);
     }
 
     private void loadComplexData() {
@@ -315,46 +318,37 @@ public class ListRoomController implements Initializable {
         }
         for (Room r : listOfEmptyRooms) {
             if (r.equals(selected)) {
-                System.out.println("found ogey");
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass()
+                            .getResource("/main/ui/addcontract/addContract.fxml"));
+                    Parent parent = loader.load();
+
+                    AddContractController con = loader.getController();
+                    con.setCurrentRoom(selected);
+
+                    Stage stage = new Stage(StageStyle.DECORATED);
+                    stage.initOwner(getStage());
+                    stage.initModality(Modality.WINDOW_MODAL);
+
+                    Scene scene = new Scene(parent);
+                    scene.getStylesheets().add(getClass()
+                            .getResource(Util.STYLE_SHEET_LOCATION).toString());
+
+                    stage.setScene(scene);
+                    stage.setTitle("Thêm hợp đồng");
+                    stage.show();
+                    Util.setWindowIcon(stage);
+
+                    stage.setOnHiding((e) -> {
+                        handleRefresh(new ActionEvent());
+                    });
+                } catch (IOException ex) {
+                    Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
-//        for (Room r: listOfAllRooms) {
-//            System.out.println(r.hashCode());
-//        }
 
-//        if (!listOfEmptyRooms.contains(selected)) {
-//            CustomAlert.showErrorMessage("Lỗi", "Chỉ có phòng trống mới có thể thêm hợp đồng.\nHãy chọn một phòng trống và thử lại");
-//            return;
-//        }
-        return;
         
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass()
-//                    .getResource("/main/ui/addcontract/addContract.fxml"));
-//            Parent parent = loader.load();
-//
-//            AddRoomController con = loader.getController();
-//            con.loadEntries(selectedForEdit);
-//
-//            Stage stage = new Stage(StageStyle.DECORATED);
-//            stage.initOwner(getStage());
-//            stage.initModality(Modality.WINDOW_MODAL);
-//
-//            Scene scene = new Scene(parent);
-//            scene.getStylesheets().add(getClass()
-//                    .getResource(Util.STYLE_SHEET_LOCATION).toString());
-//
-//            stage.setScene(scene);
-//            stage.setTitle("Thêm hợp đồng");
-//            stage.show();
-//            Util.setWindowIcon(stage);
-//
-//            stage.setOnHiding((e) -> {
-//                handleRefresh(new ActionEvent());
-//            });
-//        } catch (IOException ex) {
-//            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
     @FXML
@@ -367,14 +361,20 @@ public class ListRoomController implements Initializable {
         }
 
         // TODO check for active contracts before deleting a room
-        if (handler.deleteRoom(selected)) {
-            CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa phòng");
-
-            complexChanged(new ActionEvent());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xóa phòng");
+        alert.setContentText("Bạn có muốn xóa " + selected.getTenPhong() + "?");
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            if (handler.deleteRoom(selected)) {
+                CustomAlert.showSimpleAlert("Đã xóa ", selected.getTenPhong());
+                handleRefresh(new ActionEvent());
+            } else {
+                CustomAlert.showSimpleAlert("Thất bại", selected.getTenPhong() + " không thể xóa được");
+            }
         } else {
-            CustomAlert.showErrorMessage("Không thể xóa phòng", "Phòng đang có hợp đồng hoặc đã có lỗi");
+            CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
         }
-
     }
 
     public void initRoomTableColumns(TableView tableView) {

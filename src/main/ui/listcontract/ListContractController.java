@@ -1,12 +1,13 @@
 package main.ui.listcontract;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -21,14 +22,22 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
-import main.model.Room;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.database.DatabaseHandler;
 import main.model.Contract;
-import main.model.Customer;
+import main.ui.addcontract.AddContractController;
 import main.ui.alert.CustomAlert;
+import main.util.MasterController;
 import main.util.Util;
 
 public class ListContractController implements Initializable {
@@ -60,6 +69,7 @@ public class ListContractController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        MasterController.getInstance().registerListContractController(this);
         handler = DatabaseHandler.getInstance();
         // TODO
         initContractTableColumns();
@@ -116,7 +126,32 @@ public class ListContractController implements Initializable {
 
     @FXML
     void handleDeleteButton(ActionEvent event) {
-
+        ObservableList list = contractTable.getSelectionModel().getSelectedItems();
+        ObservableList row;
+        try {
+            row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
+            if (row == null) {
+                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để xóa");
+                return;
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Xóa phòng");
+            alert.setContentText("Xác nhận xóa?");
+            Optional<ButtonType> answer = alert.showAndWait();
+            if (answer.get() == ButtonType.OK) {
+                if (handler.deleteContract(Integer.parseInt(row.get(0).toString()))) {
+                    CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa hợp đồng");
+                    handleRefresh(new ActionEvent());
+                } else {
+                    CustomAlert.showErrorMessage("Không thể xóa", "Đã có lỗi xảy ra");
+                }
+            } else {
+                CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
+            return;
+        }
     }
 
     @FXML
@@ -129,7 +164,6 @@ public class ListContractController implements Initializable {
                 CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
                 return;
             }
-
             Contract con = new Contract(
                     Integer.parseInt(row.get(0).toString()),
                     Integer.parseInt(row.get(2).toString()),
@@ -137,11 +171,35 @@ public class ListContractController implements Initializable {
                     LocalDate.parse(row.get(6).toString(), Util.SQL_DATE_TIME_FORMATTER),
                     LocalDate.parse(row.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER),
                     new BigDecimal(row.get(8).toString()));
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass()
+                        .getResource("/main/ui/addcontract/addContract.fxml"));
+                Parent parent = loader.load();
 
-            System.out.println(con.debugString());
+                AddContractController controller = loader.getController();
+                controller.loadEntries(con);
+
+                Stage stage = new Stage(StageStyle.DECORATED);
+                stage.initOwner(getStage());
+                stage.initModality(Modality.WINDOW_MODAL);
+
+                Scene scene = new Scene(parent);
+                scene.getStylesheets().add(getClass()
+                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+
+                stage.setScene(scene);
+                stage.setTitle("Thêm hợp đồng");
+                stage.show();
+                Util.setWindowIcon(stage);
+
+                stage.setOnHiding((e) -> {
+                    handleRefresh(new ActionEvent());
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IndexOutOfBoundsException ex) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
-//            Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
 
@@ -149,7 +207,6 @@ public class ListContractController implements Initializable {
 
     @FXML
     void handleRefresh(ActionEvent event) {
-        System.out.println("filter changed");
         loadData();
     }
 
@@ -167,7 +224,6 @@ public class ListContractController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        contractTable.setItems(list);
     }
 
     public void initContractTableColumns() {
@@ -190,10 +246,16 @@ public class ListContractController implements Initializable {
                 = new TableColumn<>("Ngày trả");
         TableColumn tienCocCol
                 = new TableColumn<>("Tiền cọc");
+        TableColumn giaGocCol
+                = new TableColumn<>("Giá gốc");
+        TableColumn ngayttgannhatCol
+                = new TableColumn<>("ngayttgannhat");
+        TableColumn songayCol
+                = new TableColumn<>("Số ngày");
 
         contractTable.getColumns().addAll(
                 mahdongCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
-                tenkhachCol, ngayNhanCol, ngayTraCol, tienCocCol);
+                tenkhachCol, ngayNhanCol, ngayTraCol, tienCocCol, giaGocCol, ngayttgannhatCol, songayCol);
 
         tenPhongCol.setMinWidth(200);
         tenkhachCol.setMinWidth(200);
@@ -201,7 +263,10 @@ public class ListContractController implements Initializable {
         mahdongCol.setVisible(false);
         maphongCol.setVisible(false);
         makhCol.setVisible(false);
-
+        giaGocCol.setVisible(false);
+        ngayttgannhatCol.setVisible(false);
+        songayCol.setVisible(false);
+        
         for (int i = 0; i < contractTable.getColumns().size(); i++) {
             final int t = i;
             TableColumn col = (TableColumn) contractTable.getColumns().get(i);
@@ -267,10 +332,9 @@ public class ListContractController implements Initializable {
                 }
             };
         });
+    }
 
-//        idCol.setVisible(false);
-//        makhuCol.setVisible(false);
-//
-//        moTaCol.setMinWidth(150);
+    private Stage getStage() {
+        return (Stage) root.getScene().getWindow();
     }
 }

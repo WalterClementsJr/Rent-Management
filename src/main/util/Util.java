@@ -3,10 +3,10 @@ package main.util;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -36,6 +36,9 @@ public class Util {
     
     
     public static void main(String[] args) {
+        System.out.println(getRent(new BigDecimal(2000000), 119).setScale(-3, RoundingMode.CEILING).stripTrailingZeros().toPlainString());
+
+
     }
 
     public static void setWindowIcon(Stage stage) {
@@ -155,9 +158,13 @@ public class Util {
         BigDecimal rent =
                 monthlyRent.multiply(BigDecimal.valueOf(12*duration));
         rent = rent.divide(BigDecimal.valueOf(365), MathContext.DECIMAL64);
-        return rent.round(
-                new java.math.MathContext(
-                        monthlyRent.precision() - 3,
-                        java.math.RoundingMode.CEILING));
+        return rent;
+    }
+    
+    public static BigDecimal getRent(BigDecimal monthlyRent, int duration) {
+        BigDecimal rent =
+                monthlyRent.multiply(BigDecimal.valueOf(12*duration));
+        rent = rent.divide(BigDecimal.valueOf(365), MathContext.DECIMAL64);
+        return rent;
     }
 }

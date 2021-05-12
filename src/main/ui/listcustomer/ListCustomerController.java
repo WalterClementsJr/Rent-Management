@@ -34,6 +34,7 @@ import main.database.DatabaseHandler;
 import main.model.Customer;
 import main.ui.addcustomer.AddCustomerController;
 import main.ui.alert.CustomAlert;
+import main.util.MasterController;
 import main.util.Util;
 
 public class ListCustomerController implements Initializable {
@@ -79,6 +80,7 @@ public class ListCustomerController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        MasterController.getInstance().registerListCustomerController(this);
         handler = DatabaseHandler.getInstance();
         
         initCustomerTableColumns();
@@ -87,6 +89,7 @@ public class ListCustomerController implements Initializable {
         comboBox.getSelectionModel().selectFirst();
         
         loadData();
+        
     }
 
     private Stage getStage() {
