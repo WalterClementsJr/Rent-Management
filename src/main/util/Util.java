@@ -28,32 +28,31 @@ import javafx.util.Callback;
 import main.ui.main.MainController;
 
 public class Util {
+
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d-M-yyyy");
     public static final DateTimeFormatter SQL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-M-d");
-    public static final String APP_ICON_LOCATION    = "main/resources/icons/icon.png";
-    public static final String APP_NAME             = "Quản Lý Nhà Trọ";
+    public static final String APP_ICON_LOCATION = "main/resources/icons/icon.png";
+    public static final String APP_NAME = "Quản Lý Nhà Trọ";
     public static final String STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
-    
-    
+
     public static void main(String[] args) {
         System.out.println(getRent(new BigDecimal(2000000), 119).setScale(-3, RoundingMode.CEILING).stripTrailingZeros().toPlainString());
-
 
     }
 
     public static void setWindowIcon(Stage stage) {
         stage.getIcons().add(new Image(APP_ICON_LOCATION));
     }
-    
+
     /**
-     * 
+     *
      * @param loc đường dẫn đến file fxml cần load
      * @return AnchorPane
      */
     public static AnchorPane loadPane(URL loc) {
         try {
             FXMLLoader loader = new FXMLLoader(loc);
-            
+
             loader.getController();
             return loader.load();
         } catch (IOException ex) {
@@ -61,9 +60,9 @@ public class Util {
         }
         return null;
     }
-    
+
     /**
-     * 
+     *
      * @param loc đường dẫn đến file fxml cần load
      * @param title tên window
      * @param parentStage window cha
@@ -73,19 +72,19 @@ public class Util {
         Object controller = null;
         try {
             Parent parent = FXMLLoader.load(loc);
-   
+
             Stage stage = new Stage();
             stage.initOwner(parentStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.DECORATED);
-            
+
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(Util.STYLE_SHEET_LOCATION);
-            
+
             stage.setTitle(title);
             stage.setScene(scene);
             stage.show();
-            
+
             setWindowIcon(stage);
             return stage;
         } catch (IOException ex) {
@@ -93,28 +92,31 @@ public class Util {
         }
         return null;
     }
-    
+
     public static LocalDate stringToLocalDate(String string) {
         return LocalDate.parse(string, DATE_TIME_FORMATTER);
     }
-    
+
     public static LocalDate SQLDateToLocalDate(java.sql.Date sqlDate) {
         return sqlDate.toLocalDate();
     }
-    
+
     public static java.sql.Date LocalDateToSQLDate(LocalDate local) {
         return java.sql.Date.valueOf(local);
     }
-    
+
     public static Boolean genderToBit(String gt) {
         return !"Nam".equals(gt);
     }
-    
+
     public static String bitToGender(Boolean b) {
-        if(b == true) return "Nữ";
-        else return "Nam";
+        if (b == true) {
+            return "Nữ";
+        } else {
+            return "Nam";
+        }
     }
-    
+
     public static void loadResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {
         list.clear();
 
@@ -131,7 +133,7 @@ public class Util {
             tableView.getColumns().addAll(col);
             System.out.println("Column [" + i + "] ");
         }
-        
+
         while (rs.next()) {
             //Iterate Row
             ObservableList<String> row = FXCollections.observableArrayList();
@@ -145,25 +147,27 @@ public class Util {
         }
         tableView.setItems(list);
     }
-    
+
     /**
-     * Calculate rent base on how many dates between 2 LocalDates and round to nearest 10000
+     * Calculate rent base on how many dates between 2 LocalDates and round to
+     * nearest 10000
+     *
      * @param monthlyRent
      * @param start
      * @param end
-     * @return 
+     * @return
      */
     public static BigDecimal getRent(BigDecimal monthlyRent, LocalDate start, LocalDate end) {
         long duration = DAYS.between(start, end);
-        BigDecimal rent =
-                monthlyRent.multiply(BigDecimal.valueOf(12*duration));
+        BigDecimal rent
+                = monthlyRent.multiply(BigDecimal.valueOf(12 * duration));
         rent = rent.divide(BigDecimal.valueOf(365), MathContext.DECIMAL64);
         return rent;
     }
-    
+
     public static BigDecimal getRent(BigDecimal monthlyRent, int duration) {
-        BigDecimal rent =
-                monthlyRent.multiply(BigDecimal.valueOf(12*duration));
+        BigDecimal rent
+                = monthlyRent.multiply(BigDecimal.valueOf(12 * duration));
         rent = rent.divide(BigDecimal.valueOf(365), MathContext.DECIMAL64);
         return rent;
     }

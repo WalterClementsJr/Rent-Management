@@ -367,7 +367,7 @@ public final class DatabaseHandler {
     public boolean updateComplex(Complex c) {
         try {
             stmt = conn.prepareStatement(
-                    "UPDATE KHU SET TEN=?, DIACHI=? WHERE MAKHU=?");
+                    "UPDATE KHU SET TENKHU=?, DIACHI=? WHERE MAKHU=?");
             stmt.setNString(1, c.getTen());
             stmt.setNString(2, c.getDiaChi());
             stmt.setInt(3, c.getId());
@@ -684,7 +684,7 @@ public final class DatabaseHandler {
             stmt.setDate(
                     3, Util.LocalDateToSQLDate(m.getNgay()));
             stmt.setNString(
-                    5, m.getMoTa());
+                    4, m.getMoTa());
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);

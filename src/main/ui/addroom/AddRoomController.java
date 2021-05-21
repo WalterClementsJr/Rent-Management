@@ -44,12 +44,6 @@ public class AddRoomController implements Initializable {
     private ComboBox<Complex> comboBox;
 
     @FXML
-    private Button addComplex;
-
-    @FXML
-    private Button editComplex;
-
-    @FXML
     private TextField name;
 
     @FXML
@@ -236,7 +230,6 @@ public class AddRoomController implements Initializable {
         
         if (dbHandler.insertNewRoom(newRoom)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã thêm phòng");
-            clearEntries();
         } else {
             CustomAlert.showErrorMessage("Lỗi", "Không thể thêm");
         }
@@ -268,7 +261,7 @@ public class AddRoomController implements Initializable {
         }
 
         if(dbHandler.updateRoom(currentRoom)) {
-            CustomAlert.showSimpleAlert("Phòng sửa thành công", "");
+            CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin phòng");
             currentRoom = null;
         } else {
             CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Kiểm tra lại thông tin và thử lại sau");
@@ -307,6 +300,7 @@ public class AddRoomController implements Initializable {
         for (Complex c : list) {
             if (r.getMaKhu() == c.getId()) {
                 comboBox.setValue(c);
+                comboBox.setDisable(true);
             }
         }
         
@@ -320,15 +314,4 @@ public class AddRoomController implements Initializable {
         isEditing = true;
         currentRoom = r;
     }
-    
-    public void clearEntries() {
-        comboBox.setValue(null);
-        name.setText("");
-        nOfPeople.getValueFactory().setValue(1);
-        size.setText("");
-        deposit.setText("");
-        price.setText("");
-        desc.setText("");
-    }
-    
 }

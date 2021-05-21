@@ -62,6 +62,10 @@ public class Complex {
     public String toString() {
         return getTen();
     }
+    
+    public String getDescription() {
+        return getTen() + ", " + getDiaChi();
+    }
 
     public String debugString() {
         return "Complex{" + "id=" + getId() + ", ten=" + getTen()

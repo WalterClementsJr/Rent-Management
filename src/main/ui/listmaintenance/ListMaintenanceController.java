@@ -64,8 +64,8 @@ public class ListMaintenanceController implements Initializable {
     private Button help;
 
     // extra elements
-    
-    // TODO uncomment line in production
+
+    // TODO remove this line in production
     ObservableList<Complex> complexList = FXCollections.observableArrayList();
 //    ObservableList<Complex> complexList = ListRoomController.complexList;
 
@@ -95,7 +95,7 @@ public class ListMaintenanceController implements Initializable {
 
     private void loadComplexData() {
         complexList.clear();
-//        comboBox.getItems().clear();
+        comboBox.getItems().clear();
 
         String query = "SELECT * FROM KHU";
         ResultSet rs = handler.execQuery(query);
@@ -111,19 +111,23 @@ public class ListMaintenanceController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListMaintenanceController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         comboBox.getItems().addAll(complexList);
     }
 
     private void loadData() {
-        Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
+        Complex chosenComplex = comboBox.getValue();
 
-        if (chosenComplex == null) {
-            chosenComplex = comboBox.getSelectionModel().getSelectedItem();
-            System.out.println(chosenComplex.debugString());
+        try {
+            listOfAllMaintenance.clear();
+            loadAllMaintenance(chosenComplex.getId());
+            loadListToTable();
+        } catch (NullPointerException ex) {
+            // TODO remove this in production bc bug's wack
+            System.out.println("bug");
         }
-        chosenComplex = comboBox.getSelectionModel().getSelectedItem();
-        loadAllMaintenance(chosenComplex.getId());
-        loadListToTable();
+        
+        
     }
 
     private void loadAllMaintenance(int complexId) {
@@ -153,7 +157,7 @@ public class ListMaintenanceController implements Initializable {
 
     @FXML
     private void handleRefresh(ActionEvent event) {
-        System.out.println("refresh now");
+        System.out.println("refresing");
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
         loadData();
@@ -214,7 +218,6 @@ public class ListMaintenanceController implements Initializable {
 
     @FXML
     private void handleDelete(ActionEvent event) {
-        // TODO delete
         ObservableList list = tableView.getSelectionModel().getSelectedItems();
         ObservableList row;
 

@@ -143,6 +143,7 @@ public class AddMaintenanceController implements Initializable {
     
     public void loadRoom(Room room) {
         currentRoom = room;
+        System.out.println(currentRoom.debugString());
     }
     
     public void loadEntries(Maintenance m) {

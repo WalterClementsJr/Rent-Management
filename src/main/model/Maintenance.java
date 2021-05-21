@@ -26,10 +26,10 @@ public class Maintenance {
     }
 
     public Maintenance(int maPhong, BigDecimal chiPhi, LocalDate ngay, String moTa) {
-        this.maPhong.set(maPhong);
-        this.chiPhi.set(chiPhi);
-        this.ngay.set(ngay);
-        this.moTa.set(moTa);
+        this.maPhong = new SimpleIntegerProperty(maPhong);
+        this.chiPhi = new SimpleObjectProperty<>(chiPhi);
+        this.ngay = new SimpleObjectProperty<>(ngay);
+        this.moTa = new SimpleStringProperty(moTa);
     }
 
     public int getId() {

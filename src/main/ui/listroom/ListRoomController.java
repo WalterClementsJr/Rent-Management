@@ -22,11 +22,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -39,6 +43,7 @@ import main.ui.addcontract.AddContractController;
 import main.ui.addmaintenance.AddMaintenanceController;
 import main.ui.addroom.AddRoomController;
 import main.ui.alert.CustomAlert;
+import main.ui.main.MainController;
 import main.util.MasterController;
 import main.util.Util;
 
@@ -52,6 +57,9 @@ public class ListRoomController implements Initializable {
 
     @FXML
     private ComboBox<Complex> comboBox;
+
+    @FXML
+    private Tooltip complexTooltip;
 
     @FXML
     private Button addComplex;
@@ -92,12 +100,25 @@ public class ListRoomController implements Initializable {
         handler = DatabaseHandler.getInstance();
 
         // setup UI elements
+        roomTable.setPlaceholder(new Label("Không có thông tin"));
         initRoomTableColumns(roomTable);
+        
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
 
         filter.getItems().addAll("Tất cả", "Trống", "Đã có người");
         filter.getSelectionModel().selectFirst();
+        complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
+
+        Image addimg =
+                new Image(MainController.class.getResourceAsStream(
+                        "/main/resources/icons/add.png"));
+        addComplex.setGraphic(new ImageView(addimg));
+
+        Image editimg =
+                new Image(MainController.class.getResourceAsStream(
+                        "/main/resources/icons/edit.png"));
+        editComplex.setGraphic(new ImageView(editimg));
 
         loadData();
     }
@@ -112,6 +133,7 @@ public class ListRoomController implements Initializable {
         listOfAllRooms.clear();
         listOfEmptyRooms.clear();
         listOfOccupiedRooms.clear();
+        complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
 
         loadData();
     }
@@ -199,8 +221,6 @@ public class ListRoomController implements Initializable {
                 String ten = rs.getString("TENKHU");
                 String diaChi = rs.getString("DIACHI");
                 complexList.add(new Complex(id, ten, diaChi));
-
-                System.out.println(id + ten + diaChi);
             }
             rs.close();
         } catch (SQLException ex) {
@@ -321,6 +341,7 @@ public class ListRoomController implements Initializable {
         // if room is empty
         for (Room r : listOfEmptyRooms) {
             if (r.equals(selected)) {
+                // load add contract pane
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass()
                             .getResource("/main/ui/addcontract/addContract.fxml"));
@@ -352,7 +373,6 @@ public class ListRoomController implements Initializable {
                 }
             }
         }
-
         // room is not empty -> display error
         CustomAlert.showErrorMessage("Lỗi", "Phòng đã có hợp đồng");
     }
@@ -373,7 +393,7 @@ public class ListRoomController implements Initializable {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xóa phòng");
-        alert.setContentText("Bạn có muốn xóa " + selected.getTenPhong() + "?");
+        alert.setContentText("Bạn chắc chắn muốn xóa " + selected.getTenPhong() + "?");
         Optional<ButtonType> answer = alert.showAndWait();
         if (answer.get() == ButtonType.OK) {
             if (handler.deleteRoom(selected)) {
@@ -398,7 +418,6 @@ public class ListRoomController implements Initializable {
         }
 
         try {
-            // TODO fix this
             FXMLLoader loader = new FXMLLoader(getClass()
                     .getResource("/main/ui/addmaintenance/addMaintenance.fxml"));
             Parent parent = loader.load();
@@ -415,7 +434,7 @@ public class ListRoomController implements Initializable {
                     .getResource(Util.STYLE_SHEET_LOCATION).toString());
 
             stage.setScene(scene);
-            stage.setTitle("Thêm hợp đồng");
+            stage.setTitle("Thêm thông tin bảo trì");
             stage.show();
             Util.setWindowIcon(stage);
 
@@ -425,8 +444,6 @@ public class ListRoomController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }
 
     public void initRoomTableColumns(TableView tableView) {
