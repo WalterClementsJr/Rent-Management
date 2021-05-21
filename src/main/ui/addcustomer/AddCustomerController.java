@@ -177,7 +177,7 @@ public class AddCustomerController implements Initializable {
                 customerSDT);
 
         if (dbHandler.insertNewCustomer(customer)) {
-            CustomAlert.showSimpleAlert("Khách ", customerName + " đã được thêm");
+            CustomAlert.showSimpleAlert("Thành công", customerName + " đã được thêm");
             clearEntries();
         } else {
             CustomAlert.showErrorMessage("Không thêm được khách", "Hãy kiểm lại tra thông tin và thử lại");

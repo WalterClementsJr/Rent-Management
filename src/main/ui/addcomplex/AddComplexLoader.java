@@ -21,7 +21,7 @@ public class AddComplexLoader extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("addApartmentComplex.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("addComplex.fxml"));
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/main/app/bootstrap3.css").toExternalForm());

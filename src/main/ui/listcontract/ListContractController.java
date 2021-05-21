@@ -71,7 +71,7 @@ public class ListContractController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         MasterController.getInstance().registerListContractController(this);
         handler = DatabaseHandler.getInstance();
-        // TODO
+
         initContractTableColumns();
         loadResultSetToList(DatabaseHandler.getInstance().getAllContractsWithInfo(), listOfAllContracts);
 
@@ -149,8 +149,7 @@ public class ListContractController implements Initializable {
                 CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
             }
         } catch (IndexOutOfBoundsException ex) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
-            return;
+            CustomAlert.showErrorMessage("Chưa chọn", "Hãy chọn một hợp đồng để xóa");
         }
     }
 
@@ -188,7 +187,7 @@ public class ListContractController implements Initializable {
                         .getResource(Util.STYLE_SHEET_LOCATION).toString());
 
                 stage.setScene(scene);
-                stage.setTitle("Thêm hợp đồng");
+                stage.setTitle("Chỉnh sửa hợp đồng");
                 stage.show();
                 Util.setWindowIcon(stage);
 
@@ -206,7 +205,7 @@ public class ListContractController implements Initializable {
     }
 
     @FXML
-    void handleRefresh(ActionEvent event) {
+    public void handleRefresh(ActionEvent event) {
         loadData();
     }
 

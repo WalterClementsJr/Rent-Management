@@ -52,7 +52,6 @@ public class ListInvoiceController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         handler = DatabaseHandler.getInstance();
 
         initTableColumns();

@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Invoice {
-    
-    
     int mahdong;
     BigDecimal soTien;
     LocalDate ngayTT;

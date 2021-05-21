@@ -141,7 +141,7 @@ public class Room {
     }
 
     public boolean equals(Room other) {
-        return other.getId() == this.getId() && other.getTenPhong().equals(this.getTenPhong());
+        return other.getId() == this.getId();
     }
     
     

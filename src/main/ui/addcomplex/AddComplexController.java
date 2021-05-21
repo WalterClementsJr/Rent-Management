@@ -45,11 +45,9 @@ public class AddComplexController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dbHandler = DatabaseHandler.getInstance();
-        showDeleteButton(isEditing);
-    }
+        
+        delete.setVisible(isEditing);
 
-    public void showDeleteButton(boolean show) {
-        delete.setVisible(show);
     }
 
     public void loadEntries(Complex c) {
@@ -72,7 +70,7 @@ public class AddComplexController implements Initializable {
             return;
         }
 
-        if (checkField()) {
+        if (!checkField()) {
             return;
         }
 
@@ -96,7 +94,6 @@ public class AddComplexController implements Initializable {
         }
     }
 
-    @FXML
     private void handleEdit() {
         if (!checkField()) {
             return;
@@ -117,17 +114,17 @@ public class AddComplexController implements Initializable {
             CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
             currentComplex = null;
         } else {
-            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Không thể thực hiện");
+            CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại sau");
         }
     }
 
     @FXML
     private void handleDeleteComplex(ActionEvent event) {
-        // TODO make a check before deleting a complex
-//        if (DatabaseHandler.getInstance().isRenting(selectedForDeletion)) {
-//            CustomAlert.showErrorMessage("Không thể xóa", "Không thể xóa khu nhà có phòng đang cho thuê.");
-//            return;
-//        }
+        if (DatabaseHandler.getInstance().isComplexDeletable(currentComplex.getId())) {
+            CustomAlert.showErrorMessage("Lỗi", "Không thể xóa khu nhà có phòng.");
+            return;
+        }
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xóa khu");
         alert.setContentText("Bạn có muốn xóa khu " + currentComplex.getTen() + " ?");
@@ -137,10 +134,8 @@ public class AddComplexController implements Initializable {
             if (result) {
                 CustomAlert.showSimpleAlert("Đã xóa", "Đã xóa khu " + currentComplex.getTen());
             } else {
-                CustomAlert.showSimpleAlert("Thất bại", "Không thể xóa khu " + currentComplex.getTen());
+                CustomAlert.showSimpleAlert("Thất bại", "Hãy xóa các thông tin liên quan đến khu này và thử lại");
             }
-        } else {
-            CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
         }
     }
 

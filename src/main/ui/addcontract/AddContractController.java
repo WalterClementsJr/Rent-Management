@@ -71,7 +71,6 @@ public class AddContractController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         handler = DatabaseHandler.getInstance();
         loadCustomer();
 
@@ -230,7 +229,6 @@ public class AddContractController implements Initializable {
 
     @FXML
     private void handleAdd(ActionEvent event) {
-
         if (isEditing) {
             handleEdit();
             return;

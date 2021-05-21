@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Complex {
+
     private IntegerProperty id;
     private StringProperty ten;
     private StringProperty diaChi;
@@ -44,15 +45,15 @@ public class Complex {
     public void setDiaChi(String diaChi) {
         this.diaChi.set(diaChi);
     }
-    
+
     public IntegerProperty idProperty() {
         return id;
-    } 
-            
+    }
+
     public StringProperty tenProperty() {
         return ten;
     }
-    
+
     public StringProperty diaChiProperty() {
         return diaChi;
     }
@@ -61,10 +62,10 @@ public class Complex {
     public String toString() {
         return getTen();
     }
-    
+
     public String debugString() {
         return "Complex{" + "id=" + getId() + ", ten=" + getTen()
                 + ", diaChi=" + getDiaChi() + '}';
     }
-    
+
 }

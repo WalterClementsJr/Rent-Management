@@ -23,8 +23,13 @@ import main.util.Util;
 public final class DatabaseHandler {
 
     public static void main(String[] args) {
-        System.out.println(DatabaseHandler.getInstance().getLatestPayDate(6));
-        System.out.println(DatabaseHandler.getInstance().getLatestPayDate(7));
+        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(1));
+        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(2));
+        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(3));
+        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(5));
+        
+        
+
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -190,6 +195,26 @@ public final class DatabaseHandler {
         return true;
     }
 
+    public boolean isComplexDeletable(int makhu) {
+        try {
+            stmt = conn.prepareStatement(
+                    "select dbo.iskhudeletable(?) as candelete");
+            stmt.setInt(1, makhu);
+
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                return false;
+            } else {
+                boolean isDeletable = rs.getBoolean("candelete");
+                rs.close();
+                return isDeletable;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public boolean insertNewCustomer(Customer customer) {
         try {
             stmt = conn.prepareStatement(
@@ -231,6 +256,26 @@ public final class DatabaseHandler {
                     "DELETE FROM KHACH WHERE MAKH=?");
             stmt.setInt(1, customer.getId());
             return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean isCustomerDeletable(int makh) {
+        try {
+            stmt = conn.prepareStatement(
+                    "select dbo.iskhachdeletable(?) as candelete");
+            stmt.setInt(1, makh);
+
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                return false;
+            } else {
+                boolean isDeletable = rs.getBoolean("candelete");
+                rs.close();
+                return isDeletable;
+            }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -414,6 +459,26 @@ public final class DatabaseHandler {
         return false;
     }
 
+    public boolean isRoomDeletable(int maphong) {
+        try {
+            stmt = conn.prepareStatement(
+                    "select dbo.IsPhongDeletable(?) as candelete");
+            stmt.setInt(1, maphong);
+
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                return false;
+            } else {
+                boolean isDeletable = rs.getBoolean("candelete");
+                rs.close();
+                return isDeletable;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public ResultSet getAllRoomsFromComplex(int complexId) {
         try {
             stmt = conn.prepareStatement(
@@ -550,6 +615,26 @@ public final class DatabaseHandler {
         }
         return false;
     }
+    
+    public boolean isContractEndable(int mahdong) {
+        try {
+            stmt = conn.prepareStatement(
+                    "select dbo.ishopdongendable(?) as canend");
+            stmt.setInt(1, mahdong);
+
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next()) {
+                return false;
+            } else {
+                boolean isEndable = rs.getBoolean("canend");
+                rs.close();
+                return isEndable;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
     public LocalDate getLatestPayDate(int conId) throws NullPointerException {
         try {
@@ -639,4 +724,16 @@ public final class DatabaseHandler {
         return false;
     }
 
+    public ResultSet getMaintenanceFromComplex(int complexId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "select * from dbo.getbaotrithuockhu(?)");
+            stmt.setInt(1, complexId);
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

@@ -74,33 +74,33 @@ public class ListCustomerController implements Initializable {
 
     private boolean datachanged = false;
     DatabaseHandler handler;
-    
+
     public static void main(String[] args) {
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MasterController.getInstance().registerListCustomerController(this);
         handler = DatabaseHandler.getInstance();
-        
+
         initCustomerTableColumns();
-        
+
         comboBox.getItems().addAll("Tất cả", "Chưa có phòng", "Đã có phòng", "Đã chuyển đi");
         comboBox.getSelectionModel().selectFirst();
-        
+
         loadData();
-        
+
     }
 
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-    
+
     @FXML
     private void handleComboBoxChange(ActionEvent event) {
         loadData();
     }
-    
+
     private void loadData() {
         switch (comboBox.getSelectionModel().getSelectedItem()) {
             case "Tất cả":
@@ -134,14 +134,14 @@ public class ListCustomerController implements Initializable {
                                 rs.getString("CMND"),
                                 rs.getString("SDT")));
             }
-            
+
             rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
         customerTable.setItems(list);
     }
-    
+
     private void loadAllCustomers() {
         String query = "SELECT * FROM KHACH";
 
@@ -159,7 +159,7 @@ public class ListCustomerController implements Initializable {
     private void loadOldCustomers() {
         loadDataToTable(handler.getOldCustomers(), listOfCustomersWithRoom);
     }
-    
+
     @FXML
     private void handleAddButton(ActionEvent event) {
         System.out.println("load add customer window");
@@ -167,27 +167,27 @@ public class ListCustomerController implements Initializable {
                 "/main/ui/addcustomer/addCustomer.fxml"),
                 "Add New Customer", getStage());
         stage.setOnHiding((e) -> {
-                handleRefresh(new ActionEvent());
-            });
+            handleRefresh(new ActionEvent());
+        });
     }
 
     @FXML
     void handleEditButton(ActionEvent event) {
         Customer selectedForEdit = customerTable.getSelectionModel().getSelectedItem();
-        
+
         if (selectedForEdit == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để chỉnh sửa");
             return;
         }
         System.out.println(selectedForEdit.toString());
-        
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/ui/addcustomer/addCustomer.fxml"));
             Parent parent = loader.load();
 
             AddCustomerController con = loader.getController();
             con.loadEntries(selectedForEdit);
-            
+
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
             stage.initModality(Modality.WINDOW_MODAL);
@@ -196,7 +196,7 @@ public class ListCustomerController implements Initializable {
             scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toString());
 
             stage.setScene(scene);
-            stage.setTitle("Edit Customer");
+            stage.setTitle("Chỉnh sửa thông tin khách");
             stage.show();
             Util.setWindowIcon(stage);
 
@@ -207,24 +207,27 @@ public class ListCustomerController implements Initializable {
             Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void handleRefresh(ActionEvent event) {
         loadData();
     }
-    
+
     @FXML
     private void handleDelete(ActionEvent event) {
         Customer selectedForDeletion = customerTable.getSelectionModel().getSelectedItem();
+
         if (selectedForDeletion == null) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để xóa");
             return;
         }
-        // TODO make a rent check and uncomment thís line
-//        if (DatabaseHandler.getInstance().isRenting(selectedForDeletion)) {
-//            CustomAlert.showErrorMessage("Không thể xóa", "Không thể xóa khách đang thuê trọ.");
-//            return;
-//        }
+
+        //  check if customer has any related data before deleting
+        if (DatabaseHandler.getInstance().isCustomerDeletable(selectedForDeletion.getId())) {
+            CustomAlert.showErrorMessage("Lỗi", "Không thể xóa khách đã/đang ở trong hệ thống.");
+            return;
+        }
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xóa khách");
         alert.setContentText("Bạn có muốn xóa " + selectedForDeletion.getHoTen() + " ?");
@@ -242,7 +245,6 @@ public class ListCustomerController implements Initializable {
         }
     }
 
-    
     public void initCustomerTableColumns() {
         TableColumn<Customer, Integer> idCol = new TableColumn<>("ID");
         TableColumn<Customer, String> hotenCol = new TableColumn<>("Họ tên");
@@ -258,6 +260,7 @@ public class ListCustomerController implements Initializable {
         sdtCol.setCellValueFactory(new PropertyValueFactory<>("SDT"));
         cmndCol.setCellValueFactory(new PropertyValueFactory<>("CMND"));
 
+        // field formating
         gioitinhCol.setCellFactory(column -> {
             return new TableCell<Customer, Boolean>() {
                 @Override
@@ -273,7 +276,7 @@ public class ListCustomerController implements Initializable {
                 }
             };
         });
-        
+
         ngaysinhCol.setCellFactory(column -> {
             return new TableCell<Customer, LocalDate>() {
                 @Override
@@ -289,12 +292,11 @@ public class ListCustomerController implements Initializable {
                 }
             };
         });
-        
-        customerTable.getColumns().addAll(idCol, hotenCol, gioitinhCol ,ngaysinhCol, sdtCol, cmndCol);
-        idCol.setVisible(false);
-        
-        hotenCol.setMinWidth(150);
 
+        customerTable.getColumns().addAll(idCol, hotenCol, gioitinhCol, ngaysinhCol, sdtCol, cmndCol);
+        idCol.setVisible(false);
+
+        hotenCol.setMinWidth(150);
     }
-    
+
 }

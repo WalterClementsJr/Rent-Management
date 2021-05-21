@@ -36,6 +36,7 @@ import main.model.Complex;
 import main.model.Room;
 import main.ui.addcomplex.AddComplexController;
 import main.ui.addcontract.AddContractController;
+import main.ui.addmaintenance.AddMaintenanceController;
 import main.ui.addroom.AddRoomController;
 import main.ui.alert.CustomAlert;
 import main.util.MasterController;
@@ -81,7 +82,7 @@ public class ListRoomController implements Initializable {
     public static ObservableList<Room> listOfEmptyRooms = FXCollections.observableArrayList();
     public static ObservableList<Room> listOfOccupiedRooms = FXCollections.observableArrayList();
 
-    ObservableList<Complex> complexList = FXCollections.observableArrayList();
+    public static ObservableList<Complex> complexList = FXCollections.observableArrayList();
     DatabaseHandler handler;
 
     @Override
@@ -316,6 +317,8 @@ public class ListRoomController implements Initializable {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng để thêm hợp đồng");
             return;
         }
+
+        // if room is empty
         for (Room r : listOfEmptyRooms) {
             if (r.equals(selected)) {
                 try {
@@ -340,15 +343,18 @@ public class ListRoomController implements Initializable {
                     Util.setWindowIcon(stage);
 
                     stage.setOnHiding((e) -> {
-                        handleRefresh(new ActionEvent());
+                        MasterController.getInstance().ListContractControllerRefresh();
                     });
+                    return;
                 } catch (IOException ex) {
                     Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
+                    return;
                 }
             }
         }
 
-        
+        // room is not empty -> display error
+        CustomAlert.showErrorMessage("Lỗi", "Phòng đã có hợp đồng");
     }
 
     @FXML
@@ -360,7 +366,11 @@ public class ListRoomController implements Initializable {
             return;
         }
 
-        // TODO check for active contracts before deleting a room
+        if (DatabaseHandler.getInstance().isRoomDeletable(selected.getId())) {
+            CustomAlert.showErrorMessage("Lỗi", "Không thể xóa phòng do đã có người ở.");
+            return;
+        }
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xóa phòng");
         alert.setContentText("Bạn có muốn xóa " + selected.getTenPhong() + "?");
@@ -375,6 +385,48 @@ public class ListRoomController implements Initializable {
         } else {
             CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
         }
+    }
+
+    @FXML
+    private void handleAddMaintenance(ActionEvent event) {
+        // TODO add maintenance
+        Room selected = roomTable.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một phòng");
+            return;
+        }
+
+        try {
+            // TODO fix this
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/main/ui/addmaintenance/addMaintenance.fxml"));
+            Parent parent = loader.load();
+
+            AddMaintenanceController con = loader.getController();
+            con.loadRoom(selected);
+
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.initOwner(getStage());
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(parent);
+            scene.getStylesheets().add(getClass()
+                    .getResource(Util.STYLE_SHEET_LOCATION).toString());
+
+            stage.setScene(scene);
+            stage.setTitle("Thêm hợp đồng");
+            stage.show();
+            Util.setWindowIcon(stage);
+
+            stage.setOnHiding((e) -> {
+                handleRefresh(new ActionEvent());
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
 
     public void initRoomTableColumns(TableView tableView) {
