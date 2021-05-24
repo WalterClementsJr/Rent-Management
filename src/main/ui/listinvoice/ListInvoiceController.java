@@ -1,6 +1,5 @@
 package main.ui.listinvoice;
 
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -47,7 +46,7 @@ public class ListInvoiceController implements Initializable {
 
     // extra elements
     DatabaseHandler handler = null;
-    
+
     ObservableList listOfAllInvoices = FXCollections.observableArrayList();
 
     @Override
@@ -56,7 +55,7 @@ public class ListInvoiceController implements Initializable {
 
         initTableColumns();
         loadResultSetToList(handler.getInDebtContractsWithInvoiceInfo(), listOfAllInvoices);
-        
+
         loadData();
 
     }
@@ -65,14 +64,14 @@ public class ListInvoiceController implements Initializable {
     private void handleAddInvoice(ActionEvent event) {
         ObservableList list = tableView.getSelectionModel().getSelectedItems();
         ObservableList row;
-        
+
         try {
             row = (ObservableList) tableView.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
                 CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một dòng để thêm hóa đơn");
                 return;
             }
-            
+
             int mahdong = Integer.parseInt(row.get(0).toString());
             LocalDate lastPayDate = LocalDate.parse(row.get(10).toString(), Util.SQL_DATE_TIME_FORMATTER);
             LocalDate ngaytra = LocalDate.parse(row.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER);
@@ -84,9 +83,9 @@ public class ListInvoiceController implements Initializable {
             System.out.println(ngaytra);
             System.out.println(giagoc);
             System.out.println(songay);
-            
+
             InvoiceData data = new InvoiceData(mahdong, lastPayDate, ngaytra, giagoc, songay);
-            
+
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addinvoice/addInvoice.fxml"));
@@ -125,15 +124,15 @@ public class ListInvoiceController implements Initializable {
         loadAllInvoices();
         loadListToTable();
     }
-    
+
     private void loadListToTable() {
         tableView.setItems(listOfAllInvoices);
     }
-    
+
     public void loadAllInvoices() {
         loadResultSetToList(handler.getInDebtContractsWithInvoiceInfo(), listOfAllInvoices);
     }
-    
+
     public void loadResultSetToList(ResultSet rs, ObservableList list) {
         list.clear();
         try {
@@ -149,11 +148,13 @@ public class ListInvoiceController implements Initializable {
             Logger.getLogger(ListInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void initTableColumns() {
 
         TableColumn mahdongCol
                 = new TableColumn<>("Mã hợp đồng");
+        TableColumn maKhuCol
+                = new TableColumn<>("Mã khu");
         TableColumn tenKhuCol
                 = new TableColumn<>("Tên khu");
         TableColumn maphongCol
@@ -178,13 +179,14 @@ public class ListInvoiceController implements Initializable {
                 = new TableColumn<>("Số ngày nợ");
 
         tableView.getColumns().addAll(
-                mahdongCol, tenKhuCol, maphongCol, tenPhongCol, makhCol, tenkhachCol,
+                mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol, tenkhachCol,
                 ngayNhanCol, ngayTraCol, tienCocCol, giaGocCol, ngayttgannhatCol, songayCol);
 
         tenPhongCol.setMinWidth(200);
         tenkhachCol.setMinWidth(200);
 
         mahdongCol.setVisible(false);
+        maKhuCol.setVisible(false);
         maphongCol.setVisible(false);
         ngayNhanCol.setVisible(false);
         ngayTraCol.setVisible(false);
@@ -193,7 +195,7 @@ public class ListInvoiceController implements Initializable {
         tienCocCol.setVisible(false);
 //        songayCol.setVisible(false);
         ngayttgannhatCol.setVisible(false);
-        
+
         for (int i = 0; i < tableView.getColumns().size(); i++) {
             final int t = i;
             TableColumn col = (TableColumn) tableView.getColumns().get(i);
@@ -244,7 +246,7 @@ public class ListInvoiceController implements Initializable {
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-    
+
     @FXML
     void handleRefresh(ActionEvent event) {
         loadData();

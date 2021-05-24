@@ -3,7 +3,6 @@ package main.ui.addcontract;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
@@ -184,7 +183,7 @@ public class AddContractController implements Initializable {
             CustomAlert.showErrorMessage("Chưa điền ngày trả phòng", "Hãy nhập/chọn ngày trả phòng");
             return false;
         } else if (endDate.getValue().compareTo(startDate.getValue()) <= 0) {
-            CustomAlert.showErrorMessage("Lỗi", "Ngày nhận phòng phải lớn hơn ngày trả phòng. Hãy nhập lại.");
+            CustomAlert.showErrorMessage("Lỗi", "Ngày nhận phòng phải bé hơn ngày trả phòng. Hãy nhập lại.");
             return false;
         } else if (deposit.getText().isBlank()) {
             CustomAlert.showErrorMessage("Chưa nhập tiền cọc", "Hãy nhập tiền cọc");

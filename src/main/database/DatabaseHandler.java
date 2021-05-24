@@ -1,6 +1,5 @@
 package main.database;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,8 +26,6 @@ public final class DatabaseHandler {
         System.out.println(DatabaseHandler.getInstance().isComplexDeletable(2));
         System.out.println(DatabaseHandler.getInstance().isComplexDeletable(3));
         System.out.println(DatabaseHandler.getInstance().isComplexDeletable(5));
-        
-        
 
     }
 
@@ -89,8 +86,8 @@ public final class DatabaseHandler {
     /**
      *
      * @param query
-     * @return thưc hiện các query update data hoặc query không trả
-     * về giá trị gì
+     * @return thưc hiện các query update data hoặc query không trả về giá trị
+     * gì
      */
     public boolean execUpdate(String query) {
         try {
@@ -478,7 +475,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public ResultSet getAllRoomsFromComplex(int complexId) {
         try {
             stmt = conn.prepareStatement(
@@ -518,10 +515,23 @@ public final class DatabaseHandler {
         return null;
     }
 
-    public ResultSet getAllContractsWithInfo() {
+    public ResultSet getAllContractsWithInfo(int makhu) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM dbo.viewhopdongvaextrainfo1");
+                    "SELECT * FROM dbo.viewhopdongvaextrainfo where MAKHU=?");
+            stmt.setInt(1, makhu);
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public ResultSet getActiveContractsWithInfo(int makhu) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM dbo.viewhopdongvaextrainfo where ngaytra>getdate() and makhu=?");
+            stmt.setInt(1, makhu);
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
@@ -530,10 +540,11 @@ public final class DatabaseHandler {
         return null;
     }
 
-    public ResultSet getActiveContractsWithInfo() {
+    public ResultSet getOldContractsWithInfo(int makhu) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM dbo.viewhopdongvaextrainfo1 where ngaytra>getdate()");
+                    "SELECT * FROM dbo.viewhopdongvaextrainfo where ngaytra<=getdate() and makhu=?");
+            stmt.setInt(1, makhu);
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
@@ -542,22 +553,109 @@ public final class DatabaseHandler {
         return null;
     }
 
-    public ResultSet getOldContractsWithInfo() {
+    public ResultSet getAllRoommatesWithInfo(int complexId) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM dbo.viewhopdongvaextrainfo1 where ngaytra<=getdate()");
+                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=?");
+            stmt.setInt(1, complexId);
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public ResultSet getActiveRoommatesWithInfo(int complexId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngayvao<=getdate() and ngaydi>getdate()");
+            stmt.setInt(1, complexId);
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public ResultSet getOldRoommatesWithInfo(int complexId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngaydi>getdate()");
+            stmt.setInt(1, complexId);
+
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public boolean insertRoommate(int mahdong, int makh, LocalDate start, LocalDate end) {
+        try {
+            stmt = conn.prepareStatement(
+                    "INSERT INTO HOPDONG_KHACH VALUES(?,?,?,?)");
+            stmt.setInt(
+                    1, mahdong);
+            stmt.setInt(
+                    2, makh);
+            stmt.setDate(
+                    3, Util.LocalDateToSQLDate(end));
+            if (end == null) {
+                System.out.println("setting null end date");
+                stmt.setNull(
+                    4, java.sql.Types.DATE);
+            } else {
+                System.out.println("not null ok");
+                stmt.setDate(
+                    4, Util.LocalDateToSQLDate(end));
+            }
+            
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean editRoommateStayingPeriod(int hdkID, LocalDate start, LocalDate end) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE HOPDONG_KHACH SET ngaynhan=?, ngaytra=? WHERE id=?");
+            stmt.setDate(
+                    1, Util.LocalDateToSQLDate(start));
+            stmt.setDate(
+                    2, Util.LocalDateToSQLDate(end));
+            stmt.setInt(
+                    3, hdkID);
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    
+    
+    public boolean endRoommateStayingPeriod(int hdkID) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE HOPDONG_KHACH SET ngaytra=getdate() WHERE id=?");
+            stmt.setInt(1, hdkID);
+
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     public ResultSet getInDebtContractsWithInvoiceInfo() {
         try {
             stmt = conn.prepareStatement(
-                    "select * from viewhopdongvaextrainfo1 where songay>0");
+                    "select * from viewhopdongvaextrainfo where songay>0");
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
@@ -615,7 +713,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public boolean isContractEndable(int mahdong) {
         try {
             stmt = conn.prepareStatement(
@@ -630,6 +728,19 @@ public final class DatabaseHandler {
                 rs.close();
                 return isEndable;
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean endContract(int mahdong) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE hopdong SET ngaytra=getdate() WHERE MAHDONG=?");
+            stmt.setInt(
+                    1, mahdong);
+            return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

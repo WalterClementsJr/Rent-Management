@@ -89,7 +89,6 @@ public class ListMaintenanceController implements Initializable {
 
     @FXML
     private void complexChanged(ActionEvent event) {
-        System.out.println("complex changed");
         loadData();
     }
 
@@ -123,11 +122,8 @@ public class ListMaintenanceController implements Initializable {
             loadAllMaintenance(chosenComplex.getId());
             loadListToTable();
         } catch (NullPointerException ex) {
-            // TODO remove this in production bc bug's wack
-            System.out.println("bug");
+            return;
         }
-        
-        
     }
 
     private void loadAllMaintenance(int complexId) {
@@ -157,8 +153,9 @@ public class ListMaintenanceController implements Initializable {
 
     @FXML
     private void handleRefresh(ActionEvent event) {
-        System.out.println("refresing");
+        // TODO remove this line in production
         loadComplexData();
+        
         comboBox.getSelectionModel().selectFirst();
         loadData();
     }

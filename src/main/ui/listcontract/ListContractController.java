@@ -30,13 +30,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.database.DatabaseHandler;
+import main.model.Complex;
 import main.model.Contract;
 import main.ui.addcontract.AddContractController;
 import main.ui.alert.CustomAlert;
+import main.ui.listroom.ListRoomController;
 import main.util.MasterController;
 import main.util.Util;
 
@@ -44,6 +47,12 @@ public class ListContractController implements Initializable {
 
     @FXML
     private AnchorPane root;
+
+    @FXML
+    private ComboBox<Complex> comboBox;
+
+    @FXML
+    private Tooltip complexTooltip;
 
     @FXML
     private ComboBox<String> filter;
@@ -60,10 +69,36 @@ public class ListContractController implements Initializable {
     @FXML
     private MenuItem deleteMenu;
 
+    @FXML
+    private MenuItem returnMenu;
+
+    @FXML
+    private TableView roommateTable;
+
+    @FXML
+    private MenuItem refreshMenu1;
+
+    @FXML
+    private MenuItem editMenu1;
+
+    @FXML
+    private MenuItem deleteMenu1;
+
+    @FXML
+    private MenuItem returnMenu1;
+
     // extra elements
+    ObservableList<Complex> complexList = ListRoomController.complexList;
+//     TODO uncomment/remove these lines in production
+//    ObservableList<Complex> complexList = FXCollections.observableArrayList();
+
     public static ObservableList listOfAllContracts = FXCollections.observableArrayList();
     public static ObservableList listOfActiveContracts = FXCollections.observableArrayList();
     public static ObservableList listOfOldContracts = FXCollections.observableArrayList();
+
+    public static ObservableList listOfAllRoommates = FXCollections.observableArrayList();
+    public static ObservableList listOfActiveRoommates = FXCollections.observableArrayList();
+    public static ObservableList listOfOldRoommates = FXCollections.observableArrayList();
 
     DatabaseHandler handler;
 
@@ -72,56 +107,133 @@ public class ListContractController implements Initializable {
         MasterController.getInstance().registerListContractController(this);
         handler = DatabaseHandler.getInstance();
 
-        initContractTableColumns();
-        loadResultSetToList(DatabaseHandler.getInstance().getAllContractsWithInfo(), listOfAllContracts);
+        // TODO remove this complex loading
+        loadComplexData();
+        comboBox.getSelectionModel().selectFirst();
 
-        filter.getItems().addAll("Tất cả", "Còn hiệu lực", "Đã hết hạn");
+        initContractTableColumns();
+        initRoommateTableColumns();
+
+        int id = comboBox.getSelectionModel().getSelectedItem().getId();
+
+        // TODO
+        filter.getItems().addAll("Tất cả", "Đang ở", "Đã hết hạn");
         filter.getSelectionModel().selectFirst();
 
-        loadData();
+        loadContractData();
+        loadRoommatesData();
+    }
+
+    @FXML
+    private void complexChanged(ActionEvent event) {
+
+        listOfAllContracts.clear();
+        listOfActiveContracts.clear();
+        listOfOldContracts.clear();
+
+        listOfAllRoommates.clear();
+        listOfActiveRoommates.clear();
+        listOfOldRoommates.clear();
+
+        complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
+
+        loadContractData();
+        loadRoommatesData();
     }
 
     @FXML
     private void filterChanged(ActionEvent event) {
-        loadListToTable();
+        loadContractsToTable();
+        loadRoommatesToTable();
     }
 
-    private void loadListToTable() {
+    private void loadContractsToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
             case "Tất cả":
+                System.out.println("all");
                 contractTable.setItems(listOfAllContracts);
                 break;
-            case "Còn hiệu lực":
+            case "Đang ở":
+                System.out.println("active");
                 contractTable.setItems(listOfActiveContracts);
                 break;
             case "Đã hết hạn":
+                System.out.println("ended");
                 contractTable.setItems(listOfOldContracts);
                 break;
         }
     }
 
-    private void loadData() {
+    private void loadRoommatesToTable() {
+        switch (filter.getSelectionModel().getSelectedItem()) {
+            case "Tất cả":
+                roommateTable.setItems(listOfAllRoommates);
+                break;
+            case "Đang ở":
+                roommateTable.setItems(listOfActiveRoommates);
+                break;
+            case "Đã hết hạn":
+                roommateTable.setItems(listOfOldRoommates);
+                break;
+        }
+    }
+
+    private void loadContractData() {
         listOfAllContracts.clear();
         listOfActiveContracts.clear();
         listOfOldContracts.clear();
 
-        loadAllContracts();
-        loadActiveContracts();
-        loadOldContracts();
+        int id = comboBox.getSelectionModel().getSelectedItem().getId();
 
-        loadListToTable();
+        loadAllContracts(id);
+        loadActiveContracts(id);
+        loadOldContracts(id);
+
+        loadContractsToTable();
     }
 
-    public void loadAllContracts() {
-        loadResultSetToList(handler.getAllContractsWithInfo(), listOfAllContracts);
+    private void loadRoommatesData() {
+        listOfAllRoommates.clear();
+        listOfActiveRoommates.clear();
+        listOfOldRoommates.clear();
+
+        int id = comboBox.getSelectionModel().getSelectedItem().getId();
+
+        loadAllRoommates(id);
+        loadActiveRoommates(id);
+        loadOldRoommates(id);
     }
 
-    public void loadActiveContracts() {
-        loadResultSetToList(handler.getActiveContractsWithInfo(), listOfActiveContracts);
+    public void loadAllContracts(int id) {
+        loadResultSetToList(handler.getAllContractsWithInfo(id), listOfAllContracts);
     }
 
-    public void loadOldContracts() {
-        loadResultSetToList(handler.getOldContractsWithInfo(), listOfOldContracts);
+    public void loadActiveContracts(int id) {
+        loadResultSetToList(handler.getActiveContractsWithInfo(id), listOfActiveContracts);
+    }
+
+    public void loadOldContracts(int id) {
+        loadResultSetToList(handler.getOldContractsWithInfo(id), listOfOldContracts);
+    }
+
+    public void loadAllRoommates(int id) {
+//        loadResultSetToList(handler.getOldRoommatesWithInfo(id), listOfOldRoommates);
+//        loadResultSetToList(handler.getActiveRoommatesWithInfo(id), listOfActiveRoommates);
+//
+//        listOfAllRoommates.clear();
+//        listOfAllRoommates.addAll(listOfActiveRoommates);        
+//        listOfAllRoommates.addAll(listOfOldRoommates);
+        loadResultSetToList(handler.getAllRoommatesWithInfo(id), listOfAllRoommates);
+    }
+
+    public void loadActiveRoommates(int id) {
+        System.out.println("loading active rm");
+        loadResultSetToList(handler.getActiveRoommatesWithInfo(id), listOfActiveRoommates);
+    }
+
+    public void loadOldRoommates(int id) {
+        System.out.println("loading old rm");
+        loadResultSetToList(handler.getOldRoommatesWithInfo(id), listOfOldRoommates);
     }
 
     @FXML
@@ -206,7 +318,32 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleRefresh(ActionEvent event) {
-        loadData();
+        loadContractData();
+    }
+
+    @FXML
+    public void handleRefreshRoommates(ActionEvent event) {
+        loadRoommatesData();
+    }
+
+    @FXML
+    public void handleReturn(ActionEvent e) {
+        // TODO end ACTIVE contract
+    }
+
+    @FXML
+    public void handleEditRoommate(ActionEvent e) {
+        // TODO end ACTIVE roommates staying period
+    }
+
+    @FXML
+    public void handleRoommateReturn(ActionEvent e) {
+        // TODO end ACTIVE roommates staying period
+    }
+
+    @FXML
+    public void handleDeleteRoommate(ActionEvent e) {
+        // TODO delete roommate
     }
 
     public void loadResultSetToList(ResultSet rs, ObservableList list) {
@@ -229,6 +366,8 @@ public class ListContractController implements Initializable {
 
         TableColumn mahdongCol
                 = new TableColumn<>("Mã hợp đồng");
+        TableColumn maKhuCol
+                = new TableColumn<>("Mã khu");
         TableColumn tenKhuCol
                 = new TableColumn<>("Tên khu");
         TableColumn maphongCol
@@ -253,19 +392,20 @@ public class ListContractController implements Initializable {
                 = new TableColumn<>("Số ngày");
 
         contractTable.getColumns().addAll(
-                mahdongCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
+                mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
                 tenkhachCol, ngayNhanCol, ngayTraCol, tienCocCol, giaGocCol, ngayttgannhatCol, songayCol);
 
         tenPhongCol.setMinWidth(200);
         tenkhachCol.setMinWidth(200);
-        
+
         mahdongCol.setVisible(false);
+        maKhuCol.setVisible(false);
         maphongCol.setVisible(false);
         makhCol.setVisible(false);
         giaGocCol.setVisible(false);
         ngayttgannhatCol.setVisible(false);
         songayCol.setVisible(false);
-        
+
         for (int i = 0; i < contractTable.getColumns().size(); i++) {
             final int t = i;
             TableColumn col = (TableColumn) contractTable.getColumns().get(i);
@@ -333,7 +473,123 @@ public class ListContractController implements Initializable {
         });
     }
 
+    public void initRoommateTableColumns() {
+
+        TableColumn mahdongCol
+                = new TableColumn<>("Mã hợp đồng");
+        TableColumn maKhuCol
+                = new TableColumn<>("Mã khu");
+        TableColumn tenKhuCol
+                = new TableColumn<>("Tên khu");
+        TableColumn maphongCol
+                = new TableColumn<>("Mã phòng");
+        TableColumn tenPhongCol
+                = new TableColumn<>("Tên phòng");
+        TableColumn makhCol
+                = new TableColumn<>("Mã khách");
+        TableColumn tenkhachCol
+                = new TableColumn<>("Chủ hợp đồng");
+        TableColumn maCol
+                = new TableColumn<>("Mã kh ghép");
+        TableColumn tenCol
+                = new TableColumn<>("Tên khách");
+        TableColumn ngayNhanCol
+                = new TableColumn<>("Ngày nhận");
+        TableColumn ngayTraCol
+                = new TableColumn<>("Ngày trả");
+        TableColumn ngayVaoCol
+                = new TableColumn<>("Ngày vào");
+        TableColumn ngayDiCol
+                = new TableColumn<>("Ngày đi");
+
+        roommateTable.getColumns().addAll(
+                mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
+                tenkhachCol, maCol, tenCol, ngayNhanCol, ngayTraCol,
+                ngayVaoCol, ngayDiCol);
+
+        tenKhuCol.setMinWidth(120);
+        tenPhongCol.setMinWidth(200);
+        tenCol.setMinWidth(200);
+
+        mahdongCol.setVisible(false);
+        maKhuCol.setVisible(false);
+        maphongCol.setVisible(false);
+        makhCol.setVisible(false);
+        maCol.setVisible(false);
+        ngayNhanCol.setVisible(false);
+        ngayTraCol.setVisible(false);
+
+        for (int i = 0; i < roommateTable.getColumns().size(); i++) {
+            final int t = i;
+            TableColumn col = (TableColumn) roommateTable.getColumns().get(i);
+            col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+                    return new SimpleStringProperty(param.getValue().get(t).toString());
+                }
+            });
+        }
+
+        ngayNhanCol.setCellFactory(column -> {
+            return new TableCell<String, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, true);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        LocalDate d = LocalDate.parse(item, Util.SQL_DATE_TIME_FORMATTER);
+                        setText(Util.DATE_TIME_FORMATTER.format(d));
+                        d = null;
+                    }
+                }
+            };
+        });
+        ngayTraCol.setCellFactory(column -> {
+            return new TableCell<String, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, true);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        LocalDate d = LocalDate.parse(item, Util.SQL_DATE_TIME_FORMATTER);
+                        setText(Util.DATE_TIME_FORMATTER.format(d));
+                        d = null;
+                    }
+                }
+            };
+        });
+    }
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
+    }
+
+    // TODO remove this in production
+    private void loadComplexData() {
+        complexList.clear();
+        comboBox.getItems().clear();
+
+        String query = "SELECT * FROM KHU";
+        ResultSet rs = handler.execQuery(query);
+
+        try {
+            while (rs.next()) {
+                int id = rs.getInt("MAKHU");
+                String ten = rs.getString("TENKHU");
+                String diaChi = rs.getString("DIACHI");
+                complexList.add(new Complex(id, ten, diaChi));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        comboBox.getItems().addAll(complexList);
     }
 }
