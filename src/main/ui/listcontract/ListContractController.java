@@ -332,6 +332,11 @@ public class ListContractController implements Initializable {
     }
 
     @FXML
+    public void handleAddRoommate(ActionEvent e) {
+        // TODO add roomate here
+    }
+    
+    @FXML
     public void handleEditRoommate(ActionEvent e) {
         // TODO end ACTIVE roommates staying period
     }

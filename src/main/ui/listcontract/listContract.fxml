@@ -53,7 +53,7 @@
                                              <items>
                                                 <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
                                                 <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditContract" text="Chỉnh sửa" />
-                                                <MenuItem fx:id="returnMenu2" mnemonicParsing="false" onAction="#handleAddRoommate" text=" Thêm khách ở ghép" />
+                                                <MenuItem fx:id="addRoommate" mnemonicParsing="false" onAction="#handleAddRoommate" text=" Thêm khách ở ghép" />
                                                 <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Xóa" />
                                                 <MenuItem fx:id="returnMenu" mnemonicParsing="false" onAction="#handleReturn" text="Trả phòng" />
                                              </items>

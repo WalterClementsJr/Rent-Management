@@ -620,7 +620,7 @@ public final class DatabaseHandler {
         return false;
     }
     
-    public boolean editRoommateStayingPeriod(int hdkID, LocalDate start, LocalDate end) {
+    public boolean updateRoommateStayingPeriod(int hdkID, LocalDate start, LocalDate end) {
         try {
             stmt = conn.prepareStatement(
                     "UPDATE HOPDONG_KHACH SET ngaynhan=?, ngaytra=? WHERE id=?");

@@ -162,13 +162,7 @@ public class AddContractController implements Initializable {
     }
 
     private void loadCustomer() {
-        // TODO uncomment bc in testing listcustomercontroller.list doesn't have any data
         list.addAll(ListCustomerController.listOfCustomersWithNoRoom);
-
-//        list.add(new Customer(1, "Võ Mạng Tường", true, LocalDate.now(), "1111", "111111"));
-//        list.add(new Customer(1, "Nguyen Thanh Tu", true, LocalDate.now(), "33333", "111111"));
-//        list.add(new Customer(1, "Tân Thiên", false, LocalDate.now(), "222", "111111"));
-//        list.add(new Customer(1, "Tơ Bùi", true, LocalDate.now(), "5555555", "111111"));
         findCustomer = new AutoCompleteTextField(list);
     }
 
@@ -193,15 +187,7 @@ public class AddContractController implements Initializable {
     }
 
     public void loadEntries(Contract c) {
-        for (Customer customer : ListCustomerController.listOfAllCustomers) {
-            if (c.getMaKH() == customer.getId()) {
-                findCustomer.setText(c.toString());
-                break;
-            }
-        }
-
-        findCustomer.setDisable(true);
-        findCustomer.setVisible(false);
+        box.getChildren().remove(findCustomer);
 
         startDate.setValue(c.getNgayNhan());
         startDate.setDisable(true);
@@ -245,6 +231,9 @@ public class AddContractController implements Initializable {
         if (handler.insertNewContract(con)) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm hợp đồng");
+        } else {
+            CustomAlert.showErrorMessage(
+                    "Lỗi", "Không thêm được thông tin");
         }
     }
 
