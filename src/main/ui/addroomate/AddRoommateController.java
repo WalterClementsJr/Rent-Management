@@ -48,25 +48,26 @@ public class AddRoommateController implements Initializable {
     private AutoCompleteTextField<Customer> findCustomer;
     private SortedSet<Customer> list
             = new TreeSet<>((Customer c1, Customer c2) -> c1.toString().compareTo(c2.toString()));
-    
+
     // inserting items
     private int currentHdID, makh;
     private LocalDate hdStart, hdEnd;
-    
+
     // editing items
     private int currenthdkID;
     boolean isEditing = false;
-    
+
     DatabaseHandler handler;
-    
+
+    // TODO fix bugs
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         handler = DatabaseHandler.getInstance();
-        
+
         startDate.getEditor().setDisable(true);
         endDate.getEditor().setDisable(true);
         delete.setVisible(false);
-        
+
         // populate customers with no rooms
         loadCustomer();
         findCustomer.getEntryMenu().setOnAction(e -> {
@@ -133,7 +134,7 @@ public class AddRoommateController implements Initializable {
 
         // add customer search
         box.getChildren().add(findCustomer);
-    }    
+    }
 
     @FXML
     private void handleSave(ActionEvent event) {
@@ -144,7 +145,7 @@ public class AddRoommateController implements Initializable {
         if (!checkEntriesForInsert()) {
             return;
         }
-        
+
         if (handler.insertRoommate(
                 currentHdID,
                 makh,
@@ -161,7 +162,7 @@ public class AddRoommateController implements Initializable {
     @FXML
     private void handleDelete(ActionEvent event) {
     }
-    
+
     private void handleEdit() {
         if (endDate.getValue() == null) {
             CustomAlert.showErrorMessage("Chưa điền ngày trả phòng", "Hãy nhập/chọn ngày trả phòng");
@@ -173,8 +174,6 @@ public class AddRoommateController implements Initializable {
             CustomAlert.showErrorMessage("Lỗi", "Ngày đi phải lớn hơn ngày vào. Hãy nhập lại.");
             return;
         }
-        
-        System.out.println("check clear");
 
         if (handler.updateRoommateStayingPeriod(
                 currenthdkID,
@@ -189,13 +188,13 @@ public class AddRoommateController implements Initializable {
     private void handleCancel(ActionEvent event) {
         getStage().close();
     }
-    
+
     private boolean checkEntriesForInsert() {
         if (findCustomer.getLastSelectedObject() == null) {
             CustomAlert.showErrorMessage("Chưa chọn khách", "Hãy tìm khách trên thanh tìm kiếm và chọn một");
             return false;
         } else if (currentHdID == 0) {
-            CustomAlert.showErrorMessage("Có lỗi xảy ra", "Không tìm được hợp đồng");            
+            CustomAlert.showErrorMessage("Có lỗi xảy ra", "Không tìm được hợp đồng");
         } else if (startDate.getValue() == null) {
             CustomAlert.showErrorMessage("Nhập thiếu", "Hãy nhập/chọn ngày vào");
             return false;
@@ -203,18 +202,18 @@ public class AddRoommateController implements Initializable {
             CustomAlert.showErrorMessage("Lỗi", "Ngày vào phải bé hơn ngày đi. Hãy nhập lại.");
             return false;
         }
-        
+
         return true;
     }
-    
+
     public void loadData(int hd, int makh, LocalDate start, LocalDate end) {
         this.makh = makh;
         this.currentHdID = hd;
         this.hdStart = start;
         this.hdEnd = end;
-        
+
         System.out.println(hdStart + " - " + hdEnd);
-        
+
         startDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -222,7 +221,7 @@ public class AddRoommateController implements Initializable {
                 setDisable(date.isBefore(hdStart) || date.isAfter(hdEnd));
             }
         });
-        
+
         endDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -234,19 +233,19 @@ public class AddRoommateController implements Initializable {
             }
         });
     }
-    
+
     private void loadCustomer() {
         // TODO Empty
         list.addAll(ListCustomerController.listOfCustomersWithNoRoom);
         findCustomer = new AutoCompleteTextField(list);
     }
-    
+
     public void loadEntries(int hdkID, LocalDate start, LocalDate end) {
         box.getChildren().remove(findCustomer);
 
         startDate.setValue(start);
         endDate.setValue(end);
-        
+
         startDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -256,7 +255,7 @@ public class AddRoommateController implements Initializable {
                         || date.isAfter(hdEnd));
             }
         });
-        
+
         endDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -272,9 +271,9 @@ public class AddRoommateController implements Initializable {
         isEditing = true;
         currenthdkID = hdkID;
     }
-    
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-    
+
 }

@@ -35,9 +35,17 @@ public class Util {
     public static final String APP_NAME = "Quản Lý Nhà Trọ";
     public static final String STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
 
-    public static void main(String[] args) {
-        System.out.println(getRent(new BigDecimal(2000000), 119).setScale(-3, RoundingMode.CEILING).stripTrailingZeros().toPlainString());
+    public static final String FILTER_ALL = "Tất cả";
+    public static final String FILTER_ACTIVE = "Đang ở";
+    public static final String FILTER_OLD = "Đã hết hạn";
+    public static final String FILTER_EMPTY = "Trống";
+    public static final String FILTER_OCCUPIED = "Đã có người";
+    public static final String FILTER_CUSTOMER_NO_ROOM = "Chưa có phòng";
+    public static final String FILTER_CUSTOMER_HAS_ROOM = "Đã có phòng";
+    public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
+
+    public static void main(String[] args) {
     }
 
     public static void setWindowIcon(Stage stage) {

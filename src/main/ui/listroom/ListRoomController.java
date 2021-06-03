@@ -106,7 +106,7 @@ public class ListRoomController implements Initializable {
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
 
-        filter.getItems().addAll("Tất cả", "Trống", "Đã có người");
+        filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_EMPTY, Util.FILTER_OCCUPIED);
         filter.getSelectionModel().selectFirst();
         complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
 
@@ -159,13 +159,13 @@ public class ListRoomController implements Initializable {
 
     private void loadListToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
-            case "Tất cả":
+            case Util.FILTER_ALL:
                 roomTable.setItems(listOfAllRooms);
                 break;
-            case "Trống":
+            case Util.FILTER_EMPTY:
                 roomTable.setItems(listOfEmptyRooms);
                 break;
-            case "Đã có người":
+            case Util.FILTER_OCCUPIED:
                 roomTable.setItems(listOfOccupiedRooms);
                 break;
         }

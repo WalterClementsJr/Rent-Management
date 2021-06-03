@@ -569,7 +569,7 @@ public final class DatabaseHandler {
     public ResultSet getActiveRoommatesWithInfo(int complexId) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngayvao<=getdate() and ngaydi>getdate()");
+                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngayvao<getdate() and ngaydi<=getdate()");
             stmt.setInt(1, complexId);
 
             return stmt.executeQuery();
@@ -591,7 +591,7 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public boolean insertRoommate(int mahdong, int makh, LocalDate start, LocalDate end) {
         try {
             stmt = conn.prepareStatement(
@@ -605,13 +605,12 @@ public final class DatabaseHandler {
             if (end == null) {
                 System.out.println("setting null end date");
                 stmt.setNull(
-                    4, java.sql.Types.DATE);
+                        4, java.sql.Types.DATE);
             } else {
                 System.out.println("not null ok");
                 stmt.setDate(
-                    4, Util.LocalDateToSQLDate(end));
+                        4, Util.LocalDateToSQLDate(end));
             }
-            
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -619,7 +618,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public boolean updateRoommateStayingPeriod(int hdkID, LocalDate start, LocalDate end) {
         try {
             stmt = conn.prepareStatement(
@@ -636,9 +635,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
-    
-    
+
     public boolean endRoommateStayingPeriod(int hdkID) {
         try {
             stmt = conn.prepareStatement(
@@ -733,7 +730,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-    
+
     public boolean endContract(int mahdong) {
         try {
             stmt = conn.prepareStatement(

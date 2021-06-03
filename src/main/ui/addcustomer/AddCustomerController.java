@@ -95,7 +95,9 @@ public class AddCustomerController implements Initializable {
         // sdt, cmnd number-only textArea
         sdt.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
+            public void changed(
+                    ObservableValue<? extends String> observable,
+                    String oldValue,
                     String newValue) {
                 if (newValue.matches("\\d{0,11}")) {
                     String value = newValue;
@@ -107,7 +109,8 @@ public class AddCustomerController implements Initializable {
         });
         cmnd.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
+            public void changed(ObservableValue<? extends String> observable,
+                    String oldValue,
                     String newValue) {
                 if (newValue.matches("\\d{0,12}")) {
                     String value = newValue;

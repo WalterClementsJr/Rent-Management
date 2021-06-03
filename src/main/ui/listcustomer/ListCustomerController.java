@@ -72,7 +72,7 @@ public class ListCustomerController implements Initializable {
     public static ObservableList<Customer> listOfCustomersWithRoom = FXCollections.observableArrayList();
     public static ObservableList<Customer> listOfOldCustomers = FXCollections.observableArrayList();
 
-    private boolean datachanged = false;
+//    private boolean datachanged = false;
     DatabaseHandler handler;
 
     public static void main(String[] args) {
@@ -85,11 +85,14 @@ public class ListCustomerController implements Initializable {
 
         initCustomerTableColumns();
 
-        comboBox.getItems().addAll("Tất cả", "Chưa có phòng", "Đã có phòng", "Đã chuyển đi");
+        comboBox.getItems().addAll(
+                Util.FILTER_ALL,
+                Util.FILTER_CUSTOMER_NO_ROOM,
+                Util.FILTER_CUSTOMER_HAS_ROOM,
+                Util.FILTER_CUSTOMER_MOVED);
         comboBox.getSelectionModel().selectFirst();
 
         loadData();
-
     }
 
     private Stage getStage() {
@@ -103,20 +106,18 @@ public class ListCustomerController implements Initializable {
 
     private void loadData() {
         switch (comboBox.getSelectionModel().getSelectedItem()) {
-            case "Tất cả":
+            case Util.FILTER_ALL:
                 loadAllCustomers();
                 break;
-            case "Chưa có phòng":
+            case Util.FILTER_CUSTOMER_NO_ROOM:
                 loadCustomersWithNoRoom();
                 break;
-            case "Đã có phòng":
+            case Util.FILTER_CUSTOMER_HAS_ROOM:
                 loadCustomersWithRoom();
                 break;
-            case "Đã chuyển đi":
+            case Util.FILTER_CUSTOMER_MOVED:
                 loadOldCustomers();
                 break;
-            default:
-                System.out.println("... selected");
         }
     }
 

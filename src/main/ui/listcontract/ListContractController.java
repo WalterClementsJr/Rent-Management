@@ -89,7 +89,7 @@ public class ListContractController implements Initializable {
 
     // extra elements
     ObservableList<Complex> complexList = ListRoomController.complexList;
-//     TODO uncomment/remove these lines in production
+    // TODO uncomment/remove these lines in production
 //    ObservableList<Complex> complexList = FXCollections.observableArrayList();
 
     public static ObservableList listOfAllContracts = FXCollections.observableArrayList();
@@ -114,10 +114,9 @@ public class ListContractController implements Initializable {
         initContractTableColumns();
         initRoommateTableColumns();
 
-        int id = comboBox.getSelectionModel().getSelectedItem().getId();
+//        int id = comboBox.getSelectionModel().getSelectedItem().getId();
 
-        // TODO
-        filter.getItems().addAll("Tất cả", "Đang ở", "Đã hết hạn");
+        filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_ACTIVE, Util.FILTER_OLD);
         filter.getSelectionModel().selectFirst();
 
         loadContractData();
@@ -149,16 +148,13 @@ public class ListContractController implements Initializable {
 
     private void loadContractsToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
-            case "Tất cả":
-                System.out.println("all");
+            case Util.FILTER_ALL:
                 contractTable.setItems(listOfAllContracts);
                 break;
-            case "Đang ở":
-                System.out.println("active");
+            case Util.FILTER_ACTIVE:
                 contractTable.setItems(listOfActiveContracts);
                 break;
-            case "Đã hết hạn":
-                System.out.println("ended");
+            case Util.FILTER_OLD:
                 contractTable.setItems(listOfOldContracts);
                 break;
         }
@@ -166,13 +162,13 @@ public class ListContractController implements Initializable {
 
     private void loadRoommatesToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
-            case "Tất cả":
+            case Util.FILTER_ALL:
                 roommateTable.setItems(listOfAllRoommates);
                 break;
-            case "Đang ở":
+            case Util.FILTER_ACTIVE:
                 roommateTable.setItems(listOfActiveRoommates);
                 break;
-            case "Đã hết hạn":
+            case Util.FILTER_OLD:
                 roommateTable.setItems(listOfOldRoommates);
                 break;
         }

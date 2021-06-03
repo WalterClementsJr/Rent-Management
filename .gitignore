@@ -1,4 +1,9 @@
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
 build/
 nbbuild/
 dist/
-**/nbproject/private/
+nbdist/
+.nb-gradle/
+note.txt

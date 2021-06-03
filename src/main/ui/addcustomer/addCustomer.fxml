@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="rootAddCustomer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addcustomer.AddCustomerController">
+<StackPane fx:id="rootAddCustomer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addcustomer.AddCustomerController">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="581.0">
          <children>
@@ -19,13 +19,13 @@
                <children>
                   <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="300.0" spacing="10.0">
                      <children>
-                        <Label text="Ho va Ten" />
+                        <Label text="Họ tên" />
                         <TextField fx:id="name" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="300.0" spacing="10.0">
                      <children>
-                        <Label text="Gioi Tinh" />
+                        <Label text="Giới tính" />
                         <RadioButton fx:id="btnMale" mnemonicParsing="false" text="Nam" />
                         <RadioButton fx:id="btnFemale" mnemonicParsing="false" text="Nu" />
                         <Group />
@@ -33,7 +33,7 @@
                   </VBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="300.0" spacing="10.0">
                      <children>
-                        <Label text="SDT" />
+                        <Label text="Số điện thoại" />
                         <TextField fx:id="sdt" />
                      </children>
                   </VBox>
@@ -45,7 +45,7 @@
                   </VBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="299.0" spacing="10.0">
                      <children>
-                        <Label text="Ngay Sinh" />
+                        <Label text="Ngày sinh" />
                         <DatePicker fx:id="datePicker" prefHeight="25.0" prefWidth="170.0" promptText="D/M/YYYY" />
                      </children>
                   </VBox>
