@@ -107,19 +107,20 @@ public class ListContractController implements Initializable {
         MasterController.getInstance().registerListContractController(this);
         handler = DatabaseHandler.getInstance();
 
-        // TODO remove this complex loading
+        // TODO remove this complex loading in production
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
 
         initContractTableColumns();
         initRoommateTableColumns();
 
-//        int id = comboBox.getSelectionModel().getSelectedItem().getId();
         filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_ACTIVE, Util.FILTER_OLD);
         filter.getSelectionModel().selectFirst();
 
         loadContractData();
         loadRoommatesData();
+        loadContractsToTable();
+        loadRoommatesToTable();
     }
 
     @FXML
@@ -197,6 +198,8 @@ public class ListContractController implements Initializable {
         loadAllRoommates(id);
         loadActiveRoommates(id);
         loadOldRoommates(id);
+
+        loadRoommatesToTable();
     }
 
     public void loadAllContracts(int id) {
@@ -212,22 +215,14 @@ public class ListContractController implements Initializable {
     }
 
     public void loadAllRoommates(int id) {
-//        loadResultSetToList(handler.getOldRoommatesWithInfo(id), listOfOldRoommates);
-//        loadResultSetToList(handler.getActiveRoommatesWithInfo(id), listOfActiveRoommates);
-//
-//        listOfAllRoommates.clear();
-//        listOfAllRoommates.addAll(listOfActiveRoommates);        
-//        listOfAllRoommates.addAll(listOfOldRoommates);
         loadResultSetToList(handler.getAllRoommatesWithInfo(id), listOfAllRoommates);
     }
 
     public void loadActiveRoommates(int id) {
-        System.out.println("loading active rm");
         loadResultSetToList(handler.getActiveRoommatesWithInfo(id), listOfActiveRoommates);
     }
 
     public void loadOldRoommates(int id) {
-        System.out.println("loading old rm");
         loadResultSetToList(handler.getOldRoommatesWithInfo(id), listOfOldRoommates);
     }
 
@@ -360,7 +355,6 @@ public class ListContractController implements Initializable {
     }
 
     public void initContractTableColumns() {
-
         TableColumn mahdongCol
                 = new TableColumn<>("Mã hợp đồng");
         TableColumn maKhuCol
@@ -392,11 +386,12 @@ public class ListContractController implements Initializable {
                 mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
                 tenkhachCol, ngayNhanCol, ngayTraCol, tienCocCol, giaGocCol, ngayttgannhatCol, songayCol);
 
-        tenPhongCol.setMinWidth(200);
-        tenkhachCol.setMinWidth(200);
+        tenPhongCol.setMinWidth(150);
+        tenkhachCol.setMinWidth(150);
 
         mahdongCol.setVisible(false);
         maKhuCol.setVisible(false);
+        tenKhuCol.setVisible(false);
         maphongCol.setVisible(false);
         makhCol.setVisible(false);
         giaGocCol.setVisible(false);
@@ -471,7 +466,6 @@ public class ListContractController implements Initializable {
     }
 
     public void initRoommateTableColumns() {
-
         TableColumn mahdongCol
                 = new TableColumn<>("Mã hợp đồng");
         TableColumn maKhuCol
@@ -484,11 +478,11 @@ public class ListContractController implements Initializable {
                 = new TableColumn<>("Tên phòng");
         TableColumn makhCol
                 = new TableColumn<>("Mã khách");
-        TableColumn tenkhachCol
+        TableColumn tenkhCol
                 = new TableColumn<>("Chủ hợp đồng");
-        TableColumn maCol
+        TableColumn maRoommateCol
                 = new TableColumn<>("Mã kh ghép");
-        TableColumn tenCol
+        TableColumn tenRoommateCol
                 = new TableColumn<>("Tên khách");
         TableColumn ngayNhanCol
                 = new TableColumn<>("Ngày nhận");
@@ -501,18 +495,19 @@ public class ListContractController implements Initializable {
 
         roommateTable.getColumns().addAll(
                 mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
-                tenkhachCol, maCol, tenCol, ngayNhanCol, ngayTraCol,
+                tenkhCol, maRoommateCol, tenRoommateCol, ngayNhanCol, ngayTraCol,
                 ngayVaoCol, ngayDiCol);
 
-        tenKhuCol.setMinWidth(120);
-        tenPhongCol.setMinWidth(200);
-        tenCol.setMinWidth(200);
+        tenPhongCol.setMinWidth(150);
+        tenkhCol.setMinWidth(150);
+        tenRoommateCol.setMinWidth(150);
 
         mahdongCol.setVisible(false);
         maKhuCol.setVisible(false);
+        tenKhuCol.setVisible(false);        
         maphongCol.setVisible(false);
         makhCol.setVisible(false);
-        maCol.setVisible(false);
+        maRoommateCol.setVisible(false);
         ngayNhanCol.setVisible(false);
         ngayTraCol.setVisible(false);
 
