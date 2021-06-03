@@ -90,8 +90,7 @@ public class AutoCompleteTextField<S> extends TextField {
 
     /**
      * The CSS style that should be applied on the parts in the popup that match
-     * the entered text.
-     * Default: "-fx-font-weight: bold; -fx-fill: red;"
+     * the entered text. Default: "-fx-font-weight: bold; -fx-fill: red;"
      *
      * Note: This style is going to be applied on an
      * {@link javafx.scene.text.Text Text} instance. See the JavaFX CSS

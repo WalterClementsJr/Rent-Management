@@ -85,27 +85,27 @@ public class Customer {
     public void setCMND(String CMND) {
         this.CMND.set(CMND);
     }
-    
+
     public IntegerProperty idProperty() {
         return id;
     }
-    
+
     public StringProperty hotenProperty() {
         return hoTen;
     }
-    
+
     public BooleanProperty gioiTinhProperty() {
         return gioiTinh;
     }
-    
+
     public ObjectProperty<LocalDate> ngaySinhProperty() {
         return ngaySinh;
     }
-    
+
     public StringProperty CMNDProperty() {
         return CMND;
     }
-    
+
     public StringProperty SDTProperty() {
         return SDT;
     }
@@ -114,11 +114,11 @@ public class Customer {
     public String toString() {
         return this.getHoTen() + ", " + this.getSDT();
     }
-    
+
     public String debugString() {
         return "Customer:" + "id=" + getId() + ", hoTen=" + getHoTen()
-                + ", gioiTinh=" + getGioiTinh() + ", ngaySinh="+ getNgaySinh().format(Util.DATE_TIME_FORMATTER)
+                + ", gioiTinh=" + getGioiTinh() + ", ngaySinh=" + getNgaySinh().format(Util.DATE_TIME_FORMATTER)
                 + ", SDT=" + getSDT() + ", CMND=" + getCMND();
     }
-        
+
 }

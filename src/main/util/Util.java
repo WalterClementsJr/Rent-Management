@@ -44,7 +44,6 @@ public class Util {
     public static final String FILTER_CUSTOMER_HAS_ROOM = "Đã có phòng";
     public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
-
     public static void main(String[] args) {
     }
 

@@ -582,8 +582,8 @@
             </Menu>
         </MenuBar>
         <HTMLEditor
-                htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;"
-                prefHeight="200.0" prefWidth="506.0"/>
+            htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;"
+            prefHeight="200.0" prefWidth="506.0"/>
         <HBox prefHeight="150.0" prefWidth="868.0" spacing="10.0" style="-fx-background-color: aqua;">
             <TabPane prefHeight="100.0" prefWidth="200.0" styleClass="plain" tabClosingPolicy="ALL_TABS">
                 <Tab text="Tab 1">

@@ -1,4 +1,3 @@
-
 package main.ui.listmaintenance;
 
 import javafx.application.Application;
@@ -9,19 +8,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.util.Util;
 
-
 public class ListMainternanceLoader extends Application {
+
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("listMaintenance.fxml"));
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/main/app/bootstrap3.css").toExternalForm());
-        
+
         stage.setScene(scene);
         stage.setTitle("maintenance");
         stage.show();

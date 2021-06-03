@@ -14,60 +14,63 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.listroom.ListRoomController">
-   <children>
-      <Pane prefHeight="700.0" prefWidth="1000.0">
-         <children>
-            <VBox prefHeight="700.0" prefWidth="1000.0">
-               <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="903.0" spacing="10.0">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="84.0" text="Chọn khu nhà" />
-                        <ComboBox fx:id="comboBox" onAction="#complexChanged" prefWidth="143.0">
-                           <tooltip>
-                              <Tooltip fx:id="complexTooltip" text="Empty Tooltip">
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </Tooltip>
-                           </tooltip></ComboBox>
-                        <Button fx:id="addComplex" mnemonicParsing="false" onAction="#handleAddComplex" prefHeight="32.0" prefWidth="40.0" styleClass="success" text="+" textAlignment="CENTER">
-                           <tooltip>
-                              <Tooltip text="Thêm khu" />
-                           </tooltip></Button>
-                        <Button fx:id="editComplex" mnemonicParsing="false" onAction="#handleEditComplex" prefHeight="32.0" prefWidth="40.0" styleClass="warning" text="/" textAlignment="CENTER">
-                           <tooltip>
-                              <Tooltip text="Sửa thông tin khu" />
-                           </tooltip></Button>
-                        <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="581.0">
-                           <children>
-                              <Label prefHeight="17.0" prefWidth="32.0" text="Lọc" />
-                              <ComboBox fx:id="filter" onAction="#filterChanged" prefWidth="143.0" />
-                           </children>
+    <children>
+        <Pane prefHeight="700.0" prefWidth="1000.0">
+            <children>
+                <VBox prefHeight="700.0" prefWidth="1000.0">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="903.0" spacing="10.0">
+                            <children>
+                                <Label prefHeight="17.0" prefWidth="84.0" text="Chọn khu nhà" />
+                                <ComboBox fx:id="comboBox" onAction="#complexChanged" prefWidth="143.0">
+                                    <tooltip>
+                                        <Tooltip fx:id="complexTooltip" text="Empty Tooltip">
+                                            <font>
+                                                <Font size="13.0" />
+                                            </font>
+                                        </Tooltip>
+                                    </tooltip>
+                                </ComboBox>
+                                <Button fx:id="addComplex" mnemonicParsing="false" onAction="#handleAddComplex" prefHeight="32.0" prefWidth="40.0" styleClass="success" text="+" textAlignment="CENTER">
+                                    <tooltip>
+                                        <Tooltip text="Thêm khu" />
+                                    </tooltip>
+                                </Button>
+                                <Button fx:id="editComplex" mnemonicParsing="false" onAction="#handleEditComplex" prefHeight="32.0" prefWidth="40.0" styleClass="warning" text="/" textAlignment="CENTER">
+                                    <tooltip>
+                                        <Tooltip text="Sửa thông tin khu" />
+                                    </tooltip>
+                                </Button>
+                                <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="581.0">
+                                    <children>
+                                        <Label prefHeight="17.0" prefWidth="32.0" text="Lọc" />
+                                        <ComboBox fx:id="filter" onAction="#filterChanged" prefWidth="143.0" />
+                                    </children>
+                                </HBox>
+                            </children>
                         </HBox>
-                     </children>
-                  </HBox>
-                  <TableView fx:id="roomTable" prefHeight="498.0" prefWidth="1006.0">
-                     <contextMenu>
-                        <ContextMenu>
-                           <items>
-                              <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
-                              <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditRoom" text="Chỉnh sửa" />
-                              <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Xóa" />
-                              <MenuItem fx:id="addContract" mnemonicParsing="false" onAction="#handleAddContract" text="Thêm hợp đồng" />
-                              <MenuItem fx:id="addMaintenance" mnemonicParsing="false" onAction="#handleAddMaintenance" text="Ghi nhận bảo trì" />
-                           </items>
-                        </ContextMenu>
-                     </contextMenu>
-                  </TableView>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="64.0" prefWidth="443.0" spacing="15.0">
-                     <children>
-                        <Button fx:id="add" mnemonicParsing="false" onAction="#handleAddRoom" prefHeight="32.0" prefWidth="122.0" styleClass="success" text="Thêm phòng" />
-                        <VBox prefHeight="64.0" prefWidth="41.0" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </Pane>
-   </children>
+                        <TableView fx:id="roomTable" prefHeight="498.0" prefWidth="1006.0">
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
+                                        <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditRoom" text="Chỉnh sửa" />
+                                        <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Xóa" />
+                                        <MenuItem fx:id="addContract" mnemonicParsing="false" onAction="#handleAddContract" text="Thêm hợp đồng" />
+                                        <MenuItem fx:id="addMaintenance" mnemonicParsing="false" onAction="#handleAddMaintenance" text="Ghi nhận bảo trì" />
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </TableView>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="64.0" prefWidth="443.0" spacing="15.0">
+                            <children>
+                                <Button fx:id="add" mnemonicParsing="false" onAction="#handleAddRoom" prefHeight="32.0" prefWidth="122.0" styleClass="success" text="Thêm phòng" />
+                                <VBox prefHeight="64.0" prefWidth="41.0" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
+    </children>
 </AnchorPane>

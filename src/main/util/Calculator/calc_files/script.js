@@ -11,13 +11,12 @@ function initializeCalculator() {
     //check offline storage. see if there's any data
 
     var serializedArray = window.localStorage.getItem("programArray");
-    if (serializedArray != "[]" && serializedArray != undefined) 
+    if (serializedArray != "[]" && serializedArray != undefined)
     {
         program = JSON.parse(serializedArray);
         calculateAndUpdateDisplay();
         updateProgramDescription();
-    }
-    else
+    } else
     {
         $("#display").val("0");
         $("#descriptionDisplay").val("");
@@ -44,15 +43,14 @@ function numberPressed(pressedButtonValue) {
     //else erase the previous number from the display and start a new number
     if (userInMiddleOfTypingNumber) {
         if (pressedButtonValue != "." || currentDisplayValue.indexOf('.') == -1)
-            //consider using jquery expression jQuery.inArray()
-        {
-            if ($("#display").val() == "0")
-                $("#display").val(pressedButtonValue);
-            else
-                $("#display").val(currentDisplayValue + pressedButtonValue);
-        }
-    }
-    else {
+                //consider using jquery expression jQuery.inArray()
+                {
+                    if ($("#display").val() == "0")
+                        $("#display").val(pressedButtonValue);
+                    else
+                        $("#display").val(currentDisplayValue + pressedButtonValue);
+                }
+    } else {
         if (pressedButtonValue == '.')
             $("#display").val('0.');
         else
@@ -89,7 +87,7 @@ function isBinaryOperator(operatorOrOperand)
 {
     if ("+-*/".indexOf(operatorOrOperand) >= 0)
         return true;
-    else 
+    else
         return false;
 }
 
@@ -108,24 +106,24 @@ function getCalcValueOffTopOfStack(stack) {
     var result = stack[0];
     stack.shift();
     if (stack[0])
-        //check if there is an operator after our current operand
-    {
-        var operator = stack[0];
-        stack.shift();
-        if (stack[0])
-            //check if there is one more operand
-        {
-            var operand2 = stack[0];
-            stack.shift();
-            if (isBinaryOperator(operator))
-                //extra check to ensure binary operation
+            //check if there is an operator after our current operand
             {
-                
-                result = doBinaryOperation(result, operand2, operator);
-                stack.unshift(result);
+                var operator = stack[0];
+                stack.shift();
+                if (stack[0])
+                        //check if there is one more operand
+                        {
+                            var operand2 = stack[0];
+                            stack.shift();
+                            if (isBinaryOperator(operator))
+                                    //extra check to ensure binary operation
+                                    {
+
+                                        result = doBinaryOperation(result, operand2, operator);
+                                        stack.unshift(result);
+                                    }
+                        }
             }
-        }
-    }
     if (stack.length > 1)
         result = getCalcValueOffTopOfStack(stack);
 
@@ -145,31 +143,30 @@ function getDisplayOffTopOfStack(stack) {
     var result = stack[0];
     stack.shift();
     if (stack[0])
-        //check if there is an operator after our current operand
-    {
-        var operator = stack[0];
+            //check if there is an operator after our current operand
+            {
+                var operator = stack[0];
 
-        //if the previous operation was of type + or -, and if this operation is * or /, then apply the brackets on the result
-        if (isParenthesisNeededOnNextOperation && (operator == "*" || operator == "/"))
-        {
-            result = "(" + result + ")" + operator;
-            isParenthesisNeededOnNextOperation = false;
-        }
-        else
-            result += operator;
+                //if the previous operation was of type + or -, and if this operation is * or /, then apply the brackets on the result
+                if (isParenthesisNeededOnNextOperation && (operator == "*" || operator == "/"))
+                {
+                    result = "(" + result + ")" + operator;
+                    isParenthesisNeededOnNextOperation = false;
+                } else
+                    result += operator;
 
-        if (operator == "+" || operator == "-")
-            isParenthesisNeededOnNextOperation = true;
-        stack.shift();
-        if (stack[0])
-            //check if there is one more operand
-        {
-            var operand2 = stack[0];
-            result += operand2;
-            stack.shift();
-            stack.unshift(result);
-        }
-    }
+                if (operator == "+" || operator == "-")
+                    isParenthesisNeededOnNextOperation = true;
+                stack.shift();
+                if (stack[0])
+                        //check if there is one more operand
+                        {
+                            var operand2 = stack[0];
+                            result += operand2;
+                            stack.shift();
+                            stack.unshift(result);
+                        }
+            }
     if (stack.length > 1)
         result = getDisplayOffTopOfStack(stack);
 
@@ -180,7 +177,7 @@ function calculateAndUpdateDisplay() {
     var result = getCalcValueOffTopOfStack(program.slice(0));
     result = result.toString();
     if (result.indexOf('.') != -1) {
-        result = result.substr(0, result.indexOf('.')+6);
+        result = result.substr(0, result.indexOf('.') + 6);
     }
 
     $("#display").val(result);
@@ -229,8 +226,7 @@ function operationPressed(pressedOperation) {
         calculateAndUpdateDisplay();
         //update programdescription
 
-    }
-    else {
+    } else {
         //check if the last item pushed was a binary operator
         //if so replace it
         if (program.length == 0)
@@ -275,7 +271,8 @@ function allClearPressed() {
 
 function checkForSpecialKeys(event)
 {
-    if (event.keyCode == 8 || event.keyCode == 23) event.preventDefault();
+    if (event.keyCode == 8 || event.keyCode == 23)
+        event.preventDefault();
 
     //still handle clearing for backspace
     if (event.keyCode == 8)

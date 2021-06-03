@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
@@ -45,7 +44,7 @@ public class AddComplexController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dbHandler = DatabaseHandler.getInstance();
-        
+
         delete.setVisible(isEditing);
 
     }
@@ -76,16 +75,16 @@ public class AddComplexController implements Initializable {
 
         String cName = name.getText().trim();
         String cAddr = address.getText().trim();
-        
+
         if (dbHandler.isComplexExist(-1, cName)) {
             CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
             return;
         }
-        
+
         Complex c = new Complex(
                 cName,
                 cAddr);
-        
+
         if (dbHandler.insertNewComplex(c)) {
             CustomAlert.showSimpleAlert("Thành công", "Khu " + cName + " đã được thêm");
             clearEntries();
@@ -101,7 +100,7 @@ public class AddComplexController implements Initializable {
 
         String cName = name.getText().trim();
         String cAddr = address.getText().trim();
-        
+
         if (dbHandler.isComplexExist(currentComplex.getId(), cName)) {
             CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
             return;
@@ -125,16 +124,20 @@ public class AddComplexController implements Initializable {
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xóa khu");
-        alert.setContentText("Bạn có muốn xóa khu " + currentComplex.getTen() + " ?");
-        Optional<ButtonType> answer = alert.showAndWait();
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDelete(
+                        "Xóa khách",
+                        "Bạn có chắc muốn xóa" + currentComplex.getTen() + "?").showAndWait();
         if (answer.get() == ButtonType.OK) {
             Boolean result = dbHandler.deleteComplex(currentComplex);
             if (result) {
-                CustomAlert.showSimpleAlert("Đã xóa", "Đã xóa khu " + currentComplex.getTen());
+                CustomAlert.showSimpleAlert(
+                        "Đã xóa",
+                        "Đã xóa khu " + currentComplex.getTen());
             } else {
-                CustomAlert.showSimpleAlert("Thất bại", "Hãy xóa các thông tin liên quan đến khu này và thử lại");
+                CustomAlert.showSimpleAlert(
+                        "Thất bại",
+                        "Hãy xóa các thông tin liên quan đến khu này và thử lại");
             }
         }
     }

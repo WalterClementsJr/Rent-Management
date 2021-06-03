@@ -1,4 +1,3 @@
-
 package main.ui.addmaintenance;
 
 import java.math.BigDecimal;
@@ -23,7 +22,6 @@ import main.model.Maintenance;
 import main.model.Room;
 import main.ui.alert.CustomAlert;
 
-
 public class AddMaintenanceController implements Initializable {
 
     @FXML
@@ -39,12 +37,11 @@ public class AddMaintenanceController implements Initializable {
     @FXML
     private Button cancel;
 
-    
     // extra
     private boolean isEditing = false;
     Maintenance currentMaintenance = null;
     Room currentRoom = null;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // date format
@@ -85,9 +82,9 @@ public class AddMaintenanceController implements Initializable {
                 }
             }
         });
-        
+
     }
-    
+
     @FXML
     private void handleAdd(ActionEvent event) {
         if (isEditing) {
@@ -97,12 +94,12 @@ public class AddMaintenanceController implements Initializable {
         if (!checkEntries()) {
             return;
         }
-        
+
         if (currentRoom == null) {
             CustomAlert.showSimpleAlert("Lỗi", "Chưa chọn phòng");
             return;
         }
-        
+
         Maintenance mtn = new Maintenance(
                 currentRoom.getId(),
                 new BigDecimal(price.getText().trim()),
@@ -112,7 +109,7 @@ public class AddMaintenanceController implements Initializable {
             CustomAlert.showSimpleAlert("Thành công", "Đã thêm thông tin bảo trì vào phòng");
         }
     }
-    
+
     private void handleEdit() {
         if (!checkEntries()) {
             return;
@@ -124,7 +121,7 @@ public class AddMaintenanceController implements Initializable {
         currentMaintenance.setMoTa(desc.getText().trim());
         currentMaintenance.setChiPhi(new BigDecimal(price.getText().trim()));
         currentMaintenance.setNgay(date.getValue());
-        
+
         if (DatabaseHandler.getInstance().updateMaintenance(currentMaintenance)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin bảo trì");
             currentMaintenance = null;
@@ -136,25 +133,25 @@ public class AddMaintenanceController implements Initializable {
     private void handleCancel(ActionEvent event) {
         getStage().close();
     }
-    
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-    
+
     public void loadRoom(Room room) {
         currentRoom = room;
         System.out.println(currentRoom.debugString());
     }
-    
+
     public void loadEntries(Maintenance m) {
         desc.setText(m.getMoTa());
         price.setText(m.getChiPhi().stripTrailingZeros().toPlainString());
         date.setValue(m.getNgay());
-        
+
         isEditing = true;
         currentMaintenance = m;
     }
-    
+
     private boolean checkEntries() {
         if (desc.getText().isBlank()) {
             CustomAlert.showErrorMessage("Mô tả trống", "Hãy nhập sơ lược thông tin sửa chữa/bảo trì");

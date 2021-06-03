@@ -22,7 +22,7 @@ import main.util.MasterController;
 import main.util.Util;
 
 public class MainController implements Initializable {
-    
+
     @FXML
     private BorderPane root;
 
@@ -41,23 +41,19 @@ public class MainController implements Initializable {
     @FXML
     private Button menuBtnPayment;
 
-        @FXML
+    @FXML
     private StackPane rootPane;
 
-    
     // external Pane
     private AnchorPane lCustomer;
     private AnchorPane lRoom;
     private AnchorPane lContract;
     private AnchorPane lInvoice;
-    
-    
-        
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MasterController.getInstance().registerMainController(this);
-        
-        
+
         // load external panes
         lCustomer = Util.loadPane(getClass().getResource("/main/ui/listcustomer/listCustomer.fxml"));
         lRoom = Util.loadPane(getClass().getResource("/main/ui/listroom/listRoom.fxml"));
@@ -66,13 +62,13 @@ public class MainController implements Initializable {
 
         rootPane.getChildren().addAll(lCustomer, lRoom, lContract, lInvoice);
         showNode(rootPane.getChildren(), lContract);
-        
+
     }
-    
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-    
+
     @FXML
     private void loadListCustomer(ActionEvent event) throws IOException {
         showNode(rootPane.getChildren(), lCustomer);
@@ -82,15 +78,17 @@ public class MainController implements Initializable {
     private void loadListRoom(ActionEvent event) {
         showNode(rootPane.getChildren(), lRoom);
     }
+
     @FXML
     private void loadListContract(ActionEvent event) {
         showNode(rootPane.getChildren(), lContract);
     }
+
     @FXML
     private void loadListInvoice(ActionEvent event) {
         showNode(rootPane.getChildren(), lInvoice);
     }
-    
+
     @FXML
     private void handleMenuFullScreen(ActionEvent event) {
         Stage stage = getStage();
@@ -105,12 +103,11 @@ public class MainController implements Initializable {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * 
+     *
      * @param nodes
-     * @param nodeToShow
-     * chuyển pane sang nodeToShow
+     * @param nodeToShow chuyển pane sang nodeToShow
      */
     public static void showNode(List<Node> nodes, Node nodeToShow) {
         nodes.forEach(node -> {

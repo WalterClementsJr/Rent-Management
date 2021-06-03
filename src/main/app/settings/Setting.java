@@ -25,7 +25,7 @@ public class Setting {
 
     public static final String CONFIG_FILE = "qlnt.ini";
     public static MessageDigest DIGEST;
-    
+
     private byte[] hash;
 
     public Setting() {
@@ -49,7 +49,7 @@ public class Setting {
         return new String(
                 DIGEST.digest(password.getBytes(StandardCharsets.UTF_16))).equals(getPwd());
     }
-    
+
     public static void initSetting() {
         Writer writer = null;
         try {
@@ -67,10 +67,11 @@ public class Setting {
             }
         }
     }
-    
+
     /**
      * read setting from json file
-     * @return 
+     *
+     * @return
      */
     public static Setting getSetting() {
         Gson gson = new Gson();
@@ -97,10 +98,12 @@ public class Setting {
             Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("write to file faled!");
             //TODO same thing
-            CustomAlert.showErrorMessage(ex, "Failed", "Cant save configuration file");
+            CustomAlert.showErrorMessage("Failed", "Cant save configuration file");
         } finally {
             try {
-                if (writer != null) writer.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
             }

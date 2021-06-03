@@ -90,7 +90,7 @@ public class AddRoomController implements Initializable {
                 }
             }
         });
-        
+
         size.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -103,7 +103,7 @@ public class AddRoomController implements Initializable {
                 }
             }
         });
-        
+
         deposit.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -116,7 +116,7 @@ public class AddRoomController implements Initializable {
                 }
             }
         });
-        
+
         dbHandler = DatabaseHandler.getInstance();
         loadData();
     }
@@ -220,14 +220,14 @@ public class AddRoomController implements Initializable {
         BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
         int rSize = Integer.parseInt(size.getText().trim());
         String rDescript = desc.getText().trim();
-        
+
         Room newRoom = new Room(rName, rNOfPeople, rPrice, rDeposit, rSize, rDescript, chosenComplex.getId());
-        
+
         if (dbHandler.isRoomNameExist(-1, chosenComplex.getId(), rName)) {
             CustomAlert.showSimpleAlert(
                     "Lỗi", "Phòng với tên này đã tồn tại trong khu " + chosenComplex.getTen());
         }
-        
+
         if (dbHandler.insertNewRoom(newRoom)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã thêm phòng");
         } else {
@@ -255,12 +255,12 @@ public class AddRoomController implements Initializable {
         currentRoom.setDienTich(rSize);
         currentRoom.setMoTa(rDescript);
         currentRoom.setMaKhu(chosenComplex.getId());
-        
+
         if (dbHandler.isRoomNameExist(currentRoom.getId(), chosenComplex.getId(), rName)) {
             CustomAlert.showSimpleAlert("Lỗi", "Tên phòng đã tồn tại trong khu " + chosenComplex.getTen());
         }
 
-        if(dbHandler.updateRoom(currentRoom)) {
+        if (dbHandler.updateRoom(currentRoom)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin phòng");
             currentRoom = null;
         } else {
@@ -294,7 +294,7 @@ public class AddRoomController implements Initializable {
         }
         return true;
     }
-    
+
     public void loadEntries(Room r) {
         System.out.println(r.debugString());
         for (Complex c : list) {
@@ -303,14 +303,14 @@ public class AddRoomController implements Initializable {
                 comboBox.setDisable(true);
             }
         }
-        
+
         name.setText(r.getTenPhong().trim());
         nOfPeople.getValueFactory().setValue(r.getSoNguoi());
         size.setText("" + r.getDienTich());
         deposit.setText(r.getTienCoc().stripTrailingZeros().toPlainString());
         price.setText(r.getGiaGoc().stripTrailingZeros().toPlainString());
         desc.setText(r.getMoTa());
-        
+
         isEditing = true;
         currentRoom = r;
     }

@@ -21,7 +21,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -36,14 +35,9 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import main.database.DatabaseHandler;
 import main.model.Complex;
-import main.model.Contract;
 import main.model.Maintenance;
-import main.model.Room;
-import main.ui.addcontract.AddContractController;
 import main.ui.addmaintenance.AddMaintenanceController;
 import main.ui.alert.CustomAlert;
-import main.ui.listcontract.ListContractController;
-import main.ui.listroom.ListRoomController;
 import main.util.Util;
 
 public class ListMaintenanceController implements Initializable {
@@ -64,7 +58,6 @@ public class ListMaintenanceController implements Initializable {
     private Button help;
 
     // extra elements
-
     // TODO remove this line in production
     ObservableList<Complex> complexList = FXCollections.observableArrayList();
 //    ObservableList<Complex> complexList = ListRoomController.complexList;
@@ -110,7 +103,7 @@ public class ListMaintenanceController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListMaintenanceController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         comboBox.getItems().addAll(complexList);
     }
 
@@ -155,7 +148,7 @@ public class ListMaintenanceController implements Initializable {
     private void handleRefresh(ActionEvent event) {
         // TODO remove this line in production
         loadComplexData();
-        
+
         comboBox.getSelectionModel().selectFirst();
         loadData();
     }
@@ -215,7 +208,6 @@ public class ListMaintenanceController implements Initializable {
 
     @FXML
     private void handleDelete(ActionEvent event) {
-        ObservableList list = tableView.getSelectionModel().getSelectedItems();
         ObservableList row;
 
         try {
@@ -225,22 +217,23 @@ public class ListMaintenanceController implements Initializable {
                 return;
             }
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Xóa bảo trì");
-            alert.setContentText("Bạn có chắc muốn xóa?");
-            Optional<ButtonType> answer = alert.showAndWait();
+            Optional<ButtonType> answer
+                    = CustomAlert.confirmDelete(
+                            "Xóa bảo trì",
+                            "Bạn có chắc muốn xóa thông tin bảo trì?").showAndWait();
 
             if (answer.get() == ButtonType.OK) {
                 if (handler.deleteMaintenance(Integer.parseInt(row.get(0).toString()))) {
-                    CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa thông tin bảo trì");
+                    CustomAlert.showSimpleAlert(
+                            "Xóa thành công", "Đã xóa thông tin bảo trì");
                     handleRefresh(new ActionEvent());
                 } else {
-                    CustomAlert.showErrorMessage("Không thể xóa", "Đã có lỗi xảy ra");
+                    CustomAlert.showErrorMessage(
+                            "Không thể xóa", "Đã có lỗi xảy ra");
                 }
             }
         } catch (IndexOutOfBoundsException ex) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn thông tin bảo trì để chỉnh sửa");
-            return;
         }
     }
 
@@ -267,12 +260,12 @@ public class ListMaintenanceController implements Initializable {
                 idCol, maphongCol,
                 tenPhongCol, chiphiCol,
                 ngayCol, moTaCol);
-        
+
         tenPhongCol.setMinWidth(200);
         chiphiCol.setMinWidth(150);
         ngayCol.setMinWidth(150);
         moTaCol.setMinWidth(300);
-        
+
         idCol.setVisible(false);
         maphongCol.setVisible(false);
 
@@ -328,5 +321,4 @@ public class ListMaintenanceController implements Initializable {
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-
 }

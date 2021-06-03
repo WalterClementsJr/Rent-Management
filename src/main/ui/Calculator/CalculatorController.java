@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-
 public class CalculatorController implements Initializable {
 
     @FXML
@@ -25,5 +24,5 @@ public class CalculatorController implements Initializable {
 //        engine.load(cal.toURI().toString());
         engine.load("https://testdrive-archive.azurewebsites.net/HTML5/OfflineCalculator/Default.html");
     }
-    
+
 }

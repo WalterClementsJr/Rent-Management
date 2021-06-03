@@ -10,33 +10,33 @@
 <?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addcomplex.AddComplexController">
-   <children>
-      <AnchorPane prefHeight="600.0" prefWidth="581.0">
-         <children>
-            <VBox alignment="CENTER" fillWidth="false" layoutY="45.0" prefHeight="455.0" prefWidth="335.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="300.0" spacing="10.0">
-                     <children>
-                        <Label text="Tên khu" />
-                        <TextField fx:id="name" />
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="300.0" spacing="10.0">
-                     <children>
-                        <Label text="Địa chỉ" />
-                        <TextArea fx:id="address" prefHeight="64.0" prefWidth="300.0" />
-                     </children>
-                  </VBox>
-                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="284.0" spacing="10.0">
-                     <children>
-                        <Button fx:id="save" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
-                        <Button fx:id="delete" mnemonicParsing="false" onAction="#handleDeleteComplex" prefHeight="32.0" prefWidth="79.0" styleClass="danger" text="Xóa" />
-                        <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
-   </children>
+    <children>
+        <AnchorPane prefHeight="600.0" prefWidth="581.0">
+            <children>
+                <VBox alignment="CENTER" fillWidth="false" layoutY="45.0" prefHeight="455.0" prefWidth="335.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="300.0" spacing="10.0">
+                            <children>
+                                <Label text="Tên khu" />
+                                <TextField fx:id="name" />
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="300.0" spacing="10.0">
+                            <children>
+                                <Label text="Địa chỉ" />
+                                <TextArea fx:id="address" prefHeight="64.0" prefWidth="300.0" />
+                            </children>
+                        </VBox>
+                        <HBox alignment="CENTER" prefHeight="55.0" prefWidth="284.0" spacing="10.0">
+                            <children>
+                                <Button fx:id="save" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
+                                <Button fx:id="delete" mnemonicParsing="false" onAction="#handleDeleteComplex" prefHeight="32.0" prefWidth="79.0" styleClass="danger" text="Xóa" />
+                                <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
 </StackPane>

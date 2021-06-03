@@ -19,76 +19,76 @@
     <stylesheets>
         <URL value="@/main/app/bootstrap3.css" />
     </stylesheets>
-   <children>
-      <Pane prefHeight="700.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <VBox prefHeight="700.0" prefWidth="1000.0">
-               <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="939.0">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="84.0" text="Chọn khu nhà" />
-                        <ComboBox fx:id="comboBox" onAction="#complexChanged" prefWidth="143.0">
-                           <tooltip>
-                              <Tooltip fx:id="complexTooltip" text="Empty Tooltip">
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </Tooltip>
-                           </tooltip>
-                        </ComboBox>
-                        <HBox prefHeight="115.0" prefWidth="60.0" />
-                        <Label prefHeight="17.0" prefWidth="31.0" text="Lọc" />
-                        <ComboBox fx:id="filter" onAction="#filterChanged" prefWidth="143.0" />
-                     </children>
-                  </HBox>
-                  <TabPane prefHeight="586.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
-                    <tabs>
-                      <Tab text="Chủ hợp đồng">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <TableView fx:id="contractTable" prefHeight="548.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <contextMenu>
-                                          <ContextMenu>
-                                             <items>
-                                                <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
-                                                <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditContract" text="Chỉnh sửa" />
-                                                <MenuItem fx:id="addRoommate" mnemonicParsing="false" onAction="#handleAddRoommate" text=" Thêm khách ở ghép" />
-                                                <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Xóa" />
-                                                <MenuItem fx:id="returnMenu" mnemonicParsing="false" onAction="#handleReturn" text="Trả phòng" />
-                                             </items>
-                                          </ContextMenu>
-                                       </contextMenu>
-                                    </TableView>
-                                 </children>
-                              </AnchorPane>
-                        </content>
-                      </Tab>
-                      <Tab text="Khách ở ghép">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                 <children>
-                                    <TableView fx:id="roommateTable" prefHeight="548.0" prefWidth="1000.0">
-                                       <contextMenu>
-                                          <ContextMenu>
-                                             <items>
-                                                <MenuItem fx:id="refreshMenu1" mnemonicParsing="false" onAction="#handleRefreshRoommates" text="Làm mới" />
-                                                <MenuItem fx:id="editMenu1" mnemonicParsing="false" onAction="#handleEditRoommate" text="Chỉnh sửa" />
-                                                <MenuItem fx:id="deleteMenu1" mnemonicParsing="false" onAction="#handleDeleteRoommate" text="Xóa" />
-                                                <MenuItem fx:id="returnMenu1" mnemonicParsing="false" onAction="#handleRoommateReturn" text="Trả phòng" />
-                                             </items>
-                                          </ContextMenu>
-                                       </contextMenu>
-                                    </TableView>
-                                 </children>
-                              </AnchorPane>
-                        </content>
-                      </Tab>
-                    </tabs>
-                  </TabPane>
-               </children>
-            </VBox>
-         </children>
-      </Pane>
-   </children>
+    <children>
+        <Pane prefHeight="700.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <VBox prefHeight="700.0" prefWidth="1000.0">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="939.0">
+                            <children>
+                                <Label prefHeight="17.0" prefWidth="84.0" text="Chọn khu nhà" />
+                                <ComboBox fx:id="comboBox" onAction="#complexChanged" prefWidth="143.0">
+                                    <tooltip>
+                                        <Tooltip fx:id="complexTooltip" text="Empty Tooltip">
+                                            <font>
+                                                <Font size="13.0" />
+                                            </font>
+                                        </Tooltip>
+                                    </tooltip>
+                                </ComboBox>
+                                <HBox prefHeight="115.0" prefWidth="60.0" />
+                                <Label prefHeight="17.0" prefWidth="64.0" text="Lọc theo" />
+                                <ComboBox fx:id="filter" onAction="#filterChanged" prefWidth="143.0" />
+                            </children>
+                        </HBox>
+                        <TabPane prefHeight="586.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+                            <tabs>
+                                <Tab text="Chủ hợp đồng">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                            <children>
+                                                <TableView fx:id="contractTable" prefHeight="548.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <contextMenu>
+                                                        <ContextMenu>
+                                                            <items>
+                                                                <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
+                                                                <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditContract" text="Chỉnh sửa" />
+                                                                <MenuItem fx:id="addRoommate" mnemonicParsing="false" onAction="#handleAddRoommate" text=" Thêm khách ở ghép" />
+                                                                <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Xóa" />
+                                                                <MenuItem fx:id="returnMenu" mnemonicParsing="false" onAction="#handleReturn" text="Trả phòng" />
+                                                            </items>
+                                                        </ContextMenu>
+                                                    </contextMenu>
+                                                </TableView>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </Tab>
+                                <Tab text="Khách ở ghép">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                            <children>
+                                                <TableView fx:id="roommateTable" prefHeight="548.0" prefWidth="1000.0">
+                                                    <contextMenu>
+                                                        <ContextMenu>
+                                                            <items>
+                                                                <MenuItem fx:id="refreshMenu1" mnemonicParsing="false" onAction="#handleRefreshRoommates" text="Làm mới" />
+                                                                <MenuItem fx:id="editMenu1" mnemonicParsing="false" onAction="#handleEditRoommate" text="Chỉnh sửa" />
+                                                                <MenuItem fx:id="deleteMenu1" mnemonicParsing="false" onAction="#handleDeleteRoommate" text="Xóa" />
+                                                                <MenuItem fx:id="returnMenu1" mnemonicParsing="false" onAction="#handleRoommateReturn" text="Trả phòng" />
+                                                            </items>
+                                                        </ContextMenu>
+                                                    </contextMenu>
+                                                </TableView>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
+    </children>
 </AnchorPane>

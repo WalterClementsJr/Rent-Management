@@ -115,7 +115,6 @@ public class ListContractController implements Initializable {
         initRoommateTableColumns();
 
 //        int id = comboBox.getSelectionModel().getSelectedItem().getId();
-
         filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_ACTIVE, Util.FILTER_OLD);
         filter.getSelectionModel().selectFirst();
 
@@ -234,7 +233,6 @@ public class ListContractController implements Initializable {
 
     @FXML
     void handleDeleteButton(ActionEvent event) {
-        ObservableList list = contractTable.getSelectionModel().getSelectedItems();
         ObservableList row;
         try {
             row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
@@ -242,19 +240,20 @@ public class ListContractController implements Initializable {
                 CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để xóa");
                 return;
             }
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Xóa phòng");
-            alert.setContentText("Xác nhận xóa?");
-            Optional<ButtonType> answer = alert.showAndWait();
+
+            Optional<ButtonType> answer
+                    = CustomAlert.confirmDelete(
+                            "Xóa hợp đồng",
+                            "Bạn có chắc muốn xóa hợp đồng này?").showAndWait();
             if (answer.get() == ButtonType.OK) {
                 if (handler.deleteContract(Integer.parseInt(row.get(0).toString()))) {
-                    CustomAlert.showSimpleAlert("Xóa thành công", "Đã xóa hợp đồng");
+                    CustomAlert.showSimpleAlert(
+                            "Xóa thành công", "Đã xóa hợp đồng");
                     handleRefresh(new ActionEvent());
                 } else {
-                    CustomAlert.showErrorMessage("Không thể xóa", "Đã có lỗi xảy ra");
+                    CustomAlert.showErrorMessage(
+                            "Không thể xóa", "Đã có lỗi xảy ra");
                 }
-            } else {
-                CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
             }
         } catch (IndexOutOfBoundsException ex) {
             CustomAlert.showErrorMessage("Chưa chọn", "Hãy chọn một hợp đồng để xóa");
@@ -263,7 +262,6 @@ public class ListContractController implements Initializable {
 
     @FXML
     void handleEditContract(ActionEvent event) {
-        ObservableList list = contractTable.getSelectionModel().getSelectedItems();
         ObservableList row;
         try {
             row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
@@ -307,9 +305,7 @@ public class ListContractController implements Initializable {
             }
         } catch (IndexOutOfBoundsException ex) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
-            return;
         }
-
     }
 
     @FXML
@@ -331,7 +327,7 @@ public class ListContractController implements Initializable {
     public void handleAddRoommate(ActionEvent e) {
         // TODO add roomate here
     }
-    
+
     @FXML
     public void handleEditRoommate(ActionEvent e) {
         // TODO end ACTIVE roommates staying period

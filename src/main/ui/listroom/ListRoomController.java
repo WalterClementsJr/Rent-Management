@@ -18,7 +18,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -102,7 +101,7 @@ public class ListRoomController implements Initializable {
         // setup UI elements
         roomTable.setPlaceholder(new Label("Không có thông tin"));
         initRoomTableColumns(roomTable);
-        
+
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
 
@@ -110,13 +109,13 @@ public class ListRoomController implements Initializable {
         filter.getSelectionModel().selectFirst();
         complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
 
-        Image addimg =
-                new Image(MainController.class.getResourceAsStream(
+        Image addimg
+                = new Image(MainController.class.getResourceAsStream(
                         "/main/resources/icons/add.png"));
         addComplex.setGraphic(new ImageView(addimg));
 
-        Image editimg =
-                new Image(MainController.class.getResourceAsStream(
+        Image editimg
+                = new Image(MainController.class.getResourceAsStream(
                         "/main/resources/icons/edit.png"));
         editComplex.setGraphic(new ImageView(editimg));
 
@@ -391,10 +390,10 @@ public class ListRoomController implements Initializable {
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xóa phòng");
-        alert.setContentText("Bạn chắc chắn muốn xóa " + selected.getTenPhong() + "?");
-        Optional<ButtonType> answer = alert.showAndWait();
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDelete(
+                        "Xóa phòng",
+                        "Bạn có chắc muốn xóa phòng?").showAndWait();
         if (answer.get() == ButtonType.OK) {
             if (handler.deleteRoom(selected)) {
                 CustomAlert.showSimpleAlert("Đã xóa ", selected.getTenPhong());

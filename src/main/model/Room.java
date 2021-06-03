@@ -79,7 +79,7 @@ public class Room {
     public void setGiaGoc(BigDecimal giaGoc) {
         this.giaGoc.set(giaGoc);
     }
-    
+
     public int getDienTich() {
         return dienTich.get();
     }
@@ -87,7 +87,7 @@ public class Room {
     public void setDienTich(int dt) {
         this.dienTich.set(dt);
     }
-    
+
     public BigDecimal getTienCoc() {
         return tienCoc.get();
     }
@@ -95,7 +95,7 @@ public class Room {
     public void setTienCoc(BigDecimal tienCoc) {
         this.tienCoc.set(tienCoc);
     }
-    
+
     public String getMoTa() {
         return moTa.get();
     }
@@ -123,11 +123,11 @@ public class Room {
     public ObjectProperty<BigDecimal> giaGocProperty() {
         return giaGoc;
     }
-    
+
     public StringProperty moTaProperty() {
         return moTa;
     }
-    
+
     @Override
     public String toString() {
         return getTenPhong();
@@ -143,6 +143,5 @@ public class Room {
     public boolean equals(Room other) {
         return other.getId() == this.getId();
     }
-    
-    
+
 }

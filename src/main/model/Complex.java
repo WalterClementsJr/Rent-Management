@@ -62,7 +62,7 @@ public class Complex {
     public String toString() {
         return getTen();
     }
-    
+
     public String getDescription() {
         return getTen() + ", " + getDiaChi();
     }

@@ -8,13 +8,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public class Contract {
+
     private IntegerProperty id;
-    private IntegerProperty maPhong;    
+    private IntegerProperty maPhong;
     private IntegerProperty maKH;
     private ObjectProperty<LocalDate> ngayNhan;
     private ObjectProperty<LocalDate> ngayTra;
     private ObjectProperty<BigDecimal> tienCoc;
-    
+
     public Contract(int id, int maPhong, int maKH, LocalDate ngayNhan, LocalDate ngayTra, BigDecimal tienCoc) {
         this.id = new SimpleIntegerProperty(id);
         this.maPhong = new SimpleIntegerProperty(maPhong);
@@ -23,7 +24,7 @@ public class Contract {
         this.ngayTra = new SimpleObjectProperty<>(ngayTra);
         this.tienCoc = new SimpleObjectProperty<>(tienCoc);
     }
-    
+
     public Contract(int maPhong, int maKH, LocalDate ngayNhan, LocalDate ngayTra, BigDecimal tienCoc) {
         this.maPhong = new SimpleIntegerProperty(maPhong);
         this.maKH = new SimpleIntegerProperty(maKH);
@@ -79,27 +80,27 @@ public class Contract {
     public void setTienCoc(BigDecimal tienCoc) {
         this.tienCoc.set(tienCoc);
     }
-    
+
     public IntegerProperty idProperty() {
         return id;
     }
-    
+
     public IntegerProperty maPhongProperty() {
         return maPhong;
     }
-    
+
     public IntegerProperty maKHProperty() {
         return maKH;
     }
-    
+
     public ObjectProperty<LocalDate> ngayNhanProperty() {
         return ngayNhan;
     }
-    
+
     public ObjectProperty<LocalDate> ngayTraProperty() {
         return ngayTra;
     }
-    
+
     public ObjectProperty<BigDecimal> tienCocProperty() {
         return tienCoc;
     }
@@ -109,5 +110,5 @@ public class Contract {
                 + ", maKH=" + maKH + ", ngayNhan=" + getNgayNhan()
                 + ", ngayTra=" + getNgayTra() + ", tienCoc=" + getTienCoc() + '}';
     }
-    
+
 }

@@ -17,7 +17,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -224,25 +223,29 @@ public class ListCustomerController implements Initializable {
         }
 
         //  check if customer has any related data before deleting
-        if (DatabaseHandler.getInstance().isCustomerDeletable(selectedForDeletion.getId())) {
-            CustomAlert.showErrorMessage("Lỗi", "Không thể xóa khách đã/đang ở trong hệ thống.");
+        if (!DatabaseHandler.getInstance().isCustomerDeletable(selectedForDeletion.getId())) {
+            CustomAlert.showErrorMessage("Lỗi",
+                    "Không thể xóa khách đã/đang ở trong hệ thống."
+                    + "\nHãy xóa các thông tin liên quan và thử lại");
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xóa khách");
-        alert.setContentText("Bạn có muốn xóa " + selectedForDeletion.getHoTen() + " ?");
-        Optional<ButtonType> answer = alert.showAndWait();
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDelete(
+                        "Xóa khách",
+                        "Bạn có chắc muốn xóa" + selectedForDeletion.getHoTen() + "?").showAndWait();
         if (answer.get() == ButtonType.OK) {
             Boolean result = handler.deleteCustomer(selectedForDeletion);
             if (result) {
-                CustomAlert.showSimpleAlert("Đã xóa ", selectedForDeletion.getHoTen() + " was deleted successfully.");
+                CustomAlert.showSimpleAlert(
+                        "Thành công",
+                        "Đã xóa " + selectedForDeletion.getHoTen());
                 listOfAllCustomers.remove(selectedForDeletion);
             } else {
-                CustomAlert.showSimpleAlert("Thất bại", selectedForDeletion.getHoTen() + " không thể xóa được");
+                CustomAlert.showSimpleAlert(
+                        "Thất bại",
+                        "Không thể xóa " + selectedForDeletion.getHoTen());
             }
-        } else {
-            CustomAlert.showSimpleAlert("Hủy", "Hủy xóa");
         }
     }
 

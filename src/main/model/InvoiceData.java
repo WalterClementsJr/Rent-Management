@@ -1,12 +1,11 @@
-
 package main.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import main.util.Util;
 
-
 public class InvoiceData {
+
     int mahdong;
     LocalDate lastPayDate;
     LocalDate ngaytra;
@@ -60,6 +59,5 @@ public class InvoiceData {
     public void setSongay(int songay) {
         this.songay = songay;
     }
-    
-    
+
 }
