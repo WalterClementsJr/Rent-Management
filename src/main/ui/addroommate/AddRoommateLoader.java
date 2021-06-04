@@ -1,4 +1,4 @@
-package main.ui.addroomate;
+package main.ui.addroommate;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;

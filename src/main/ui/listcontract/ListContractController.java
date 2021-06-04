@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,17 +28,18 @@ import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import main.app.Main;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.model.Contract;
 import main.ui.addcontract.AddContractController;
+import main.ui.addroommate.AddRoommateController;
 import main.ui.alert.CustomAlert;
 import main.ui.listroom.ListRoomController;
 import main.util.MasterController;
@@ -316,21 +318,163 @@ public class ListContractController implements Initializable {
     @FXML
     public void handleReturn(ActionEvent e) {
         // TODO end ACTIVE contract
+        ObservableList selectedRow;
+        try {
+            selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
+            if (selectedRow == null) {
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn một hợp đồng để kết thúc hợp đồng");
+                return;
+            }
+            int selectedConId = Integer.parseInt((String) selectedRow.get(0));
+            List activeConRow;
+            int activeConId;
+
+            for (int i = 0; i < listOfActiveContracts.size(); i++) {
+                activeConRow = (List) listOfActiveContracts.get(i);
+                activeConId = Integer.parseInt((String) activeConRow.get(0));
+                if (activeConId == selectedConId) {
+                    if (handler.isContractEndable(selectedConId)) {
+                        Optional<ButtonType> answer
+                                = CustomAlert.confirmDelete(
+                                        "Kết thúc hợp đồng",
+                                        "Bạn có chắc muốn kết thúc hợp đồng này?").showAndWait();
+                        if (answer.get() == ButtonType.OK) {
+                            if (handler.endContract(selectedConId)) {
+                                CustomAlert.showSimpleAlert(
+                                        "Thành công",
+                                        "Đã kết thúc hợp đồng vào ngày " + LocalDate.now().format(Util.DATE_TIME_FORMATTER));
+                                handleRefresh(new ActionEvent());
+                            } else {
+                                CustomAlert.showErrorMessage(
+                                        "Không thể thực hiện", "Đã có lỗi xảy ra");
+                            }
+                        }
+                        handler.endContract(selectedConId);
+                    } else {
+                        CustomAlert.showErrorMessage(
+                                "Không thể thực hiện",
+                                "Hợp đồng chưa thanh toán đủ.\n\n"
+                                + "Hãy thanh toán đầy đủ cho hợp đồng này và thử lại sau");
+                    }
+                    return;
+                }
+            }
+            CustomAlert.showErrorMessage(
+                    "Không thể thực hiện",
+                    "Hợp đồng đã chọn chưa hết hạn");
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage("Chưa chọn", "Hãy chọn một hợp đồng để xóa");
+        }
     }
 
     @FXML
-    public void handleAddRoommate(ActionEvent e) {
+    public void handleAddRoommate(ActionEvent evt) {
         // TODO add roomate here
+        ObservableList selectedRow;
+        try {
+            selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
+            if (selectedRow == null) {
+                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng thêm khách ở ghép");
+                return;
+            }
+            int mahd = Integer.parseInt((String) selectedRow.get(0));
+            LocalDate start = LocalDate.parse(
+                    selectedRow.get(7).toString(),
+                    Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate end = LocalDate.parse(
+                    selectedRow.get(8).toString(),
+                    Util.SQL_DATE_TIME_FORMATTER);
+            
+            // TODO load up add roommate fxml for inserting
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass()
+                        .getResource("/main/ui/addroommate/addRoommate.fxml"));
+                Parent parent = loader.load();
+
+                AddRoommateController con = loader.getController();
+                con.loadDataForInsert(mahd, start, end);
+
+                Stage stage = new Stage(StageStyle.DECORATED);
+                stage.initOwner(getStage());
+                stage.initModality(Modality.WINDOW_MODAL);
+
+                Scene scene = new Scene(parent);
+                scene.getStylesheets().add(getClass()
+                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+
+                stage.setScene(scene);
+                stage.setTitle("Thêm khách ở ghép");
+                stage.show();
+                Util.setWindowIcon(stage);
+
+                stage.setOnHiding((e) -> {
+                    handleRefresh(new ActionEvent());
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage("Chưa chọn", "\nHãy chọn một hợp đồng để thêm");
+        }
     }
 
     @FXML
     public void handleEditRoommate(ActionEvent e) {
-        // TODO end ACTIVE roommates staying period
+        // TODO edit (extends/end) roommates staying periodObservableList selectedRow;
+        ObservableList selectedRow;
+        try {
+            selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
+            if (selectedRow == null) {
+                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng thêm khách ở ghép");
+                return;
+            }
+            int mahd = Integer.parseInt((String) selectedRow.get(0));
+            LocalDate start = LocalDate.parse(
+                    selectedRow.get(7).toString(),
+                    Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate end = LocalDate.parse(
+                    selectedRow.get(8).toString(),
+                    Util.SQL_DATE_TIME_FORMATTER);
+            
+            // TODO load up add roommate fxml for inserting
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass()
+                        .getResource("/main/ui/addroommate/addRoommate.fxml"));
+                Parent parent = loader.load();
+
+                AddRoommateController con = loader.getController();
+                con.loadDataForInsert(mahd, start, end);
+
+                Stage stage = new Stage(StageStyle.DECORATED);
+                stage.initOwner(getStage());
+                stage.initModality(Modality.WINDOW_MODAL);
+
+                Scene scene = new Scene(parent);
+                scene.getStylesheets().add(getClass()
+                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+
+                stage.setScene(scene);
+                stage.setTitle("Chỉnh sửa thời hạn");
+                stage.show();
+                Util.setWindowIcon(stage);
+
+                stage.setOnHiding((evt) -> {
+                    handleRefresh(new ActionEvent());
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage("Chưa chọn", "\nHãy chọn một hợp đồng để thêm");
+        }
     }
 
     @FXML
     public void handleRoommateReturn(ActionEvent e) {
         // TODO end ACTIVE roommates staying period
+
     }
 
     @FXML
@@ -466,6 +610,8 @@ public class ListContractController implements Initializable {
     }
 
     public void initRoommateTableColumns() {
+        TableColumn idhdk
+                = new TableColumn<>("Mã hdk");
         TableColumn mahdongCol
                 = new TableColumn<>("Mã hợp đồng");
         TableColumn maKhuCol
@@ -494,17 +640,18 @@ public class ListContractController implements Initializable {
                 = new TableColumn<>("Ngày đi");
 
         roommateTable.getColumns().addAll(
-                mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
-                tenkhCol, maRoommateCol, tenRoommateCol, ngayNhanCol, ngayTraCol,
-                ngayVaoCol, ngayDiCol);
+                idhdk, mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol,
+                makhCol, tenkhCol, maRoommateCol, tenRoommateCol,
+                ngayNhanCol, ngayTraCol, ngayVaoCol, ngayDiCol);
 
         tenPhongCol.setMinWidth(150);
         tenkhCol.setMinWidth(150);
         tenRoommateCol.setMinWidth(150);
 
+        idhdk.setVisible(false);
         mahdongCol.setVisible(false);
         maKhuCol.setVisible(false);
-        tenKhuCol.setVisible(false);        
+        tenKhuCol.setVisible(false);
         maphongCol.setVisible(false);
         makhCol.setVisible(false);
         maRoommateCol.setVisible(false);

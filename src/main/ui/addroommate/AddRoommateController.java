@@ -1,6 +1,5 @@
-package main.ui.addroomate;
+package main.ui.addroommate;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +23,6 @@ import main.model.Customer;
 import main.ui.alert.CustomAlert;
 import main.ui.listcustomer.ListCustomerController;
 import main.util.AutoCompleteTextField;
-import main.util.Util;
 
 public class AddRoommateController implements Initializable {
 
@@ -59,7 +57,6 @@ public class AddRoommateController implements Initializable {
 
     DatabaseHandler handler;
 
-    // TODO fix bugs
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         handler = DatabaseHandler.getInstance();
@@ -198,22 +195,27 @@ public class AddRoommateController implements Initializable {
         } else if (startDate.getValue() == null) {
             CustomAlert.showErrorMessage("Nhập thiếu", "Hãy nhập/chọn ngày vào");
             return false;
-        } else if (endDate != null && endDate.getValue().compareTo(startDate.getValue()) <= 0) {
-            CustomAlert.showErrorMessage("Lỗi", "Ngày vào phải bé hơn ngày đi. Hãy nhập lại.");
+        } else if (endDate.getValue() != null && endDate.getValue().compareTo(startDate.getValue()) <= 0) {
+            CustomAlert.showErrorMessage("Lỗi", "Ngày vào phải nhỏ hơn ngày đi. Hãy nhập lại.");
             return false;
         }
-
         return true;
     }
 
-    public void loadData(int hd, int makh, LocalDate start, LocalDate end) {
-        this.makh = makh;
-        this.currentHdID = hd;
+    /**
+     * load data into roommate pane when insert roommate
+     * @param mahd
+     * @param start
+     * @param end 
+     */
+    public void loadDataForInsert(int mahd, LocalDate start, LocalDate end) {
+        this.currentHdID = mahd;
         this.hdStart = start;
         this.hdEnd = end;
 
         System.out.println(hdStart + " - " + hdEnd);
 
+        // set date pickers' limit when roommate can choose to stay.
         startDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -232,15 +234,21 @@ public class AddRoommateController implements Initializable {
                         || date.isAfter(hdEnd));
             }
         });
+
+        if (LocalDate.now().isAfter(start)) {
+            startDate.setValue(LocalDate.now());
+        }
+        endDate.setValue(end);
     }
 
-    private void loadCustomer() {
-        // TODO Empty
-        list.addAll(ListCustomerController.listOfCustomersWithNoRoom);
-        findCustomer = new AutoCompleteTextField(list);
-    }
-
-    public void loadEntries(int hdkID, LocalDate start, LocalDate end) {
+    /**
+     * load data into add roommate pane when updating.
+     * use along with loadDataForInsert()
+     * @param hdkID
+     * @param start
+     * @param end 
+     */
+    public void loadDataForUpdate(int hdkID, LocalDate start, LocalDate end) {
         box.getChildren().remove(findCustomer);
 
         startDate.setValue(start);
@@ -261,8 +269,8 @@ public class AddRoommateController implements Initializable {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 setDisable(
-                        date.isBefore(startDate.getValue())
-                        || date.isEqual(startDate.getValue())
+                        date.isBefore(start)
+                        || date.isEqual(start)
                         || date.isAfter(hdEnd));
             }
         });
@@ -270,6 +278,16 @@ public class AddRoommateController implements Initializable {
         delete.setVisible(true);
         isEditing = true;
         currenthdkID = hdkID;
+        
+        // remove node in insert mode that update mode doesnt use
+        root.getChildren().remove(delete);
+        root.getChildren().remove(findCustomer);
+    }
+    
+    private void loadCustomer() {
+        // TODO this is running with Main
+        list.addAll(ListCustomerController.listOfCustomersWithNoRoom);
+        findCustomer = new AutoCompleteTextField(list);
     }
 
     private Stage getStage() {

@@ -698,6 +698,21 @@ public final class DatabaseHandler {
         }
         return false;
     }
+    
+    public boolean endContract(int mahd, LocalDate ngaytra) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE hopdong SET ngaytra=? WHERE MAHDONG=?");
+            stmt.setDate(
+                    1, Util.LocalDateToSQLDate(ngaytra));
+            stmt.setInt(
+                    2, mahd);
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
     public boolean deleteContract(int contractId) {
         try {

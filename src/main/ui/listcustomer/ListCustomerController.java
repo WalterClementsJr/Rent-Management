@@ -74,9 +74,6 @@ public class ListCustomerController implements Initializable {
 //    private boolean datachanged = false;
     DatabaseHandler handler;
 
-    public static void main(String[] args) {
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MasterController.getInstance().registerListCustomerController(this);

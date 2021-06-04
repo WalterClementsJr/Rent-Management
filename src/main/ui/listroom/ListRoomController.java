@@ -301,7 +301,7 @@ public class ListRoomController implements Initializable {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass()
-                    .getResource("/main/ui/addRoom/addRoom.fxml"));
+                    .getResource("/main/ui/addroom/addRoom.fxml"));
             Parent parent = loader.load();
 
             AddRoomController con = loader.getController();

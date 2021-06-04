@@ -143,15 +143,6 @@ public class AddCustomerController implements Initializable {
     }
 
     @FXML
-    public void clearEntries() {
-        name.clear();
-        sex.selectToggle(null);
-        datePicker.setValue(null);
-        sdt.clear();
-        cmnd.clear();
-    }
-
-    @FXML
     private void handleSave(ActionEvent event) {
         if (isEditing) {
             handleEdit();
@@ -180,10 +171,14 @@ public class AddCustomerController implements Initializable {
                 customerSDT);
 
         if (dbHandler.insertNewCustomer(customer)) {
-            CustomAlert.showSimpleAlert("Thành công", customerName + " đã được thêm");
-            clearEntries();
+            CustomAlert.showSimpleAlert(
+                    "Thành công",
+                    customerName + " đã được thêm");
+            getStage().close();
         } else {
-            CustomAlert.showErrorMessage("Không thêm được khách", "Hãy kiểm lại tra thông tin và thử lại");
+            CustomAlert.showErrorMessage(
+                    "Thất bại",
+                    "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
 
@@ -211,6 +206,7 @@ public class AddCustomerController implements Initializable {
 
         if (dbHandler.updateCustomer(currentCustomer)) {
             CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
+            getStage().close();
             currentCustomer = null;
         } else {
             CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra");
@@ -219,8 +215,7 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     private void handleCancel(ActionEvent event) {
-        Stage stage = (Stage) rootAddCustomer.getScene().getWindow();
-        stage.close();
+        getStage().close();
     }
 
     private boolean checkEntries() {
@@ -241,5 +236,9 @@ public class AddCustomerController implements Initializable {
             return false;
         }
         return true;
+    }
+    
+    private Stage getStage() {
+        return (Stage) rootAddCustomer.getScene().getWindow();
     }
 }
