@@ -88,7 +88,12 @@ public class ListCustomerController implements Initializable {
                 Util.FILTER_CUSTOMER_MOVED);
         comboBox.getSelectionModel().selectFirst();
 
-        loadData();
+        loadAllCustomers();
+        loadCustomersWithNoRoom();
+        loadCustomersWithRoom();
+        loadOldCustomers();
+
+        loadListToTable();
     }
 
     private Stage getStage() {
@@ -97,29 +102,28 @@ public class ListCustomerController implements Initializable {
 
     @FXML
     private void handleComboBoxChange(ActionEvent event) {
-        loadData();
+        loadListToTable();
     }
 
-    private void loadData() {
+    private void loadListToTable() {
         switch (comboBox.getSelectionModel().getSelectedItem()) {
             case Util.FILTER_ALL:
-                loadAllCustomers();
+                customerTable.setItems(listOfAllCustomers);
                 break;
             case Util.FILTER_CUSTOMER_NO_ROOM:
-                loadCustomersWithNoRoom();
+                customerTable.setItems(listOfCustomersWithNoRoom);
                 break;
             case Util.FILTER_CUSTOMER_HAS_ROOM:
-                loadCustomersWithRoom();
+                customerTable.setItems(listOfCustomersWithRoom);
                 break;
             case Util.FILTER_CUSTOMER_MOVED:
-                loadOldCustomers();
+                customerTable.setItems(listOfOldCustomers);
                 break;
         }
     }
 
-    private void loadDataToTable(ResultSet rs, ObservableList list) {
+    private void loadDataToList(ResultSet rs, ObservableList list) {
         list.clear();
-
         try {
             while (rs.next()) {
                 list.add(
@@ -131,35 +135,31 @@ public class ListCustomerController implements Initializable {
                                 rs.getString("CMND"),
                                 rs.getString("SDT")));
             }
-
             rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(ListCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        customerTable.setItems(list);
     }
 
     private void loadAllCustomers() {
         String query = "SELECT * FROM KHACH";
-
-        loadDataToTable(handler.execQuery(query), listOfAllCustomers);
+        loadDataToList(handler.execQuery(query), listOfAllCustomers);
     }
 
     private void loadCustomersWithNoRoom() {
-        loadDataToTable(handler.getCustomersWithNoRoom(), listOfCustomersWithNoRoom);
+        loadDataToList(handler.getCustomersWithNoRoom(), listOfCustomersWithNoRoom);
     }
 
     private void loadCustomersWithRoom() {
-        loadDataToTable(handler.getCustomersWithRoom(), listOfCustomersWithRoom);
+        loadDataToList(handler.getCustomersWithRoom(), listOfCustomersWithRoom);
     }
 
     private void loadOldCustomers() {
-        loadDataToTable(handler.getOldCustomers(), listOfCustomersWithRoom);
+        loadDataToList(handler.getOldCustomers(), listOfOldCustomers);
     }
 
     @FXML
     private void handleAddButton(ActionEvent event) {
-        System.out.println("load add customer window");
         Stage stage = (Stage) Util.loadWindow(getClass().getResource(
                 "/main/ui/addcustomer/addCustomer.fxml"),
                 "Add New Customer", getStage());
@@ -173,13 +173,15 @@ public class ListCustomerController implements Initializable {
         Customer selectedForEdit = customerTable.getSelectionModel().getSelectedItem();
 
         if (selectedForEdit == null) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để chỉnh sửa");
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn.",
+                    "Hãy chọn một khách để chỉnh sửa");
             return;
         }
-        System.out.println(selectedForEdit.toString());
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/ui/addcustomer/addCustomer.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/main/ui/addcustomer/addCustomer.fxml"));
             Parent parent = loader.load();
 
             AddCustomerController con = loader.getController();
@@ -190,7 +192,8 @@ public class ListCustomerController implements Initializable {
             stage.initModality(Modality.WINDOW_MODAL);
 
             Scene scene = new Scene(parent);
-            scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toString());
+            scene.getStylesheets().add(getClass().getResource(
+                    Util.STYLE_SHEET_LOCATION).toString());
 
             stage.setScene(scene);
             stage.setTitle("Chỉnh sửa thông tin khách");
@@ -207,7 +210,11 @@ public class ListCustomerController implements Initializable {
 
     @FXML
     private void handleRefresh(ActionEvent event) {
-        loadData();
+        loadAllCustomers();
+        loadCustomersWithNoRoom();
+        loadCustomersWithRoom();
+        loadOldCustomers();
+        loadListToTable();
     }
 
     @FXML
@@ -215,7 +222,9 @@ public class ListCustomerController implements Initializable {
         Customer selectedForDeletion = customerTable.getSelectionModel().getSelectedItem();
 
         if (selectedForDeletion == null) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một khách để xóa");
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn.",
+                    "Hãy chọn một khách để xóa");
             return;
         }
 
@@ -230,7 +239,8 @@ public class ListCustomerController implements Initializable {
         Optional<ButtonType> answer
                 = CustomAlert.confirmDelete(
                         "Xóa khách",
-                        "Bạn có chắc muốn xóa" + selectedForDeletion.getHoTen() + "?").showAndWait();
+                        "Bạn có chắc muốn xóa" + selectedForDeletion.getHoTen() + "?"
+                ).showAndWait();
         if (answer.get() == ButtonType.OK) {
             Boolean result = handler.deleteCustomer(selectedForDeletion);
             if (result) {
@@ -294,7 +304,9 @@ public class ListCustomerController implements Initializable {
             };
         });
 
-        customerTable.getColumns().addAll(idCol, hotenCol, gioitinhCol, ngaysinhCol, sdtCol, cmndCol);
+        customerTable.getColumns().addAll(
+                idCol, hotenCol, gioitinhCol, ngaysinhCol, sdtCol, cmndCol);
+
         idCol.setVisible(false);
 
         hotenCol.setMinWidth(150);
