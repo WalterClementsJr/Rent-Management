@@ -205,16 +205,15 @@ public class AddRoommateController implements Initializable {
 
     /**
      * load data into roommate pane when insert roommate
+     *
      * @param mahd
      * @param start
-     * @param end 
+     * @param end
      */
     public void loadDataForInsert(int mahd, LocalDate start, LocalDate end) {
         this.currentHdID = mahd;
         this.hdStart = start;
         this.hdEnd = end;
-
-        System.out.println(hdStart + " - " + hdEnd);
 
         // set date pickers' limit when roommate can choose to stay.
         startDate.setDayCellFactory(param -> new DateCell() {
@@ -243,18 +242,24 @@ public class AddRoommateController implements Initializable {
     }
 
     /**
-     * load data into add roommate pane when updating.
-     * use along with loadDataForInsert()
+     * load data items for updating roommate info
+     *
      * @param hdkID
-     * @param start
-     * @param end 
+     * @param hdEnd
+     * @param hdStart
+     * @param rmStart
+     * @param rmEnd
      */
-    public void loadDataForUpdate(int hdkID, LocalDate start, LocalDate end) {
+    public void loadDataForUpdate(int hdkID, LocalDate hdStart, LocalDate hdEnd, LocalDate rmStart, LocalDate rmEnd) {
         box.getChildren().remove(findCustomer);
 
-        startDate.setValue(start);
-        endDate.setValue(end);
+        currenthdkID = hdkID;
+        this.hdStart = hdStart;
+        this.hdEnd = hdEnd;
+        startDate.setValue(rmStart);
+        endDate.setValue(rmEnd);
 
+        // disable dates before hdStart, after hdEnd
         startDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -265,24 +270,21 @@ public class AddRoommateController implements Initializable {
             }
         });
 
+        // disable dates before startDate, startDate, after hdEnd
         endDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 setDisable(
-                        date.isBefore(start)
-                        || date.isEqual(start)
+                        date.isBefore(startDate.getValue())
+                        || date.isEqual(startDate.getValue())
                         || date.isAfter(hdEnd));
             }
         });
 
         isEditing = true;
-        currenthdkID = hdkID;
-        
-        // remove node in insert mode that update mode doesnt use
-        root.getChildren().remove(findCustomer);
     }
-    
+
     private void loadCustomer() {
         // TODO this is running with Main
         list.addAll(ListCustomerController.listOfCustomersWithNoRoom);

@@ -375,7 +375,9 @@ public class ListContractController implements Initializable {
         try {
             selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
             if (selectedRow == null) {
-                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng thêm khách ở ghép");
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn một hợp đồng thêm khách ở ghép");
                 return;
             }
             int mahd = Integer.parseInt((String) selectedRow.get(0));
@@ -385,8 +387,7 @@ public class ListContractController implements Initializable {
             LocalDate end = LocalDate.parse(
                     selectedRow.get(8).toString(),
                     Util.SQL_DATE_TIME_FORMATTER);
-            
-            // TODO load up add roommate fxml for inserting
+
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addroommate/addRoommate.fxml"));
@@ -421,30 +422,37 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleEditRoommate(ActionEvent e) {
-        // TODO edit (extends/end) roommates staying periodObservableList selectedRow;
+        // TODO edit (extends/end) roommates staying period
         ObservableList selectedRow;
         try {
-            selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
+            selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
             if (selectedRow == null) {
-                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng thêm khách ở ghép");
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn thông tin khách ở ghép để chỉnh sửa");
                 return;
             }
-            int mahd = Integer.parseInt((String) selectedRow.get(0));
-            LocalDate start = LocalDate.parse(
-                    selectedRow.get(7).toString(),
+            int mahdk = Integer.parseInt((String) selectedRow.get(0));
+            LocalDate hdStart = LocalDate.parse(
+                    selectedRow.get(10).toString(),
                     Util.SQL_DATE_TIME_FORMATTER);
-            LocalDate end = LocalDate.parse(
-                    selectedRow.get(8).toString(),
+            LocalDate hdEnd = LocalDate.parse(
+                    selectedRow.get(11).toString(),
                     Util.SQL_DATE_TIME_FORMATTER);
-            
-            // TODO load up add roommate fxml for inserting
+            LocalDate rmStart = LocalDate.parse(
+                    selectedRow.get(12).toString(),
+                    Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate rmEnd = LocalDate.parse(
+                    selectedRow.get(13).toString(),
+                    Util.SQL_DATE_TIME_FORMATTER);
+
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addroommate/addRoommate.fxml"));
                 Parent parent = loader.load();
 
                 AddRoommateController con = loader.getController();
-                con.loadDataForInsert(mahd, start, end);
+                con.loadDataForUpdate(mahdk, hdStart, hdEnd, rmStart, rmEnd);
 
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.initOwner(getStage());
@@ -455,7 +463,7 @@ public class ListContractController implements Initializable {
                         .getResource(Util.STYLE_SHEET_LOCATION).toString());
 
                 stage.setScene(scene);
-                stage.setTitle("Chỉnh sửa thời hạn");
+                stage.setTitle("Chỉnh sửa thời hạn ở ghép");
                 stage.show();
                 Util.setWindowIcon(stage);
 
@@ -463,10 +471,14 @@ public class ListContractController implements Initializable {
                     handleRefresh(new ActionEvent());
                 });
             } catch (IOException ex) {
+                ex.printStackTrace(System.out);
                 Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (IndexOutOfBoundsException ex) {
-            CustomAlert.showErrorMessage("Chưa chọn", "\nHãy chọn một hợp đồng để thêm");
+            ex.printStackTrace(System.out);
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn",
+                    "\nHãy chọn thông tin khách ở ghép để chỉnh sửa");
         }
     }
 
@@ -479,10 +491,10 @@ public class ListContractController implements Initializable {
     @FXML
     public void handleDeleteRoommate(ActionEvent e) {
         // TODO delete roommate
-        ObservableList row;
+        ObservableList selectedRow;
         try {
-            row = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
-            if (row == null) {
+            selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
+            if (selectedRow == null) {
                 CustomAlert.showErrorMessage(
                         "Chưa chọn.",
                         "Hãy chọn thông tin khách ở ghép để xóa");
@@ -493,10 +505,10 @@ public class ListContractController implements Initializable {
                             "Xóa thông tin khách ở ghép",
                             "Bạn có chắc muốn xóa?").showAndWait();
             if (answer.get() == ButtonType.OK) {
-                if (handler.deleteRoommate(Integer.parseInt((String) row.get(0)) )) {
+                if (handler.deleteRoommate(Integer.parseInt((String) selectedRow.get(0)))) {
                     CustomAlert.showSimpleAlert(
                             "Xóa thành công", "Đã xóa khách ở ghép");
-                    roommateTable.getItems().remove(row);
+                    roommateTable.getItems().remove(selectedRow);
                     handleRefresh(new ActionEvent());
                 } else {
                     CustomAlert.showErrorMessage(
