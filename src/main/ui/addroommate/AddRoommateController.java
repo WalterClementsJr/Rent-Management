@@ -37,8 +37,6 @@ public class AddRoommateController implements Initializable {
     @FXML
     private Button save;
     @FXML
-    private Button delete;
-    @FXML
     private Button cancel;
 
     // extra elements
@@ -63,7 +61,6 @@ public class AddRoommateController implements Initializable {
 
         startDate.getEditor().setDisable(true);
         endDate.getEditor().setDisable(true);
-        delete.setVisible(false);
 
         // load up customers with no rooms
         loadCustomer();
@@ -145,7 +142,7 @@ public class AddRoommateController implements Initializable {
 
         if (handler.insertRoommate(
                 currentHdID,
-                makh,
+                findCustomer.getLastSelectedObject().getId(),
                 startDate.getValue(),
                 endDate.getValue())) {
             CustomAlert.showSimpleAlert(
@@ -155,11 +152,6 @@ public class AddRoommateController implements Initializable {
                     "Thất bại",
                     "Hãy kiểm lại tra thông tin và thử lại");
         }
-    }
-
-    @FXML
-    private void handleDelete(ActionEvent event) {
-        // TODO delete roommate
     }
 
     /**
@@ -284,12 +276,10 @@ public class AddRoommateController implements Initializable {
             }
         });
 
-        delete.setVisible(true);
         isEditing = true;
         currenthdkID = hdkID;
         
         // remove node in insert mode that update mode doesnt use
-        root.getChildren().remove(delete);
         root.getChildren().remove(findCustomer);
     }
     

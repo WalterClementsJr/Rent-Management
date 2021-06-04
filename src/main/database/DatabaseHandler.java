@@ -601,17 +601,9 @@ public final class DatabaseHandler {
             stmt.setInt(
                     2, makh);
             stmt.setDate(
-                    3, Util.LocalDateToSQLDate(end));
-            if (end == null) {
-                System.out.println("setting null end date");
-                stmt.setNull(
-                        4, java.sql.Types.DATE);
-            } else {
-                System.out.println("not null ok");
-                stmt.setDate(
-                        4, Util.LocalDateToSQLDate(end));
-            }
-
+                    3, Util.LocalDateToSQLDate(start));
+            stmt.setDate(
+                    4, Util.LocalDateToSQLDate(end));
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -631,7 +623,8 @@ public final class DatabaseHandler {
                     3, hdkID);
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -644,7 +637,22 @@ public final class DatabaseHandler {
 
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean deleteRoommate(int hdk) {
+        try {
+            stmt = conn.prepareStatement(
+                    "DELETE FROM HOPDONG_KHACH WHERE id=?");
+            stmt.setInt(1, hdk);
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -656,7 +664,8 @@ public final class DatabaseHandler {
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -677,7 +686,8 @@ public final class DatabaseHandler {
                     5, c.getTienCoc());
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -694,11 +704,12 @@ public final class DatabaseHandler {
                     3, c.getId());
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
-    
+
     public boolean endContract(int mahd, LocalDate ngaytra) {
         try {
             stmt = conn.prepareStatement(
@@ -709,7 +720,8 @@ public final class DatabaseHandler {
                     2, mahd);
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -721,7 +733,8 @@ public final class DatabaseHandler {
             stmt.setInt(1, contractId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -741,7 +754,8 @@ public final class DatabaseHandler {
                 return isEndable;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -754,7 +768,8 @@ public final class DatabaseHandler {
                     1, mahdong);
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -774,7 +789,8 @@ public final class DatabaseHandler {
                 return Util.SQLDateToLocalDate(date);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -791,7 +807,8 @@ public final class DatabaseHandler {
                     3, Util.LocalDateToSQLDate(invoice.getNgayTT()));
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -810,7 +827,8 @@ public final class DatabaseHandler {
                     4, m.getMoTa());
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -830,7 +848,8 @@ public final class DatabaseHandler {
                     4, m.getId());
             return (stmt.executeUpdate() > 0);
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -842,7 +861,8 @@ public final class DatabaseHandler {
             stmt.setInt(1, maintenanceId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -855,7 +875,8 @@ public final class DatabaseHandler {
 
             return stmt.executeQuery();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="357.0" prefWidth="511.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addroommate.AddRoommateController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="357.0" prefWidth="511.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addroommate.AddRoommateController">
     <children>
         <VBox layoutX="31.0" prefHeight="357.0" prefWidth="449.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -48,7 +48,6 @@
                 <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="284.0" spacing="10.0">
                     <children>
                         <Button fx:id="save" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
-                        <Button fx:id="delete" mnemonicParsing="false" onAction="#handleDelete" prefHeight="32.0" prefWidth="79.0" styleClass="danger" text="Xóa" />
                         <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
                     </children>
                 </HBox>
