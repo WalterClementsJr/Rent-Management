@@ -340,7 +340,7 @@ public class ListContractController implements Initializable {
                                         "Bạn có chắc muốn kết thúc hợp đồng này?")
                                         .showAndWait();
                         if (answer.get() == ButtonType.OK) {
-                            if (handler.endContract(selectedConId)) {
+                            if (handler.endContractToday(selectedConId)) {
                                 CustomAlert.showSimpleAlert(
                                         "Thành công",
                                         "Đã kết thúc hợp đồng vào ngày " + LocalDate.now().format(Util.DATE_TIME_FORMATTER));
@@ -350,7 +350,7 @@ public class ListContractController implements Initializable {
                                         "Không thể thực hiện", "Đã có lỗi xảy ra");
                             }
                         }
-                        handler.endContract(selectedConId);
+                        handler.endContractToday(selectedConId);
                     } else {
                         CustomAlert.showErrorMessage(
                                 "Không thể thực hiện",
@@ -422,7 +422,6 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleEditRoommate(ActionEvent e) {
-        // TODO edit (extends/end) roommates staying period
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
@@ -484,8 +483,32 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleRoommateReturn(ActionEvent e) {
-        // TODO end ACTIVE roommates staying period
+        // TODO end ACTIVE roommates staying period (set enddate to getdate())
+        ObservableList selectedRow;
+        try {
+            selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
+            if (selectedRow == null) {
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn thông tin khách ở ghép để chỉnh sửa");
+                return;
+            }
+            int mahdk = Integer.parseInt((String) selectedRow.get(0));
 
+            if (handler.endRoommateStayingPeriod(mahdk)) {
+                CustomAlert.showSimpleAlert(
+                        "Thành công", "Đã cho khách trả phòng");
+            } else {
+                CustomAlert.showErrorMessage(
+                        "Lỗi",
+                        "Không thể trả phòng.\nHãy xem lại thông tin và thử lại.");
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            ex.printStackTrace(System.out);
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn",
+                    "\nHãy chọn thông tin khách ở ghép để trả phòng");
+        }
     }
 
     @FXML
@@ -709,7 +732,7 @@ public class ListContractController implements Initializable {
             });
         }
 
-        ngayNhanCol.setCellFactory(column -> {
+        ngayVaoCol.setCellFactory(column -> {
             return new TableCell<String, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -726,7 +749,7 @@ public class ListContractController implements Initializable {
                 }
             };
         });
-        ngayTraCol.setCellFactory(column -> {
+        ngayDiCol.setCellFactory(column -> {
             return new TableCell<String, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {

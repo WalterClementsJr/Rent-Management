@@ -22,11 +22,6 @@ import main.util.Util;
 public final class DatabaseHandler {
 
     public static void main(String[] args) {
-        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(1));
-        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(2));
-        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(3));
-        System.out.println(DatabaseHandler.getInstance().isComplexDeletable(5));
-
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -569,7 +564,7 @@ public final class DatabaseHandler {
     public ResultSet getActiveRoommatesWithInfo(int complexId) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngayvao<getdate() and ngaydi<=getdate()");
+                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngaydi>getdate()");
             stmt.setInt(1, complexId);
 
             return stmt.executeQuery();
@@ -582,7 +577,7 @@ public final class DatabaseHandler {
     public ResultSet getOldRoommatesWithInfo(int complexId) {
         try {
             stmt = conn.prepareStatement(
-                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngaydi>getdate()");
+                    "SELECT * FROM viewkhachoghepvaextrainfo where makhu=? and ngaydi<=getdate()");
             stmt.setInt(1, complexId);
 
             return stmt.executeQuery();
@@ -710,22 +705,6 @@ public final class DatabaseHandler {
         return false;
     }
 
-    public boolean endContract(int mahd, LocalDate ngaytra) {
-        try {
-            stmt = conn.prepareStatement(
-                    "UPDATE hopdong SET ngaytra=? WHERE MAHDONG=?");
-            stmt.setDate(
-                    1, Util.LocalDateToSQLDate(ngaytra));
-            stmt.setInt(
-                    2, mahd);
-            return (stmt.executeUpdate() > 0);
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-
     public boolean deleteContract(int contractId) {
         try {
             stmt = conn.prepareStatement(
@@ -760,7 +739,23 @@ public final class DatabaseHandler {
         return false;
     }
 
-    public boolean endContract(int mahdong) {
+    public boolean endContract(int mahd, LocalDate ngaytra) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE hopdong SET ngaytra=? WHERE MAHDONG=?");
+            stmt.setDate(
+                    1, Util.LocalDateToSQLDate(ngaytra));
+            stmt.setInt(
+                    2, mahd);
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean endContractToday(int mahdong) {
         try {
             stmt = conn.prepareStatement(
                     "UPDATE hopdong SET ngaytra=getdate() WHERE MAHDONG=?");
