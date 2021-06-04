@@ -65,7 +65,7 @@ public class AddRoommateController implements Initializable {
         endDate.getEditor().setDisable(true);
         delete.setVisible(false);
 
-        // populate customers with no rooms
+        // load up customers with no rooms
         loadCustomer();
         findCustomer.getEntryMenu().setOnAction(e -> {
             ((MenuItem) e.getTarget()).addEventHandler(Event.ANY, event
@@ -152,14 +152,19 @@ public class AddRoommateController implements Initializable {
                     "Thành công", "Đã thêm khách ở ghép");
         } else {
             CustomAlert.showErrorMessage(
-                    "Đã có lỗi xảy ra", "Không thêm được thông tin");
+                    "Thất bại",
+                    "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
 
     @FXML
     private void handleDelete(ActionEvent event) {
+        // TODO delete roommate
     }
 
+    /**
+     * edit roommate staying period
+     */
     private void handleEdit() {
         if (endDate.getValue() == null) {
             CustomAlert.showErrorMessage("Chưa điền ngày trả phòng", "Hãy nhập/chọn ngày trả phòng");
@@ -178,6 +183,10 @@ public class AddRoommateController implements Initializable {
                 endDate.getValue())) {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin");
             getStage().close();
+        } else {
+            CustomAlert.showErrorMessage(
+                    "Thất bại",
+                    "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
 
@@ -293,5 +302,4 @@ public class AddRoommateController implements Initializable {
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-
 }

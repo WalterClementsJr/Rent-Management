@@ -46,7 +46,6 @@ public class AddComplexController implements Initializable {
         dbHandler = DatabaseHandler.getInstance();
 
         delete.setVisible(isEditing);
-
     }
 
     public void loadEntries(Complex c) {
@@ -69,7 +68,7 @@ public class AddComplexController implements Initializable {
             return;
         }
 
-        if (!checkField()) {
+        if (!checkEntries()) {
             return;
         }
 
@@ -87,14 +86,14 @@ public class AddComplexController implements Initializable {
 
         if (dbHandler.insertNewComplex(c)) {
             CustomAlert.showSimpleAlert("Thành công", "Khu " + cName + " đã được thêm");
-            clearEntries();
+            getStage().close();
         } else {
             CustomAlert.showErrorMessage("Không thêm được khu", "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
 
     private void handleEdit() {
-        if (!checkField()) {
+        if (!checkEntries()) {
             return;
         }
 
@@ -112,6 +111,7 @@ public class AddComplexController implements Initializable {
         if (dbHandler.updateComplex(currentComplex)) {
             CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
             currentComplex = null;
+            getStage().close();
         } else {
             CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại sau");
         }
@@ -129,11 +129,11 @@ public class AddComplexController implements Initializable {
                         "Xóa khách",
                         "Bạn có chắc muốn xóa" + currentComplex.getTen() + "?").showAndWait();
         if (answer.get() == ButtonType.OK) {
-            Boolean result = dbHandler.deleteComplex(currentComplex);
-            if (result) {
+            if (dbHandler.deleteComplex(currentComplex)) {
                 CustomAlert.showSimpleAlert(
-                        "Đã xóa",
+                        "Thành công",
                         "Đã xóa khu " + currentComplex.getTen());
+                getStage().close();
             } else {
                 CustomAlert.showSimpleAlert(
                         "Thất bại",
@@ -148,7 +148,7 @@ public class AddComplexController implements Initializable {
         stage.close();
     }
 
-    private boolean checkField() {
+    private boolean checkEntries() {
         if (name.getText().isBlank()) {
             CustomAlert.showErrorMessage("Tên khu trống", "Hãy nhập tên khu");
             return false;
@@ -157,5 +157,9 @@ public class AddComplexController implements Initializable {
             return false;
         }
         return true;
+    }
+    
+    private Stage getStage() {
+        return (Stage) root.getScene().getWindow();
     }
 }

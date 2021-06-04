@@ -511,7 +511,7 @@ public class ListRoomController implements Initializable {
         idCol.setVisible(false);
         makhuCol.setVisible(false);
 
-        moTaCol.setMinWidth(150);
+        moTaCol.prefWidthProperty().bind(tableView.widthProperty().divide(1.5));
     }
 
 }

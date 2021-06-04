@@ -225,13 +225,18 @@ public class AddRoomController implements Initializable {
 
         if (dbHandler.isRoomNameExist(-1, chosenComplex.getId(), rName)) {
             CustomAlert.showSimpleAlert(
-                    "Lỗi", "Phòng với tên này đã tồn tại trong khu " + chosenComplex.getTen());
+                    "Lỗi",
+                    "Phòng với tên này đã tồn tại trong khu " + chosenComplex.getTen());
+            return;
         }
 
         if (dbHandler.insertNewRoom(newRoom)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã thêm phòng");
+            getStage().close();
         } else {
-            CustomAlert.showErrorMessage("Lỗi", "Không thể thêm");
+            CustomAlert.showErrorMessage(
+                    "Lỗi",
+                    "Không thể thêm phòng.\nHãy xem lại thông tin và thử lại.");
         }
     }
 
@@ -257,14 +262,22 @@ public class AddRoomController implements Initializable {
         currentRoom.setMaKhu(chosenComplex.getId());
 
         if (dbHandler.isRoomNameExist(currentRoom.getId(), chosenComplex.getId(), rName)) {
-            CustomAlert.showSimpleAlert("Lỗi", "Tên phòng đã tồn tại trong khu " + chosenComplex.getTen());
+            CustomAlert.showSimpleAlert(
+                    "Lỗi",
+                    "Tên phòng đã tồn tại trong khu " + chosenComplex.getTen());
+            return;
         }
 
         if (dbHandler.updateRoom(currentRoom)) {
-            CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin phòng");
+            CustomAlert.showSimpleAlert(
+                    "Thành công",
+                    "Đã sửa thông tin phòng");
             currentRoom = null;
+            getStage().close();
         } else {
-            CustomAlert.showErrorMessage("Chỉnh sửa thất bại", "Kiểm tra lại thông tin và thử lại sau");
+            CustomAlert.showErrorMessage(
+                    "Chỉnh sửa thất bại",
+                    "Kiểm tra lại thông tin và thử lại sau");
         }
     }
 

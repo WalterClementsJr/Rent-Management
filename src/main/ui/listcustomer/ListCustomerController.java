@@ -231,7 +231,7 @@ public class ListCustomerController implements Initializable {
         //  check if customer has any related data before deleting
         if (!DatabaseHandler.getInstance().isCustomerDeletable(selectedForDeletion.getId())) {
             CustomAlert.showErrorMessage("Lỗi",
-                    "Không thể xóa khách đã/đang ở trong hệ thống."
+                    "Không thể xóa khách đã/đang sử dụng dịch vụ trong hệ thống."
                     + "\nHãy xóa các thông tin liên quan và thử lại");
             return;
         }

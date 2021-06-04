@@ -90,12 +90,9 @@ public class AddMaintenanceController implements Initializable {
         if (isEditing) {
             handleEdit();
             return;
-        }
-        if (!checkEntries()) {
+        } else if (!checkEntries()) {
             return;
-        }
-
-        if (currentRoom == null) {
+        } else if (currentRoom == null) {
             CustomAlert.showSimpleAlert("Lỗi", "Chưa chọn phòng");
             return;
         }
@@ -106,7 +103,14 @@ public class AddMaintenanceController implements Initializable {
                 date.getValue(),
                 desc.getText().trim());
         if (DatabaseHandler.getInstance().insertNewMaintenance(mtn)) {
-            CustomAlert.showSimpleAlert("Thành công", "Đã thêm thông tin bảo trì vào phòng");
+            CustomAlert.showSimpleAlert(
+                    "Thành công",
+                    "Đã thêm thông tin bảo trì vào phòng");
+            getStage().close();
+        } else {
+            CustomAlert.showErrorMessage(
+                    "Thất bại",
+                    "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
 
@@ -126,6 +130,10 @@ public class AddMaintenanceController implements Initializable {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin bảo trì");
             currentMaintenance = null;
             getStage().close();
+        } else {
+            CustomAlert.showErrorMessage(
+                    "Thất bại",
+                    "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
 

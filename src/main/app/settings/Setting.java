@@ -92,12 +92,12 @@ public class Setting {
             writer = new FileWriter(CONFIG_FILE);
             gson.toJson(setting, writer);
             // TODO run this line only when in javafx.Application
-//            CustomAlert.showSimpleAlert("wht", "ok");
+//            CustomAlert.showSimpleAlert("Thành công", "Đã lưu thông tin mới");
             System.out.println("write to file success!");
         } catch (IOException ex) {
             Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("write to file faled!");
-            //TODO same thing
+            //TODO run this line only when in javafx.Application
             CustomAlert.showErrorMessage("Failed", "Cant save configuration file");
         } finally {
             try {

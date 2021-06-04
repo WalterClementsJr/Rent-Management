@@ -206,8 +206,8 @@ public class AddCustomerController implements Initializable {
 
         if (dbHandler.updateCustomer(currentCustomer)) {
             CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
-            getStage().close();
             currentCustomer = null;
+            getStage().close();
         } else {
             CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra");
         }

@@ -168,19 +168,29 @@ public class AddContractController implements Initializable {
 
     private boolean checkEntries() {
         if (findCustomer.getLastSelectedObject() == null) {
-            CustomAlert.showErrorMessage("Chưa chọn khách", "Hãy tìm khách trên thanh tìm kiếm và chọn một");
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn khách",
+                    "Hãy tìm khách trên thanh tìm kiếm và chọn một");
             return false;
         } else if (startDate.getValue() == null) {
-            CustomAlert.showErrorMessage("Chưa điền ngày nhận phòng", "Hãy nhập/chọn ngày nhận phòng");
+            CustomAlert.showErrorMessage(
+                    "Chưa điền ngày nhận phòng",
+                    "Hãy nhập/chọn ngày nhận phòng");
             return false;
         } else if (endDate.getValue() == null) {
-            CustomAlert.showErrorMessage("Chưa điền ngày trả phòng", "Hãy nhập/chọn ngày trả phòng");
+            CustomAlert.showErrorMessage(
+                    "Chưa điền ngày trả phòng",
+                    "Hãy nhập/chọn ngày trả phòng");
             return false;
         } else if (endDate.getValue().compareTo(startDate.getValue()) <= 0) {
-            CustomAlert.showErrorMessage("Lỗi", "Ngày nhận phòng phải bé hơn ngày trả phòng. Hãy nhập lại.");
+            CustomAlert.showErrorMessage(
+                    "Lỗi",
+                    "Ngày nhận phòng phải bé hơn ngày trả phòng. Hãy nhập lại.");
             return false;
         } else if (deposit.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Chưa nhập tiền cọc", "Hãy nhập tiền cọc");
+            CustomAlert.showErrorMessage(
+                    "Chưa nhập tiền cọc",
+                    "Hãy nhập tiền cọc");
             return false;
         }
         return true;
@@ -231,6 +241,7 @@ public class AddContractController implements Initializable {
         if (handler.insertNewContract(con)) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm hợp đồng");
+            getStage().close();
         } else {
             CustomAlert.showErrorMessage(
                     "Lỗi", "Không thêm được thông tin");

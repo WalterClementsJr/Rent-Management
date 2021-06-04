@@ -122,7 +122,12 @@ public class AddInvoiceController implements Initializable {
 
         if (DatabaseHandler.getInstance().insertNewInvoice(newInvoice)) {
             CustomAlert.showSimpleAlert(
-                    "Thành công", "Đã hóa đơn");
+                    "Thành công", "Đã thêm hóa đơn");
+            getStage().close();
+        } else {
+            CustomAlert.showErrorMessage(
+                    "Thất bại",
+                    "Hãy kiểm lại tra thông tin và thử lại");
         }
     }
 
