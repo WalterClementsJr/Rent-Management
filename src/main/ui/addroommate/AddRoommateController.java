@@ -23,6 +23,7 @@ import main.model.Customer;
 import main.ui.alert.CustomAlert;
 import main.ui.listcustomer.ListCustomerController;
 import main.util.AutoCompleteTextField;
+import main.util.MasterController;
 
 public class AddRoommateController implements Initializable {
 
@@ -147,6 +148,9 @@ public class AddRoommateController implements Initializable {
                 endDate.getValue())) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm khách ở ghép");
+            // TODO only run this line in main
+            MasterController.getInstance().getListCustomerController()
+                    .handleRefresh(new ActionEvent());
         } else {
             CustomAlert.showErrorMessage(
                     "Thất bại",
@@ -159,10 +163,14 @@ public class AddRoommateController implements Initializable {
      */
     private void handleEdit() {
         if (endDate.getValue() == null) {
-            CustomAlert.showErrorMessage("Chưa điền ngày trả phòng", "Hãy nhập/chọn ngày trả phòng");
+            CustomAlert.showErrorMessage(
+                    "Chưa điền ngày trả phòng",
+                    "Hãy nhập/chọn ngày trả phòng");
             return;
         } else if (endDate.getValue().compareTo(hdEnd) > 0) {
-            CustomAlert.showErrorMessage("Lỗi", "Ngày đi không hợp lệ. Hãy nhập lại.");
+            CustomAlert.showErrorMessage(
+                    "",
+                    "Ngày đi không được lớn hơn ngày trả hợp đồng. Hãy nhập lại.");
             return;
         } else if (endDate.getValue().compareTo(startDate.getValue()) <= 0) {
             CustomAlert.showErrorMessage("Lỗi", "Ngày đi phải lớn hơn ngày vào. Hãy nhập lại.");
@@ -174,6 +182,9 @@ public class AddRoommateController implements Initializable {
                 startDate.getValue(),
                 endDate.getValue())) {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin");
+            // TODO only run this line in main
+            MasterController.getInstance().getListCustomerController()
+                    .handleRefresh(new ActionEvent());
             getStage().close();
         } else {
             CustomAlert.showErrorMessage(
@@ -207,13 +218,13 @@ public class AddRoommateController implements Initializable {
      * load data into roommate pane when insert roommate
      *
      * @param mahd
-     * @param start
-     * @param end
+     * @param hdStart
+     * @param hdEnd
      */
-    public void loadDataForInsert(int mahd, LocalDate start, LocalDate end) {
+    public void loadDataForInsert(int mahd, LocalDate hdStart, LocalDate hdEnd) {
         this.currentHdID = mahd;
-        this.hdStart = start;
-        this.hdEnd = end;
+        this.hdStart = hdStart;
+        this.hdEnd = hdEnd;
 
         // set date pickers' limit when roommate can choose to stay.
         startDate.setDayCellFactory(param -> new DateCell() {
@@ -235,10 +246,12 @@ public class AddRoommateController implements Initializable {
             }
         });
 
-        if (LocalDate.now().isAfter(start)) {
+        if (LocalDate.now().isBefore(hdEnd)) {
             startDate.setValue(LocalDate.now());
+        } else {
+            startDate.setValue(hdStart);
         }
-        endDate.setValue(end);
+        endDate.setValue(hdEnd);
     }
 
     /**

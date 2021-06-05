@@ -30,6 +30,7 @@ import main.model.Room;
 import main.ui.alert.CustomAlert;
 import main.ui.listcustomer.ListCustomerController;
 import main.util.AutoCompleteTextField;
+import main.util.MasterController;
 
 public class AddContractController implements Initializable {
 
@@ -241,6 +242,9 @@ public class AddContractController implements Initializable {
         if (handler.insertNewContract(con)) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm hợp đồng");
+            // TODO only run this line in main
+            MasterController.getInstance().getListCustomerController()
+                    .handleRefresh(new ActionEvent());
             getStage().close();
         } else {
             CustomAlert.showErrorMessage(
@@ -265,6 +269,9 @@ public class AddContractController implements Initializable {
 
         if (handler.updateContract(currentContract)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa hợp đồng");
+            // TODO only run this line in main
+            MasterController.getInstance().getListCustomerController()
+                    .handleRefresh(new ActionEvent());
             currentContract = null;
             getStage().close();
         }

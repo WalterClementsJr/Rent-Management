@@ -674,9 +674,9 @@ public final class DatabaseHandler {
             stmt.setInt(
                     2, c.getMaKH());
             stmt.setDate(
-                    3, Util.LocalDateToSQLDate(c.getNgayTra()));
+                    3, Util.LocalDateToSQLDate(c.getNgayNhan()));
             stmt.setDate(
-                    4, Util.LocalDateToSQLDate(c.getNgayNhan()));
+                    4, Util.LocalDateToSQLDate(c.getNgayTra()));
             stmt.setBigDecimal(
                     5, c.getTienCoc());
             return (stmt.executeUpdate() > 0);

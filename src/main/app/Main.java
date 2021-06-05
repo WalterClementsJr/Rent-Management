@@ -1,12 +1,11 @@
 package main.app;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.database.DatabaseHandler;
 import main.util.Util;
 
 public class Main extends Application {
@@ -31,6 +30,7 @@ public class Main extends Application {
         stage.setResizable(false);
 
         new Thread(() -> {
+            DatabaseHandler.getInstance().createConnection();
         }).start();
     }
 

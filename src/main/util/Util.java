@@ -3,13 +3,14 @@ package main.util;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.DAYS;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -25,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import main.ui.listcontract.ListContractController;
 import main.ui.main.MainController;
 
 public class Util {
@@ -153,6 +155,22 @@ public class Util {
 
         }
         tableView.setItems(list);
+    }
+
+    public static void loadResultSetToList(ResultSet rs, ObservableList list) {
+        list.clear();
+        try {
+            while (rs.next()) {
+                ObservableList row = FXCollections.observableArrayList();
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                    row.add(rs.getString(i).trim());
+                }
+                list.add(row);
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

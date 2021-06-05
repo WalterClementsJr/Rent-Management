@@ -204,27 +204,27 @@ public class ListContractController implements Initializable {
     }
 
     public void loadAllContracts(int id) {
-        loadResultSetToList(handler.getAllContractsWithInfo(id), listOfAllContracts);
+        Util.loadResultSetToList(handler.getAllContractsWithInfo(id), listOfAllContracts);
     }
 
     public void loadActiveContracts(int id) {
-        loadResultSetToList(handler.getActiveContractsWithInfo(id), listOfActiveContracts);
+        Util.loadResultSetToList(handler.getActiveContractsWithInfo(id), listOfActiveContracts);
     }
 
     public void loadOldContracts(int id) {
-        loadResultSetToList(handler.getOldContractsWithInfo(id), listOfOldContracts);
+        Util.loadResultSetToList(handler.getOldContractsWithInfo(id), listOfOldContracts);
     }
 
     public void loadAllRoommates(int id) {
-        loadResultSetToList(handler.getAllRoommatesWithInfo(id), listOfAllRoommates);
+        Util.loadResultSetToList(handler.getAllRoommatesWithInfo(id), listOfAllRoommates);
     }
 
     public void loadActiveRoommates(int id) {
-        loadResultSetToList(handler.getActiveRoommatesWithInfo(id), listOfActiveRoommates);
+        Util.loadResultSetToList(handler.getActiveRoommatesWithInfo(id), listOfActiveRoommates);
     }
 
     public void loadOldRoommates(int id) {
-        loadResultSetToList(handler.getOldRoommatesWithInfo(id), listOfOldRoommates);
+        Util.loadResultSetToList(handler.getOldRoommatesWithInfo(id), listOfOldRoommates);
     }
 
     @FXML
@@ -233,18 +233,26 @@ public class ListContractController implements Initializable {
         try {
             row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
-                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để xóa");
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn một hợp đồng để xóa");
                 return;
             }
             Optional<ButtonType> answer
                     = CustomAlert.confirmDelete(
                             "Xóa hợp đồng",
-                            "Bạn có chắc muốn xóa hợp đồng này?").showAndWait();
+                            "Bạn có chắc muốn xóa hợp đồng này cùng các thông tin liên quan"
+                            + "\n(Bao gồm thông tin khách ở ghép và hóa đơn)?")
+                            .showAndWait();
             if (answer.get() == ButtonType.OK) {
                 if (handler.deleteContract(Integer.parseInt(row.get(0).toString()))) {
                     CustomAlert.showSimpleAlert(
                             "Xóa thành công", "Đã xóa hợp đồng");
                     handleRefresh(new ActionEvent());
+
+                    // TODO only run this line in main
+                    MasterController.getInstance().getListCustomerController()
+                            .handleRefresh(new ActionEvent());
                 } else {
                     CustomAlert.showErrorMessage(
                             "Không thể xóa", "Đã có lỗi xảy ra");
@@ -266,11 +274,11 @@ public class ListContractController implements Initializable {
             }
             Contract con = new Contract(
                     Integer.parseInt(row.get(0).toString()),
-                    Integer.parseInt(row.get(2).toString()),
-                    Integer.parseInt(row.get(4).toString()),
-                    LocalDate.parse(row.get(6).toString(), Util.SQL_DATE_TIME_FORMATTER),
-                    LocalDate.parse(row.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER),
-                    new BigDecimal(row.get(8).toString()));
+                    Integer.parseInt(row.get(3).toString()),
+                    Integer.parseInt(row.get(5).toString()),
+                    LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER),
+                    LocalDate.parse(row.get(9).toString(), Util.SQL_DATE_TIME_FORMATTER),
+                    new BigDecimal(row.get(10).toString()));
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addcontract/addContract.fxml"));
@@ -299,7 +307,9 @@ public class ListContractController implements Initializable {
                 Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (IndexOutOfBoundsException ex) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn.",
+                    "Hãy chọn một hợp đồng để chỉnh sửa");
         }
     }
 
@@ -343,7 +353,11 @@ public class ListContractController implements Initializable {
                             if (handler.endContractToday(selectedConId)) {
                                 CustomAlert.showSimpleAlert(
                                         "Thành công",
-                                        "Đã kết thúc hợp đồng vào ngày " + LocalDate.now().format(Util.DATE_TIME_FORMATTER));
+                                        "Đã kết thúc hợp đồng vào ngày "
+                                        + LocalDate.now().format(Util.DATE_TIME_FORMATTER));
+                                // TODO only run this line in main
+                                MasterController.getInstance().getListCustomerController()
+                                        .handleRefresh(new ActionEvent());
                                 handleRefresh(new ActionEvent());
                             } else {
                                 CustomAlert.showErrorMessage(
@@ -498,13 +512,15 @@ public class ListContractController implements Initializable {
             if (handler.endRoommateStayingPeriod(mahdk)) {
                 CustomAlert.showSimpleAlert(
                         "Thành công", "Đã cho khách trả phòng");
+                // TODO only run this line in main
+                MasterController.getInstance().getListCustomerController()
+                        .handleRefresh(new ActionEvent());
             } else {
                 CustomAlert.showErrorMessage(
                         "Lỗi",
                         "Không thể trả phòng.\nHãy xem lại thông tin và thử lại.");
             }
         } catch (IndexOutOfBoundsException ex) {
-            ex.printStackTrace(System.out);
             CustomAlert.showErrorMessage(
                     "Chưa chọn",
                     "\nHãy chọn thông tin khách ở ghép để trả phòng");
@@ -513,7 +529,6 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleDeleteRoommate(ActionEvent e) {
-        // TODO delete roommate
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
@@ -532,6 +547,9 @@ public class ListContractController implements Initializable {
                     CustomAlert.showSimpleAlert(
                             "Xóa thành công", "Đã xóa khách ở ghép");
                     roommateTable.getItems().remove(selectedRow);
+                    // TODO only run this line in main
+                    MasterController.getInstance().getListCustomerController()
+                            .handleRefresh(new ActionEvent());
                     handleRefresh(new ActionEvent());
                 } else {
                     CustomAlert.showErrorMessage(
@@ -542,22 +560,6 @@ public class ListContractController implements Initializable {
             CustomAlert.showErrorMessage(
                     "Chưa chọn",
                     "Hãy chọn thông tin khách ở ghép để xóa");
-        }
-    }
-
-    public void loadResultSetToList(ResultSet rs, ObservableList list) {
-        list.clear();
-        try {
-            while (rs.next()) {
-                ObservableList row = FXCollections.observableArrayList();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    row.add(rs.getString(i).trim());
-                }
-                list.add(row);
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -772,7 +774,6 @@ public class ListContractController implements Initializable {
         return (Stage) root.getScene().getWindow();
     }
 
-    // TODO remove this in production
     private void loadComplexData() {
         complexList.clear();
         comboBox.getItems().clear();

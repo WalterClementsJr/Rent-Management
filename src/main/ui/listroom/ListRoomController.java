@@ -372,8 +372,9 @@ public class ListRoomController implements Initializable {
                 }
             }
         }
-        // room is not empty -> display error
-        CustomAlert.showErrorMessage("Lỗi", "Phòng đã có hợp đồng");
+        // room is not empty, can't make contract -> display error
+        CustomAlert.showErrorMessage(
+                "Không thể thực hiện", "Phòng đã có hợp đồng");
     }
 
     @FXML

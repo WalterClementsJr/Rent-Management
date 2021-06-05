@@ -169,7 +169,7 @@ public class ListCustomerController implements Initializable {
     }
 
     @FXML
-    void handleEditButton(ActionEvent event) {
+    private void handleEditButton(ActionEvent event) {
         Customer selectedForEdit = customerTable.getSelectionModel().getSelectedItem();
 
         if (selectedForEdit == null) {
@@ -209,7 +209,7 @@ public class ListCustomerController implements Initializable {
     }
 
     @FXML
-    private void handleRefresh(ActionEvent event) {
+    public void handleRefresh(ActionEvent event) {
         loadAllCustomers();
         loadCustomersWithNoRoom();
         loadCustomersWithRoom();

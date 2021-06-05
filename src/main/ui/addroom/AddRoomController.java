@@ -134,8 +134,6 @@ public class AddRoomController implements Initializable {
                 String ten = rs.getString("TENKHU");
                 String diaChi = rs.getString("DIACHI");
                 list.add(new Complex(id, ten, diaChi));
-
-                System.out.println(id + ten + diaChi);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AddRoomController.class.getName()).log(Level.SEVERE, null, ex);
@@ -309,11 +307,9 @@ public class AddRoomController implements Initializable {
     }
 
     public void loadEntries(Room r) {
-        System.out.println(r.debugString());
         for (Complex c : list) {
             if (r.getMaKhu() == c.getId()) {
                 comboBox.setValue(c);
-                comboBox.setDisable(true);
             }
         }
 

@@ -18,8 +18,24 @@ public final class MasterController {
     private ListContractController listContractController = null;
     private ListMaintenanceController listMaintenanceController = null;
 
-    public MasterController() {
+    public MainController getMainController() {
+        return mainController;
+    }
 
+    public ListCustomerController getListCustomerController() {
+        return listCustomerController;
+    }
+
+    public ListRoomController getListRoomController() {
+        return listRoomController;
+    }
+
+    public ListContractController getListContractController() {
+        return listContractController;
+    }
+
+    public ListMaintenanceController getListMaintenanceController() {
+        return listMaintenanceController;
     }
 
     public static MasterController getInstance() {
@@ -53,5 +69,5 @@ public final class MasterController {
         mainController.showNode(mainController.getRootPane().getChildren(),
                 mainController.getlCustomer());
     }
-
+    
 }

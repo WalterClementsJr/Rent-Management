@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addcontract.AddContractController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="518.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addcontract.AddContractController">
     <children>
         <Pane layoutX="259.0" layoutY="108.0" prefHeight="700.0" prefWidth="921.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <VBox layoutX="32.0" prefHeight="572.0" prefWidth="638.0">
+                <VBox layoutX="32.0" prefHeight="518.0" prefWidth="638.0">
                     <children>
                         <HBox fx:id="box" alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="915.0" spacing="10.0">
                             <children>
@@ -25,7 +25,7 @@
                                 </Label>
                             </children>
                         </HBox>
-                        <VBox prefHeight="159.0" prefWidth="602.0">
+                        <VBox prefHeight="141.0" prefWidth="638.0">
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="117.0" prefWidth="598.0" spacing="20.0">
                                     <children>
@@ -51,11 +51,6 @@
                                         </HBox>
                                     </children>
                                 </HBox>
-                                <Label fx:id="warning" prefHeight="67.0" prefWidth="787.0" text="Chú ý">
-                                    <font>
-                                        <Font name="Arial" size="15.0" />
-                                    </font>
-                                </Label>
                             </children>
                         </VBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="915.0" spacing="10.0">
@@ -72,7 +67,7 @@
                                 </VBox>
                             </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="116.0" prefWidth="915.0" spacing="10.0" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="638.0" spacing="10.0" />
                         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="369.0" spacing="10.0">
                             <children>
                                 <Button fx:id="save" mnemonicParsing="false" onAction="#handleAdd" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
