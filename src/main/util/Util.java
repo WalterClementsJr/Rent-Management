@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import static java.time.temporal.ChronoUnit.DAYS;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,13 +41,14 @@ public class Util {
     public static final String FILTER_ALL = "Tất cả";
     public static final String FILTER_ACTIVE = "Đang ở";
     public static final String FILTER_OLD = "Đã hết hạn";
-    public static final String FILTER_EMPTY = "Trống";
-    public static final String FILTER_OCCUPIED = "Đã có người";
+    public static final String FILTER_ROOM_EMPTY = "Trống";
+    public static final String FILTER_ROOM_OCCUPIED = "Đã có người";
     public static final String FILTER_CUSTOMER_NO_ROOM = "Chưa có phòng";
     public static final String FILTER_CUSTOMER_HAS_ROOM = "Đã có phòng";
     public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
     public static void main(String[] args) {
+        System.out.println(chuanHoaTen("   Ng tan   THianan  ".trim()));
     }
 
     public static void setWindowIcon(Stage stage) {
@@ -78,7 +80,6 @@ public class Util {
      * @return Object
      */
     public static Object loadWindow(URL loc, String title, Stage parentStage) {
-        Object controller = null;
         try {
             Parent parent = FXMLLoader.load(loc);
 
@@ -114,16 +115,29 @@ public class Util {
         return java.sql.Date.valueOf(local);
     }
 
+    public static String chuanHoaTen(String ten) {
+        ten = ten.toLowerCase();
+        String[] tungTuTrongTen = ten.split("[\\s]+");
+        System.out.println(Arrays.toString(tungTuTrongTen));
+        ten = "";
+        for (int i = 0; i < tungTuTrongTen.length; i++) {
+            String phanChuThuong = tungTuTrongTen[i].substring(1);
+            tungTuTrongTen[i] = tungTuTrongTen[i].substring(0, 1).toUpperCase();
+            if (i == tungTuTrongTen.length - 1) {
+                ten = ten + tungTuTrongTen[i] + phanChuThuong;
+            } else {
+                ten = ten + tungTuTrongTen[i] + phanChuThuong + " ";
+            }
+        }
+        return ten;
+    }
+
     public static Boolean genderToBit(String gt) {
         return !"Nam".equals(gt);
     }
 
     public static String bitToGender(Boolean b) {
-        if (b == true) {
-            return "Nữ";
-        } else {
-            return "Nam";
-        }
+        return b == true ? "Nữ" : "Nam";
     }
 
     public static void loadResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {

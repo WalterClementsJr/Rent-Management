@@ -62,9 +62,9 @@ public final class DatabaseHandler {
     }
 
     /**
-     *
+     * thực hiện các query trả về data
      * @param query
-     * @return
+     * @return ResultSet
      */
     public ResultSet execQuery(String query) {
         ResultSet result;
@@ -79,10 +79,9 @@ public final class DatabaseHandler {
     }
 
     /**
-     *
+     * thực hiện các query update data hoặc query không trả về giá trị
      * @param query
-     * @return thưc hiện các query update data hoặc query không trả về giá trị
-     * gì
+     * @return true nếu thành công
      */
     public boolean execUpdate(String query) {
         try {
@@ -767,27 +766,6 @@ public final class DatabaseHandler {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-    }
-
-    public LocalDate getLatestPayDate(int conId) throws NullPointerException {
-        try {
-            stmt = conn.prepareStatement(
-                    "select dbo.getlatestpaydate(?) as date");
-            stmt.setInt(1, conId);
-
-            ResultSet rs = stmt.executeQuery();
-            if (!rs.next()) {
-                throw new NullPointerException("No latest paydate is associated with this contract");
-            } else {
-                java.sql.Date date = rs.getDate("date");
-                rs.close();
-                return Util.SQLDateToLocalDate(date);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
 
     public boolean insertNewInvoice(Invoice invoice) {

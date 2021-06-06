@@ -148,9 +148,9 @@ public class AddRoommateController implements Initializable {
                 endDate.getValue())) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm khách ở ghép");
-            // TODO only run this line in main
             MasterController.getInstance().getListCustomerController()
                     .handleRefresh(new ActionEvent());
+            getStage().close();
         } else {
             CustomAlert.showErrorMessage(
                     "Thất bại",
@@ -182,7 +182,6 @@ public class AddRoommateController implements Initializable {
                 startDate.getValue(),
                 endDate.getValue())) {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin");
-            // TODO only run this line in main
             MasterController.getInstance().getListCustomerController()
                     .handleRefresh(new ActionEvent());
             getStage().close();
@@ -299,7 +298,6 @@ public class AddRoommateController implements Initializable {
     }
 
     private void loadCustomer() {
-        // TODO this is running with Main
         list.addAll(ListCustomerController.listOfCustomersWithNoRoom);
         findCustomer = new AutoCompleteTextField(list);
     }

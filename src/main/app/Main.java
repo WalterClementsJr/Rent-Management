@@ -1,5 +1,6 @@
 package main.app;
 
+import java.util.Locale;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +17,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        // set datepicker's language to Vietnamese
+        Locale.setDefault(new Locale("vi", "VN"));
+
         Parent root = FXMLLoader.load(getClass().getResource("/main/ui/main/main.fxml"));
 
         Scene scene = new Scene(root);

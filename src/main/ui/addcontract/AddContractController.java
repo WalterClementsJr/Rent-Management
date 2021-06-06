@@ -16,7 +16,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -45,9 +44,6 @@ public class AddContractController implements Initializable {
 
     @FXML
     private DatePicker endDate;
-
-    @FXML
-    private Label warning;
 
     @FXML
     private TextField deposit;
@@ -139,9 +135,7 @@ public class AddContractController implements Initializable {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-//                setDisable(empty || date.compareTo(LocalDate.now()) <= 0 );
                 setDisable(empty || date.compareTo(startDate.getValue()) <= 0);
-
             }
         });
         // deposit field format
@@ -242,7 +236,7 @@ public class AddContractController implements Initializable {
         if (handler.insertNewContract(con)) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm hợp đồng");
-            // TODO only run this line in main
+
             MasterController.getInstance().getListCustomerController()
                     .handleRefresh(new ActionEvent());
             getStage().close();
@@ -254,13 +248,19 @@ public class AddContractController implements Initializable {
 
     private void handleEdit() {
         if (endDate.getValue() == null) {
-            CustomAlert.showErrorMessage("Chưa điền ngày trả phòng", "Hãy nhập/chọn ngày trả phòng");
+            CustomAlert.showErrorMessage(
+                    "Chưa điền ngày trả phòng",
+                    "Hãy nhập/chọn ngày trả phòng");
             return;
         } else if (endDate.getValue().compareTo(startDate.getValue()) <= 0) {
-            CustomAlert.showErrorMessage("Lỗi", "Ngày nhận phòng phải lớn hơn ngày trả phòng. Hãy nhập lại.");
+            CustomAlert.showErrorMessage(
+                    "Ngày nhận phòng phải lớn hơn ngày trả phòng",
+                    "Xin nhập lại và thử lại sau.");
             return;
         } else if (deposit.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Chưa nhập tiền cọc", "Hãy nhập tiền cọc");
+            CustomAlert.showErrorMessage(
+                    "Chưa nhập tiền cọc",
+                    "Hãy nhập tiền cọc");
             return;
         }
 
@@ -269,7 +269,6 @@ public class AddContractController implements Initializable {
 
         if (handler.updateContract(currentContract)) {
             CustomAlert.showSimpleAlert("Thành công", "Đã sửa hợp đồng");
-            // TODO only run this line in main
             MasterController.getInstance().getListCustomerController()
                     .handleRefresh(new ActionEvent());
             currentContract = null;

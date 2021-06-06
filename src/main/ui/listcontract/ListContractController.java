@@ -497,7 +497,6 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleRoommateReturn(ActionEvent e) {
-        // TODO end ACTIVE roommates staying period (set enddate to getdate())
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
@@ -509,15 +508,15 @@ public class ListContractController implements Initializable {
             }
             int mahdk = Integer.parseInt((String) selectedRow.get(0));
 
+            // TODO check if ngayvao is today before roommate return
             if (handler.endRoommateStayingPeriod(mahdk)) {
                 CustomAlert.showSimpleAlert(
                         "Thành công", "Đã cho khách trả phòng");
-                // TODO only run this line in main
                 MasterController.getInstance().getListCustomerController()
                         .handleRefresh(new ActionEvent());
             } else {
                 CustomAlert.showErrorMessage(
-                        "Lỗi",
+                        "Thất bại",
                         "Không thể trả phòng.\nHãy xem lại thông tin và thử lại.");
             }
         } catch (IndexOutOfBoundsException ex) {

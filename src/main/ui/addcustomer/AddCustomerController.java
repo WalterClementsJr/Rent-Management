@@ -20,6 +20,7 @@ import javafx.util.StringConverter;
 import main.database.DatabaseHandler;
 import main.model.Customer;
 import main.ui.alert.CustomAlert;
+import main.util.Util;
 
 public class AddCustomerController implements Initializable {
 
@@ -153,7 +154,7 @@ public class AddCustomerController implements Initializable {
             return;
         }
 
-        String customerName = name.getText().trim();
+        String customerName = Util.chuanHoaTen(name.getText().trim());
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
         LocalDate customerBDay = datePicker.getValue();
         String customerCMND = sdt.getText().trim();
@@ -187,7 +188,7 @@ public class AddCustomerController implements Initializable {
             return;
         }
 
-        String customerName = name.getText().trim();
+        String customerName = Util.chuanHoaTen(name.getText().trim());
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
         LocalDate customerBDay = datePicker.getValue();
         String customerCMND = cmnd.getText().trim();
@@ -220,24 +221,44 @@ public class AddCustomerController implements Initializable {
 
     private boolean checkEntries() {
         if (name.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Tên khách trống", "Hãy nhập tên");
+            CustomAlert.showErrorMessage("Tên khách trống", "Hãy nhập tên khách");
             return false;
         } else if (sex.getSelectedToggle() == null) {
-            CustomAlert.showErrorMessage("Chưa chọn giới tính", "Hãy nhập đầy đủ thông tin");
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn giới tính",
+                    "Hãy nhập đầy đủ thông tin");
             return false;
         } else if (datePicker.getValue() == null) {
-            CustomAlert.showErrorMessage("Chưa nhập ngày sinh", "Hãy nhập đầy đủ thông tin");
+            CustomAlert.showErrorMessage(
+                    "Chưa nhập ngày sinh",
+                    "Hãy nhập đầy đủ thông tin");
             return false;
         } else if (sdt.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Chưa nhập số điện thoại", "Hãy nhập đầy đủ thông tin");
+            CustomAlert.showErrorMessage(
+                    "Chưa nhập số điện thoại",
+                    "Hãy nhập đầy đủ thông tin");
+            return false;
+        } else if (!(sdt.getText().matches("\\d{10}")
+                || sdt.getText().matches("\\d{11}"))) {
+            CustomAlert.showErrorMessage(
+                    "Số điện thoại sai cú pháp",
+                    "CMND phải có 9 số hoặc 12 số");
             return false;
         } else if (cmnd.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Chưa nhập chứng minh nhân dân", "Hãy nhập đầy đủ thông tin");
+            CustomAlert.showErrorMessage(
+                    "Chưa nhập chứng minh nhân dân",
+                    "Hãy nhập đầy đủ thông tin");
+            return false;
+        } else if (!(cmnd.getText().matches("\\d{9}")
+                || cmnd.getText().matches("\\d{12}"))) {
+            CustomAlert.showErrorMessage(
+                    "Chứng minh nhân dân sai cú pháp",
+                    "CMND phải có 9 số hoặc 12 số");
             return false;
         }
         return true;
     }
-    
+
     private Stage getStage() {
         return (Stage) rootAddCustomer.getScene().getWindow();
     }

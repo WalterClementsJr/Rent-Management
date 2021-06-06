@@ -105,7 +105,7 @@ public class ListRoomController implements Initializable {
         loadComplexData();
         comboBox.getSelectionModel().selectFirst();
 
-        filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_EMPTY, Util.FILTER_OCCUPIED);
+        filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_ROOM_EMPTY, Util.FILTER_ROOM_OCCUPIED);
         filter.getSelectionModel().selectFirst();
         complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
 
@@ -161,10 +161,10 @@ public class ListRoomController implements Initializable {
             case Util.FILTER_ALL:
                 roomTable.setItems(listOfAllRooms);
                 break;
-            case Util.FILTER_EMPTY:
+            case Util.FILTER_ROOM_EMPTY:
                 roomTable.setItems(listOfEmptyRooms);
                 break;
-            case Util.FILTER_OCCUPIED:
+            case Util.FILTER_ROOM_OCCUPIED:
                 roomTable.setItems(listOfOccupiedRooms);
                 break;
         }
@@ -364,6 +364,7 @@ public class ListRoomController implements Initializable {
 
                     stage.setOnHiding((e) -> {
                         MasterController.getInstance().ListContractControllerRefresh();
+                        handleRefresh(new ActionEvent());
                     });
                     return;
                 } catch (IOException ex) {
