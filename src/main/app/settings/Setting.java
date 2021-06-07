@@ -13,16 +13,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.ui.alert.CustomAlert;
 
-public class Setting {
+public final class Setting {
 
     public static void main(String[] args) {
         Setting s;
-        s = Setting.getSetting();
+        s = Setting.readSettting();
 //        s.setPwd("4444");
         System.out.println(s.checkPassword("4444"));
-        Setting.writePreferenceToFile(s);
+        Setting.writeSetting(s);
     }
 
+    private static Setting APP_SETTING = null;
+    public static String SETTING_STYLE_SHEET;
     public static final String CONFIG_FILE = "qlnt.ini";
     public static MessageDigest DIGEST;
 
@@ -69,11 +71,10 @@ public class Setting {
     }
 
     /**
-     * read setting from json file
-     *
-     * @return
+     * read setting from json
+     * @return Setting object
      */
-    public static Setting getSetting() {
+    public static Setting readSettting() {
         Gson gson = new Gson();
         Setting settings = new Setting();
         try {
@@ -85,7 +86,11 @@ public class Setting {
         return settings;
     }
 
-    public static void writePreferenceToFile(Setting setting) {
+    /**
+     * write Setting object to json
+     * @param setting 
+     */
+    public static void writeSetting(Setting setting) {
         Writer writer = null;
         try {
             Gson gson = new Gson();
@@ -98,7 +103,7 @@ public class Setting {
             Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("write to file faled!");
             //TODO run this line only when in javafx.Application
-            CustomAlert.showErrorMessage("Failed", "Cant save configuration file");
+//            CustomAlert.showErrorMessage("Failed", "Cant save configuration file");
         } finally {
             try {
                 if (writer != null) {

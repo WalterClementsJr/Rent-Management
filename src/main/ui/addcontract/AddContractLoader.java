@@ -19,7 +19,7 @@ public class AddContractLoader extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("addContract.fxml"));
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/main/app/bootstrap3.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle(Util.APP_NAME);

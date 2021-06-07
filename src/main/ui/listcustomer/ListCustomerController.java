@@ -310,6 +310,8 @@ public class ListCustomerController implements Initializable {
         idCol.setVisible(false);
 
         hotenCol.setMinWidth(150);
+        ngaysinhCol.setMinWidth(200);
+        cmndCol.setMinWidth(200);
     }
 
 }

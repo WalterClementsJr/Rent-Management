@@ -49,16 +49,24 @@ public class MainController implements Initializable {
     private AnchorPane lRoom;
     private AnchorPane lContract;
     private AnchorPane lInvoice;
+    private AnchorPane lMaintenance;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MasterController.getInstance().registerMainController(this);
 
         // load external panes
-        lCustomer = Util.loadPane(getClass().getResource("/main/ui/listcustomer/listCustomer.fxml"));
-        lRoom = Util.loadPane(getClass().getResource("/main/ui/listroom/listRoom.fxml"));
-        lContract = Util.loadPane(getClass().getResource("/main/ui/listcontract/listContract.fxml"));
-        lInvoice = Util.loadPane(getClass().getResource("/main/ui/listinvoice/listinvoice.fxml"));
+        lCustomer =
+                Util.loadPane(getClass().getResource("/main/ui/listcustomer/listCustomer.fxml"));
+        lRoom =
+                Util.loadPane(getClass().getResource("/main/ui/listroom/listRoom.fxml"));
+        lContract =
+                Util.loadPane(getClass().getResource("/main/ui/listcontract/listContract.fxml"));
+        lInvoice =
+                Util.loadPane(getClass().getResource("/main/ui/listinvoice/listinvoice.fxml"));
+        lMaintenance = 
+                Util.loadPane(getClass().getResource("/main/ui/listinvoice/listmaintenance.fxml"));
 
         rootPane.getChildren().addAll(lCustomer, lRoom, lContract, lInvoice);
         showNode(rootPane.getChildren(), lContract);

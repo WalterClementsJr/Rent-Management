@@ -36,7 +36,10 @@ public class Util {
     public static final DateTimeFormatter SQL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-M-d");
     public static final String APP_ICON_LOCATION = "main/resources/icons/icon.png";
     public static final String APP_NAME = "Quản Lý Nhà Trọ";
-    public static final String STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
+    public static final String WIN7_STYLE_SHEET_LOCATION = "/main/app/win7glass.css";
+    public static final String FLAT_STYLE_SHEET_LOCATION = "/main/app/flatbee.css";
+    public static final String BOOTSTRAP_STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
+    public static String STYLE_SHEET_LOCATION = BOOTSTRAP_STYLE_SHEET_LOCATION;
 
     public static final String FILTER_ALL = "Tất cả";
     public static final String FILTER_ACTIVE = "Đang ở";
@@ -48,13 +51,15 @@ public class Util {
     public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
     public static void main(String[] args) {
-        System.out.println(chuanHoaTen("   Ng tan   THianan  ".trim()));
     }
 
     public static void setWindowIcon(Stage stage) {
         stage.getIcons().add(new Image(APP_ICON_LOCATION));
     }
 
+    public static void setStyleSheet(String style) {
+        STYLE_SHEET_LOCATION = style;
+    }
     /**
      *
      * @param loc đường dẫn đến file fxml cần load

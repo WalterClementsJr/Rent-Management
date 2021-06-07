@@ -19,7 +19,7 @@ public class AddMaintenanceLoader extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("addMaintenance.fxml"));
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/main/app/bootstrap3.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(Util.WIN7_STYLE_SHEET_LOCATION).toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle(Util.APP_NAME);

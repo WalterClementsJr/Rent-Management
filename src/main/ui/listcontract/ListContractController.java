@@ -90,8 +90,6 @@ public class ListContractController implements Initializable {
 
     // extra elements
     ObservableList<Complex> complexList = ListRoomController.complexList;
-    // TODO uncomment/remove these lines in Main
-//    ObservableList<Complex> complexList = FXCollections.observableArrayList();
 
     public static ObservableList listOfAllContracts = FXCollections.observableArrayList();
     public static ObservableList listOfActiveContracts = FXCollections.observableArrayList();
@@ -514,6 +512,7 @@ public class ListContractController implements Initializable {
                         "Thành công", "Đã cho khách trả phòng");
                 MasterController.getInstance().getListCustomerController()
                         .handleRefresh(new ActionEvent());
+                handleRefresh(new ActionEvent());
             } else {
                 CustomAlert.showErrorMessage(
                         "Thất bại",
@@ -546,10 +545,8 @@ public class ListContractController implements Initializable {
                     CustomAlert.showSimpleAlert(
                             "Xóa thành công", "Đã xóa khách ở ghép");
                     roommateTable.getItems().remove(selectedRow);
-                    // TODO only run this line in main
                     MasterController.getInstance().getListCustomerController()
                             .handleRefresh(new ActionEvent());
-                    handleRefresh(new ActionEvent());
                 } else {
                     CustomAlert.showErrorMessage(
                             "Không thể xóa", "Đã có lỗi xảy ra");
@@ -710,7 +707,7 @@ public class ListContractController implements Initializable {
 
         tenPhongCol.setMinWidth(150);
         tenkhCol.setMinWidth(150);
-        tenRoommateCol.setMinWidth(150);
+        tenRoommateCol.setMinWidth(200);
 
         idhdk.setVisible(false);
         mahdongCol.setVisible(false);

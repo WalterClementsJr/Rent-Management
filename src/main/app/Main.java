@@ -23,7 +23,8 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/main/ui/main/main.fxml"));
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("bootstrap3.css").toExternalForm());
+//        scene.getStylesheets().add(getClass().getResource("bootstrap3.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("flatbee.css").toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle(Util.APP_NAME);

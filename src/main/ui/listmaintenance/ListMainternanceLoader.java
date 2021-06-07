@@ -19,7 +19,7 @@ public class ListMainternanceLoader extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("listMaintenance.fxml"));
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/main/app/bootstrap3.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle("maintenance");

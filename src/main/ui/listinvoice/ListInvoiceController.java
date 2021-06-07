@@ -62,21 +62,22 @@ public class ListInvoiceController implements Initializable {
 
     @FXML
     private void handleAddInvoice(ActionEvent event) {
-        ObservableList list = tableView.getSelectionModel().getSelectedItems();
         ObservableList row;
-
         try {
             row = (ObservableList) tableView.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
-                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một dòng để thêm hóa đơn");
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn một dòng để thêm hóa đơn");
                 return;
             }
 
+            // TODO fix row.get
             int mahdong = Integer.parseInt(row.get(0).toString());
-            LocalDate lastPayDate = LocalDate.parse(row.get(10).toString(), Util.SQL_DATE_TIME_FORMATTER);
-            LocalDate ngaytra = LocalDate.parse(row.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER);
-            BigDecimal giagoc = new BigDecimal(row.get(9).toString());
-            int songay = Integer.parseInt(row.get(11).toString());
+            LocalDate lastPayDate = LocalDate.parse(row.get(12).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate ngaytra = LocalDate.parse(row.get(9).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            BigDecimal giagoc = new BigDecimal(row.get(11).toString());
+            int songay = Integer.parseInt(row.get(13).toString());
 
             System.out.println(mahdong);
             System.out.println(lastPayDate);
@@ -114,8 +115,9 @@ public class ListInvoiceController implements Initializable {
                 Logger.getLogger(ListInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (IndexOutOfBoundsException ex) {
-            CustomAlert.showErrorMessage("Chưa chọn.", "Chọn một hợp đồng để thêm hóa đơn");
-            return;
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn.",
+                    "Chọn một hợp đồng để thêm hóa đơn");
         }
     }
 
