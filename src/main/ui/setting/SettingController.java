@@ -47,8 +47,6 @@ public class SettingController implements Initializable {
 
         themeComboBox.getItems().addAll(Arrays.asList(themes));
         themeComboBox.getSelectionModel().selectFirst();
-        
-        System.out.println(setting.getSTYLE_SHEET());
         setComboBox(setting.getSTYLE_SHEET());
     }
 

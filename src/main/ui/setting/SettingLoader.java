@@ -27,7 +27,7 @@ public class SettingLoader extends Application {
         stage.show();
 
         Util.setWindowIcon(stage);
-        
+
         Setting.getInstance();
     }
 }

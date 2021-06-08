@@ -66,7 +66,7 @@ public class Util {
         public String getLocation() {
             return location;
         }
-        
+
         @Override
         public String toString() {
             return name;
@@ -82,7 +82,6 @@ public class Util {
     public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(Themes.values()));
     }
 
     public static void setWindowIcon(Stage stage) {
@@ -156,7 +155,6 @@ public class Util {
     public static String chuanHoaTen(String ten) {
         ten = ten.toLowerCase();
         String[] tungTuTrongTen = ten.split("[\\s]+");
-        System.out.println(Arrays.toString(tungTuTrongTen));
         ten = "";
         for (int i = 0; i < tungTuTrongTen.length; i++) {
             String phanChuThuong = tungTuTrongTen[i].substring(1);

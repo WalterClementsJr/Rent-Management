@@ -69,5 +69,5 @@ public final class MasterController {
         mainController.showNode(mainController.getRootPane().getChildren(),
                 mainController.getlCustomer());
     }
-    
+
 }

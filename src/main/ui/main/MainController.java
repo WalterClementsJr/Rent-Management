@@ -114,12 +114,6 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void handleMenuFullScreen(ActionEvent event) {
-        Stage stage = getStage();
-        stage.setFullScreen(!stage.isFullScreen());
-    }
-
-    @FXML
     private void runCalculator(ActionEvent event) {
         try {
             Desktop.getDesktop().open(new File("./src/main/util/Calculator/calc.html"));

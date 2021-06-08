@@ -158,7 +158,7 @@ public class AddComplexController implements Initializable {
         }
         return true;
     }
-    
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }

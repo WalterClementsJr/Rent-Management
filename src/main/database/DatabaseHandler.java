@@ -59,6 +59,7 @@ public final class DatabaseHandler {
 
     /**
      * thực hiện các query trả về data
+     *
      * @param query
      * @return ResultSet
      */
@@ -76,6 +77,7 @@ public final class DatabaseHandler {
 
     /**
      * thực hiện các query update data hoặc query không trả về giá trị
+     *
      * @param query
      * @return true nếu thành công
      */
@@ -85,8 +87,7 @@ public final class DatabaseHandler {
             stmt.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "An Error Occured", JOptionPane.ERROR_MESSAGE);
-            System.out.println("Exception at execQuery:dataHandler" + ex.getLocalizedMessage());
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
@@ -290,7 +291,6 @@ public final class DatabaseHandler {
 
             ResultSet rs = stmt.executeQuery();
             if (!rs.next()) {
-                System.out.println("no data");
                 return -1;
             } else {
                 int t = rs.getInt("songuoi");

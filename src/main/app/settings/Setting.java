@@ -1,25 +1,29 @@
 package main.app.settings;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.ui.alert.CustomAlert;
 import main.util.Util;
+import main.util.Util.Themes;
 
 public final class Setting {
 
     public static void main(String[] args) {
     }
 
-    private static Setting APP_SETTING = null;
+    private static Setting APP_SETTING;
 
     public static boolean IS_VERIFIED = false;
     public static final String CONFIG_FILE = "qlnt.ini";
@@ -37,16 +41,23 @@ public final class Setting {
                 Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if (APP_SETTING == null) {
-            APP_SETTING = readSettting();
-        }
-        if (APP_SETTING == null) {
-            initSetting();
+
+        if (APP_SETTING != null) {
+            return APP_SETTING;
         }
 
-        System.out.println(APP_SETTING.getSTYLE_SHEET());
-        System.out.println(APP_SETTING.getPassword());
+        if (!readSettting()) {
+            APP_SETTING = new Setting();
+        }
 
+        if (APP_SETTING == null) {
+            APP_SETTING = new Setting();
+        }
+
+        // to counter a bug when reading from a file, its content will now be "null"
+        // write this object to file to prevent data loss when file is loaded but
+        // not modified
+        writeSetting(APP_SETTING);
         return APP_SETTING;
     }
 
@@ -54,47 +65,8 @@ public final class Setting {
      * create default setting object
      */
     public Setting() {
-        this.STYLE_SHEET = Util.BOOTSTRAP_STYLE_SHEET_LOCATION;
+        this.STYLE_SHEET = Util.Themes.BOOTSTRAP.getLocation();
         setPassword("");
-    }
-
-//    public void hashPassword(String pwd) {
-//        this.hash = DIGEST.digest(pwd.getBytes(StandardCharsets.UTF_16));
-//    }
-    public void setPassword(String pwd) {
-        this.hash = DIGEST.digest(pwd.getBytes(StandardCharsets.UTF_16));
-        writeSetting(APP_SETTING);
-    }
-
-    public String getPassword() {
-        return new String(hash);
-    }
-
-    /**
-     * check password
-     *
-     * @param password
-     * @return true if equals with user password
-     */
-    public boolean checkPassword(String password) {
-        return new String(
-                DIGEST.digest(password.getBytes(StandardCharsets.UTF_16))).equals(getPassword());
-    }
-
-    /**
-     * create .ini file with default settings use when can't find available
-     * setting file
-     */
-    public static void initSetting() {
-        Writer writer;
-        try {
-            APP_SETTING = new Setting();
-            writer = new FileWriter(CONFIG_FILE);
-            gson.toJson(APP_SETTING, writer);
-            writer.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -102,13 +74,20 @@ public final class Setting {
      *
      * @return Setting object
      */
-    public static Setting readSettting() {
+    public static boolean readSettting() {
+        Reader reader;
         try {
-            return gson.fromJson(new FileReader(CONFIG_FILE), Setting.class);
+            reader = new FileReader(CONFIG_FILE);
+            APP_SETTING = gson.fromJson(reader, Setting.class);
+            reader.close();
+            return true;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Setting.class.getName()).info(
                     "Config file is missing.");
-            return null;
+            return false;
+        } catch (IOException ex) {
+            Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
 
@@ -118,28 +97,48 @@ public final class Setting {
      * @param setting
      */
     public static void writeSetting(Setting setting) {
-        Writer writer = null;
+        Writer writer;
         try {
-            Gson gson = new Gson();
             writer = new FileWriter(CONFIG_FILE);
             gson.toJson(setting, writer);
-            // TODO run this line only when in javafx.Application
-//            CustomAlert.showSimpleAlert("Thành công", "Đã lưu thông tin");
             writer.close();
         } catch (IOException ex) {
             Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
-            //TODO run this line only when in javafx.Application
-//            CustomAlert.showErrorMessage(
-//                    "Thất bại", "Không thể lưu thông tin");
         }
     }
 
+    public void setPassword(String password) {
+        this.hash = DIGEST.digest(
+                password.getBytes(StandardCharsets.UTF_16));
+        writeSetting(APP_SETTING);
+    }
+
+    public String getPassword() {
+        return new String(APP_SETTING.hash);
+    }
+
+    public byte[] getHash() {
+        return APP_SETTING.hash;
+    }
+
+    /**
+     * check password
+     *
+     * @param password
+     * @return true if equals with user password
+     */
+    public boolean checkPassword(String password) {
+        return new String(DIGEST.digest(
+                password.getBytes(StandardCharsets.UTF_16)))
+                .equals(APP_SETTING.getPassword());
+    }
+
     public String getSTYLE_SHEET() {
-        return STYLE_SHEET;
+        return APP_SETTING.STYLE_SHEET;
     }
 
     public void setSTYLE_SHEET(String STYLE_SHEET) {
-        this.STYLE_SHEET = STYLE_SHEET;
+        APP_SETTING.STYLE_SHEET = STYLE_SHEET;
         writeSetting(APP_SETTING);
     }
 }

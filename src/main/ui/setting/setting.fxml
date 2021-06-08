@@ -10,44 +10,44 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.setting.SettingController">
-   <children>
-      <HBox layoutX="231.0" layoutY="219.0" prefHeight="700.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <VBox prefHeight="700.0" prefWidth="233.0" spacing="30.0">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-               <children>
-                  <Label prefHeight="35.0" prefWidth="140.0" text="Thay đổi mật khẩu" />
-                  <PasswordField fx:id="currentPwd" promptText="Nhập mật khẩu cũ">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </PasswordField>
-                  <PasswordField fx:id="newPwd1" promptText="Nhập mật khẩu mới" />
-                  <PasswordField fx:id="newPwd2" promptText="Nhập lại mật khẩu mới" />
-                  <Button fx:id="ok" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="107.0" styleClass="success" text="Đổi mật khẩu" />
-               </children>
-            </VBox>
-            <VBox prefHeight="700.0" prefWidth="687.0" spacing="30.0">
-               <children>
-                  <Label prefHeight="29.0" prefWidth="76.0" text="Chọn theme" />
-                  <ComboBox fx:id="themeComboBox" onAction="#themeChanged" prefWidth="151.0">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </ComboBox>
-                  <Label prefHeight="17.0" prefWidth="409.0" text="Chú ý: cần restart ứng dụng để theme có hiệu lực">
-                     <VBox.margin>
-                        <Insets top="-10.0" />
-                     </VBox.margin>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets left="60.0" />
-               </HBox.margin>
-            </VBox>
-         </children>
-      </HBox>
-   </children>
+    <children>
+        <HBox layoutX="231.0" layoutY="219.0" prefHeight="700.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <VBox prefHeight="700.0" prefWidth="233.0" spacing="30.0">
+                    <HBox.margin>
+                        <Insets left="20.0" />
+                    </HBox.margin>
+                    <children>
+                        <Label prefHeight="35.0" prefWidth="140.0" text="Thay đổi mật khẩu" />
+                        <PasswordField fx:id="currentPwd" promptText="Nhập mật khẩu cũ">
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </PasswordField>
+                        <PasswordField fx:id="newPwd1" promptText="Nhập mật khẩu mới" />
+                        <PasswordField fx:id="newPwd2" promptText="Nhập lại mật khẩu mới" />
+                        <Button fx:id="ok" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="107.0" styleClass="success" text="Đổi mật khẩu" />
+                    </children>
+                </VBox>
+                <VBox prefHeight="700.0" prefWidth="687.0" spacing="30.0">
+                    <children>
+                        <Label prefHeight="29.0" prefWidth="76.0" text="Chọn theme" />
+                        <ComboBox fx:id="themeComboBox" onAction="#themeChanged" prefWidth="151.0">
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </ComboBox>
+                        <Label prefHeight="17.0" prefWidth="409.0" text="Chú ý: cần restart ứng dụng để theme có hiệu lực">
+                            <VBox.margin>
+                                <Insets top="-10.0" />
+                            </VBox.margin>
+                        </Label>
+                    </children>
+                    <HBox.margin>
+                        <Insets left="60.0" />
+                    </HBox.margin>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
 </AnchorPane>
