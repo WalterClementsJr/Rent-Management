@@ -19,15 +19,16 @@ public class SettingLoader extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("setting.fxml"));
 
+        Setting.getInstance();
+
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(
+                Setting.getInstance().getSTYLE_SHEET()).toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle(Util.APP_NAME);
         stage.show();
 
         Util.setWindowIcon(stage);
-
-        Setting.getInstance();
     }
 }

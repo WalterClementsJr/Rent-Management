@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.app.settings.Setting;
 import main.util.Util;
 
 public class ListMainternanceLoader extends Application {
@@ -19,7 +20,7 @@ public class ListMainternanceLoader extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("listMaintenance.fxml"));
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(Setting.getInstance().getSTYLE_SHEET()).toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle("maintenance");

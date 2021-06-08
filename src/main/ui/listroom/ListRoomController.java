@@ -34,6 +34,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.model.Room;
@@ -265,7 +266,7 @@ public class ListRoomController implements Initializable {
             stage.initModality(Modality.WINDOW_MODAL);
 
             Scene scene = new Scene(parent);
-            scene.getStylesheets().add(getClass().getResource(Util.STYLE_SHEET_LOCATION).toString());
+            scene.getStylesheets().add(getClass().getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
             stage.setScene(scene);
             stage.setTitle("Chỉnh sửa khu nhà");
@@ -313,7 +314,7 @@ public class ListRoomController implements Initializable {
 
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(getClass()
-                    .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                    .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
             stage.setScene(scene);
             stage.setTitle("Sửa phòng");
@@ -355,7 +356,7 @@ public class ListRoomController implements Initializable {
 
                     Scene scene = new Scene(parent);
                     scene.getStylesheets().add(getClass()
-                            .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                            .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
                     stage.setScene(scene);
                     stage.setTitle("Thêm hợp đồng");
@@ -432,7 +433,7 @@ public class ListRoomController implements Initializable {
 
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(getClass()
-                    .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                    .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
             stage.setScene(scene);
             stage.setTitle("Thêm thông tin bảo trì");

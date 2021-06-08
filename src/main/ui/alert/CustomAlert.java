@@ -12,6 +12,7 @@ import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import main.app.Main;
+import main.app.settings.Setting;
 import main.util.Util;
 
 public class CustomAlert {
@@ -63,6 +64,6 @@ public class CustomAlert {
         Util.setWindowIcon(stage);
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(Main.class.getResource(Util.STYLE_SHEET_LOCATION).toExternalForm());
+        dialogPane.getStylesheets().add(Main.class.getResource(Setting.getInstance().getSTYLE_SHEET()).toExternalForm());
     }
 }

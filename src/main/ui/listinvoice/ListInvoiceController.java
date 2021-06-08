@@ -28,8 +28,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
-import main.model.Invoice;
 import main.model.InvoiceData;
 import main.ui.addinvoice.AddInvoiceController;
 import main.ui.alert.CustomAlert;
@@ -101,7 +101,7 @@ public class ListInvoiceController implements Initializable {
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
-                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
                 stage.setScene(scene);
                 stage.setTitle("Thêm hóa đơn");

@@ -107,13 +107,11 @@ public class SettingController implements Initializable {
     @FXML
     private void themeChanged(ActionEvent event) {
         setting.setSTYLE_SHEET(
-                themeComboBox.getSelectionModel().getSelectedItem()
-                        .getLocation());
-        System.out.println(setting.getSTYLE_SHEET());
+                themeComboBox.getSelectionModel()
+                        .getSelectedItem().getLocation());
     }
 
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
-
 }

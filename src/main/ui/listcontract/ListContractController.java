@@ -34,6 +34,7 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.model.Contract;
@@ -291,7 +292,7 @@ public class ListContractController implements Initializable {
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
-                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
                 stage.setScene(scene);
                 stage.setTitle("Chỉnh sửa hợp đồng");
@@ -414,7 +415,7 @@ public class ListContractController implements Initializable {
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
-                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
                 stage.setScene(scene);
                 stage.setTitle("Thêm khách ở ghép");
@@ -471,7 +472,7 @@ public class ListContractController implements Initializable {
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
-                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
                 stage.setScene(scene);
                 stage.setTitle("Chỉnh sửa thời hạn ở ghép");

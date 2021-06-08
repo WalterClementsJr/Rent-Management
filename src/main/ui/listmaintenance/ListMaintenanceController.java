@@ -3,10 +3,10 @@ package main.ui.listmaintenance;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -33,6 +33,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.model.Maintenance;
@@ -186,7 +187,7 @@ public class ListMaintenanceController implements Initializable {
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
-                        .getResource(Util.STYLE_SHEET_LOCATION).toString());
+                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
 
                 stage.setScene(scene);
                 stage.setTitle("Chỉnh sửa bảo trì");

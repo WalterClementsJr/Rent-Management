@@ -37,10 +37,7 @@ public class Main extends Application {
 
         stage.setResizable(false);
 
-        DatabaseHandler.getInstance().createConnection();
-
-//        new Thread(() -> {
-//        }).start();
+        DatabaseHandler.getInstance();
     }
 
 }
