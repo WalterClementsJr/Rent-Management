@@ -12,83 +12,110 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.ui.alert.CustomAlert;
+import main.util.Util;
 
 public final class Setting {
 
     public static void main(String[] args) {
-        Setting s;
-        s = Setting.readSettting();
-//        s.setPwd("4444");
-        System.out.println(s.checkPassword("4444"));
-        Setting.writeSetting(s);
     }
 
     private static Setting APP_SETTING = null;
-    public static String SETTING_STYLE_SHEET;
-    public static final String CONFIG_FILE = "qlnt.ini";
-    public static MessageDigest DIGEST;
 
+    public static boolean IS_VERIFIED = false;
+    public static final String CONFIG_FILE = "qlnt.ini";
+    public static MessageDigest DIGEST = null;
+    public static Gson gson = new Gson();
+
+    private String STYLE_SHEET;
     private byte[] hash;
 
-    public Setting() {
-        try {
-            DIGEST = MessageDigest.getInstance("SHA-256");
-            hash = DIGEST.digest("".getBytes(StandardCharsets.UTF_16));
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+    public static Setting getInstance() {
+        if (DIGEST == null) {
+            try {
+                DIGEST = MessageDigest.getInstance("SHA-256");
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        if (APP_SETTING == null) {
+            APP_SETTING = readSettting();
+        }
+        if (APP_SETTING == null) {
+            initSetting();
+        }
+
+        System.out.println(APP_SETTING.getSTYLE_SHEET());
+        System.out.println(APP_SETTING.getPassword());
+
+        return APP_SETTING;
     }
 
-    public void setPwd(String pwd) {
+    /**
+     * create default setting object
+     */
+    public Setting() {
+        this.STYLE_SHEET = Util.BOOTSTRAP_STYLE_SHEET_LOCATION;
+        setPassword("");
+    }
+
+//    public void hashPassword(String pwd) {
+//        this.hash = DIGEST.digest(pwd.getBytes(StandardCharsets.UTF_16));
+//    }
+    public void setPassword(String pwd) {
         this.hash = DIGEST.digest(pwd.getBytes(StandardCharsets.UTF_16));
+        writeSetting(APP_SETTING);
     }
 
-    public String getPwd() {
+    public String getPassword() {
         return new String(hash);
     }
 
+    /**
+     * check password
+     *
+     * @param password
+     * @return true if equals with user password
+     */
     public boolean checkPassword(String password) {
         return new String(
-                DIGEST.digest(password.getBytes(StandardCharsets.UTF_16))).equals(getPwd());
+                DIGEST.digest(password.getBytes(StandardCharsets.UTF_16))).equals(getPassword());
     }
 
+    /**
+     * create .ini file with default settings use when can't find available
+     * setting file
+     */
     public static void initSetting() {
-        Writer writer = null;
+        Writer writer;
         try {
-            Setting setting = new Setting();
-            Gson gson = new Gson();
+            APP_SETTING = new Setting();
             writer = new FileWriter(CONFIG_FILE);
-            gson.toJson(setting, writer);
+            gson.toJson(APP_SETTING, writer);
+            writer.close();
         } catch (IOException ex) {
             Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 
     /**
-     * read setting from json
+     * read setting from .ini file
+     *
      * @return Setting object
      */
     public static Setting readSettting() {
-        Gson gson = new Gson();
-        Setting settings = new Setting();
         try {
-            settings = gson.fromJson(new FileReader(CONFIG_FILE), Setting.class);
+            return gson.fromJson(new FileReader(CONFIG_FILE), Setting.class);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Setting.class.getName()).info("Config file is missing. Creating new one with default config");
-            initSetting();
+            Logger.getLogger(Setting.class.getName()).info(
+                    "Config file is missing.");
+            return null;
         }
-        return settings;
     }
 
     /**
      * write Setting object to json
-     * @param setting 
+     *
+     * @param setting
      */
     public static void writeSetting(Setting setting) {
         Writer writer = null;
@@ -97,22 +124,22 @@ public final class Setting {
             writer = new FileWriter(CONFIG_FILE);
             gson.toJson(setting, writer);
             // TODO run this line only when in javafx.Application
-//            CustomAlert.showSimpleAlert("Thành công", "Đã lưu thông tin mới");
-            System.out.println("write to file success!");
+//            CustomAlert.showSimpleAlert("Thành công", "Đã lưu thông tin");
+            writer.close();
         } catch (IOException ex) {
             Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("write to file faled!");
             //TODO run this line only when in javafx.Application
-//            CustomAlert.showErrorMessage("Failed", "Cant save configuration file");
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            CustomAlert.showErrorMessage(
+//                    "Thất bại", "Không thể lưu thông tin");
         }
     }
 
+    public String getSTYLE_SHEET() {
+        return STYLE_SHEET;
+    }
+
+    public void setSTYLE_SHEET(String STYLE_SHEET) {
+        this.STYLE_SHEET = STYLE_SHEET;
+        writeSetting(APP_SETTING);
+    }
 }

@@ -43,10 +43,6 @@ public final class DatabaseHandler {
         createConnection();
     }
 
-    public static Connection getConn() {
-        return conn;
-    }
-
     public static PreparedStatement getStmt() {
         return stmt;
     }

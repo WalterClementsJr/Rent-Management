@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.util.Util;
 
@@ -19,12 +20,14 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         // set datepicker's language to Vietnamese
         Locale.setDefault(new Locale("vi", "VN"));
+        Setting s = Setting.getInstance();
 
-        Parent root = FXMLLoader.load(getClass().getResource("/main/ui/main/main.fxml"));
+        Parent root = FXMLLoader.load(
+                getClass().getResource("/main/ui/main/main.fxml"));
 
         Scene scene = new Scene(root);
-//        scene.getStylesheets().add(getClass().getResource("bootstrap3.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("flatbee.css").toExternalForm());
+        scene.getStylesheets().add(
+                getClass().getResource(s.getSTYLE_SHEET()).toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle(Util.APP_NAME);

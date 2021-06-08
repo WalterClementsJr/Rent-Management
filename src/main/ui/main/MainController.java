@@ -42,6 +42,9 @@ public class MainController implements Initializable {
     private Button menuBtnPayment;
 
     @FXML
+    private Button menuBtnMaintenance;
+
+    @FXML
     private StackPane rootPane;
 
     // external Pane
@@ -50,27 +53,30 @@ public class MainController implements Initializable {
     private AnchorPane lContract;
     private AnchorPane lInvoice;
     private AnchorPane lMaintenance;
-    
+    private AnchorPane setting;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MasterController.getInstance().registerMainController(this);
 
         // load external panes
-        lCustomer =
-                Util.loadPane(getClass().getResource("/main/ui/listcustomer/listCustomer.fxml"));
-        lRoom =
-                Util.loadPane(getClass().getResource("/main/ui/listroom/listRoom.fxml"));
-        lContract =
-                Util.loadPane(getClass().getResource("/main/ui/listcontract/listContract.fxml"));
-        lInvoice =
-                Util.loadPane(getClass().getResource("/main/ui/listinvoice/listinvoice.fxml"));
-        lMaintenance = 
-                Util.loadPane(getClass().getResource("/main/ui/listinvoice/listmaintenance.fxml"));
+        lCustomer
+                = Util.loadPane(getClass().getResource("/main/ui/listcustomer/listCustomer.fxml"));
+        lRoom
+                = Util.loadPane(getClass().getResource("/main/ui/listroom/listRoom.fxml"));
+        lContract
+                = Util.loadPane(getClass().getResource("/main/ui/listcontract/listContract.fxml"));
+        lInvoice
+                = Util.loadPane(getClass().getResource("/main/ui/listinvoice/listinvoice.fxml"));
+        lMaintenance
+                = Util.loadPane(getClass().getResource("/main/ui/listmaintenance/listmaintenance.fxml"));
+        setting
+                = Util.loadPane(getClass().getResource("/main/ui/setting/setting.fxml"));
 
-        rootPane.getChildren().addAll(lCustomer, lRoom, lContract, lInvoice);
+        rootPane.getChildren().addAll(
+                lCustomer, lRoom, lContract, lInvoice, lMaintenance,
+                setting);
         showNode(rootPane.getChildren(), lContract);
-
     }
 
     private Stage getStage() {
@@ -95,6 +101,16 @@ public class MainController implements Initializable {
     @FXML
     private void loadListInvoice(ActionEvent event) {
         showNode(rootPane.getChildren(), lInvoice);
+    }
+
+    @FXML
+    private void loadListMaintenance(ActionEvent event) {
+        showNode(rootPane.getChildren(), lMaintenance);
+    }
+
+    @FXML
+    private void loadSetting(ActionEvent event) {
+        showNode(rootPane.getChildren(), setting);
     }
 
     @FXML

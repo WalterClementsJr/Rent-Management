@@ -14,14 +14,15 @@
                 <VBox prefHeight="319.0" prefWidth="200.0">
                     <children>
                         <Button fx:id="menuBtnContract" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListContract" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Hợp đồng" textAlignment="CENTER" />
-                        <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Khách" textAlignment="CENTER" />
                         <Button fx:id="menuBtnRoom" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListRoom" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Phòng" textAlignment="CENTER" />
+                  <Button fx:id="menuBtnMaintenance" mnemonicParsing="false" onAction="#loadListMaintenance" prefHeight="32.0" prefWidth="220.0" text="Bảo trì" />
+                        <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Khách" textAlignment="CENTER" />
                         <Button fx:id="menuBtnBill" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListInvoice" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Hóa đơn" textAlignment="CENTER" />
                     </children>
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="240.0" prefWidth="200.0">
                     <children>
-                        <Button fx:id="menuBtnSetting" mnemonicParsing="false" prefHeight="32.0" prefWidth="217.0" text="Cài đặt" />
+                        <Button fx:id="menuBtnSetting" mnemonicParsing="false" onAction="#loadSetting" prefHeight="32.0" prefWidth="217.0" text="Cài đặt" />
                         <Button fx:id="menuBtnHelp" mnemonicParsing="false" prefHeight="32.0" prefWidth="217.0" text="Hướng dẫn" />
                     </children>
                 </VBox>

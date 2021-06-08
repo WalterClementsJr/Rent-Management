@@ -642,7 +642,7 @@ VBox > .split-menu-button.last > .arrow-button {
 }
 
 .tooltip {
-    -fx-show-delay: 250ms;
+    -fx-show-delay: 100ms;
     -fx-background: white;
     -fx-text-fill: #333333;
     -fx-background-color: white;

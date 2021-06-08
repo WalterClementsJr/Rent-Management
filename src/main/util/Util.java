@@ -34,13 +34,44 @@ public class Util {
 
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d-M-yyyy");
     public static final DateTimeFormatter SQL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-M-d");
+
     public static final String APP_ICON_LOCATION = "main/resources/icons/icon.png";
     public static final String APP_NAME = "Quản Lý Nhà Trọ";
-    public static final String WIN7_STYLE_SHEET_LOCATION = "/main/app/win7glass.css";
+    public static final String WIN7_STYLE_SHEET_LOCATION = "/main/app/win7.css";
     public static final String FLAT_STYLE_SHEET_LOCATION = "/main/app/flatbee.css";
     public static final String BOOTSTRAP_STYLE_SHEET_LOCATION = "/main/app/bootstrap3.css";
+    public static final String MATERIAL_STYLE_SHEET_LOCATION = "/main/app/material.css";
+    public static final String DARK_STYLE_SHEET_LOCATION = "/main/app/dark.css";
     public static String STYLE_SHEET_LOCATION = BOOTSTRAP_STYLE_SHEET_LOCATION;
 
+    public static enum Themes {
+        BOOTSTRAP("Bootstrap3", "/main/app/bootstrap3.css"),
+        WIN7("Windows 7", "/main/app/win7.css"),
+        FLAT("FlatBee", "/main/app/flatbee.css"),
+        MATERIAL("Material FX", "/main/app/material.css"),
+        DARK("Dark theme", "/main/app/dark.css");
+
+        private final String name;
+        private final String location;
+
+        private Themes(String name, String location) {
+            this.name = name;
+            this.location = location;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+        
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
     public static final String FILTER_ALL = "Tất cả";
     public static final String FILTER_ACTIVE = "Đang ở";
     public static final String FILTER_OLD = "Đã hết hạn";
@@ -51,6 +82,7 @@ public class Util {
     public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
     public static void main(String[] args) {
+        System.out.println(Arrays.toString(Themes.values()));
     }
 
     public static void setWindowIcon(Stage stage) {
@@ -60,6 +92,7 @@ public class Util {
     public static void setStyleSheet(String style) {
         STYLE_SHEET_LOCATION = style;
     }
+
     /**
      *
      * @param loc đường dẫn đến file fxml cần load

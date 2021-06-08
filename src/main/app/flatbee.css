@@ -105,6 +105,47 @@
 
 /*
  * **********
+ * TOOLTIP
+ * **********
+*/
+
+.tooltip {
+    -fx-show-delay: 100ms;
+    -fx-background: -white;
+    -fx-text-fill: #333333;
+    -fx-background-color: -white;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #C0C0C0;
+    -fx-background-insets: 0;
+    -fx-padding: 0.667em 0.75em 0.667em 0.75em; /* 10px */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0.0, 0, 3);
+    -fx-font-size: 0.85em;
+}
+
+.tooltip.success {
+    -fx-background: #dff0d8;
+    -fx-background-color: #dff0d8;
+    -fx-text-fill: #99bb96;
+    -fx-border-color: #d6e9c6;
+}
+
+.tooltip.info {
+    -fx-background: #d8ecf6;
+    -fx-background-color: #d8ecf6;
+    -fx-text-fill: #31708f;
+    -fx-border-color: #bce8f1;
+}
+
+.tooltip.warning {
+    -fx-background: #fcf8e3;
+    -fx-background-color: #fcf8e3;
+    -fx-text-fill: #8a6e3c;
+    -fx-border-color: -abort;
+}
+
+/*
+ * **********
  * BUTTONS
  * **********
  * 
