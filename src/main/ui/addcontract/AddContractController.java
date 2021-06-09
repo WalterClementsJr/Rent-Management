@@ -24,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Contract;
 import main.model.Customer;
@@ -32,6 +33,7 @@ import main.ui.alert.CustomAlert;
 import main.ui.listcustomer.ListCustomerController;
 import main.util.AutoCompleteTextField;
 import main.util.MasterController;
+import main.util.Util;
 
 public class AddContractController implements Initializable {
 
@@ -221,6 +223,11 @@ public class AddContractController implements Initializable {
 
     @FXML
     private void handleAdd(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (isEditing) {
             handleEdit();
             return;
@@ -249,6 +256,11 @@ public class AddContractController implements Initializable {
     }
 
     private void handleEdit() {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (endDate.getValue() == null) {
             CustomAlert.showErrorMessage(
                     "Chưa điền ngày trả phòng",

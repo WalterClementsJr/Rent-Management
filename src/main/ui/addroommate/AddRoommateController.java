@@ -20,12 +20,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Customer;
 import main.ui.alert.CustomAlert;
 import main.ui.listcustomer.ListCustomerController;
 import main.util.AutoCompleteTextField;
 import main.util.MasterController;
+import main.util.Util;
 
 public class AddRoommateController implements Initializable {
 
@@ -135,6 +137,11 @@ public class AddRoommateController implements Initializable {
 
     @FXML
     private void handleSave(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (isEditing) {
             handleEdit();
             return;
@@ -164,6 +171,11 @@ public class AddRoommateController implements Initializable {
      * edit roommate staying period
      */
     private void handleEdit() {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (endDate.getValue() == null) {
             CustomAlert.showErrorMessage(
                     "Chưa điền ngày trả phòng",

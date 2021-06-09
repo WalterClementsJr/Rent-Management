@@ -66,10 +66,12 @@ public class ListMaintenanceController implements Initializable {
     ObservableList<Complex> listOfAllMaintenance = FXCollections.observableArrayList();
 
     DatabaseHandler handler;
+    Setting setting;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         handler = DatabaseHandler.getInstance();
+        setting = Setting.getInstance();
         initTableColumns(tableView);
 
         // TODO uncomment these lines when running in production
@@ -156,13 +158,13 @@ public class ListMaintenanceController implements Initializable {
 
     @FXML
     private void handleEditButton(ActionEvent event) {
-        ObservableList list = tableView.getSelectionModel().getSelectedItems();
         ObservableList row;
-
         try {
             row = (ObservableList) tableView.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
-                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn thông tin bảo trì để xóa");
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn thông tin bảo trì để xóa");
                 return;
             }
             Maintenance m = new Maintenance(
@@ -172,8 +174,8 @@ public class ListMaintenanceController implements Initializable {
                     LocalDate.parse(row.get(4).toString(), Util.SQL_DATE_TIME_FORMATTER),
                     row.get(5).toString());
             try {
-                FXMLLoader loader = new FXMLLoader(getClass()
-                        .getResource("/main/ui/addmaintenance/addMaintenance.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                        "/main/ui/addmaintenance/addMaintenance.fxml"));
                 Parent parent = loader.load();
 
                 AddMaintenanceController controller = loader.getController();
@@ -184,8 +186,8 @@ public class ListMaintenanceController implements Initializable {
                 stage.initModality(Modality.WINDOW_MODAL);
 
                 Scene scene = new Scene(parent);
-                scene.getStylesheets().add(getClass()
-                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
+                scene.getStylesheets().add(getClass().getResource(
+                        Setting.getInstance().getSTYLE_SHEET()).toString());
 
                 stage.setScene(scene);
                 stage.setTitle("Chỉnh sửa bảo trì");
@@ -205,8 +207,12 @@ public class ListMaintenanceController implements Initializable {
 
     @FXML
     private void handleDelete(ActionEvent event) {
-        ObservableList row;
+        Util.checkLogin(getStage());
 
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+        ObservableList row;
         try {
             row = (ObservableList) tableView.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
@@ -217,8 +223,8 @@ public class ListMaintenanceController implements Initializable {
             Optional<ButtonType> answer
                     = CustomAlert.confirmDialog(
                             "Xóa bảo trì",
-                            "Bạn có chắc muốn xóa thông tin bảo trì?").showAndWait();
-
+                            "Bạn có chắc muốn xóa thông tin bảo trì?")
+                            .showAndWait();
             if (answer.get() == ButtonType.OK) {
                 if (handler.deleteMaintenance(Integer.parseInt(row.get(0).toString()))) {
                     CustomAlert.showSimpleAlert(

@@ -12,9 +12,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.ui.alert.CustomAlert;
+import main.util.Util;
 
 public class AddComplexController implements Initializable {
 
@@ -63,6 +65,11 @@ public class AddComplexController implements Initializable {
 
     @FXML
     private void handleSave(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (isEditing) {
             handleEdit();
             return;
@@ -93,6 +100,11 @@ public class AddComplexController implements Initializable {
     }
 
     private void handleEdit() {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (!checkEntries()) {
             return;
         }

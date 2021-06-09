@@ -58,7 +58,7 @@ public final class Setting {
     }
 
     /**
-     * create default setting object
+     * create default Setting object
      */
     public Setting() {
         this.STYLE_SHEET = Util.Themes.BOOTSTRAP.getLocation();

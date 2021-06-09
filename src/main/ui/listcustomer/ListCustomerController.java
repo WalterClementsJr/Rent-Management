@@ -72,7 +72,6 @@ public class ListCustomerController implements Initializable {
     public static ObservableList<Customer> listOfCustomersWithRoom = FXCollections.observableArrayList();
     public static ObservableList<Customer> listOfOldCustomers = FXCollections.observableArrayList();
 
-//    private boolean datachanged = false;
     DatabaseHandler handler;
 
     @Override
@@ -220,6 +219,11 @@ public class ListCustomerController implements Initializable {
 
     @FXML
     private void handleDelete(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         Customer selectedForDeletion = customerTable.getSelectionModel().getSelectedItem();
 
         if (selectedForDeletion == null) {

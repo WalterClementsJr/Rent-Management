@@ -29,7 +29,7 @@
                         </PasswordField>
                         <PasswordField fx:id="newPwd1" promptText="Nhập mật khẩu mới" />
                         <PasswordField fx:id="newPwd2" promptText="Xác nhận mật khẩu mới" />
-                  <ProgressBar fx:id="passwordBar" prefHeight="18.0" prefWidth="239.0" progress="0.28" styleClass="success" />
+                  <ProgressBar fx:id="passwordBar" prefHeight="18.0" prefWidth="239.0" progress="0.0" styleClass="success" />
                   <Label fx:id="notify" prefHeight="35.0" prefWidth="140.0">
                      <VBox.margin>
                         <Insets top="-25.0" />

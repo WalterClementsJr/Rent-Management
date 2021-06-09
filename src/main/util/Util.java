@@ -29,7 +29,6 @@ import javafx.util.Callback;
 import main.app.Main;
 import main.app.settings.Setting;
 import main.ui.listcontract.ListContractController;
-import main.ui.main.MainController;
 
 public class Util {
 
@@ -42,16 +41,26 @@ public class Util {
             = "Quản Lý Nhà Trọ";
 
     public static enum Themes {
-        BOOTSTRAP("Bootstrap3", "/main/app/bootstrap3.css"),
-        WIN7("Windows 7", "/main/app/win7.css"),
-        FLAT("FlatBee", "/main/app/flatbee.css"),
-        MATERIAL("Material FX", "/main/app/material.css"),
-        DARK("Dark (Beta)", "/main/app/dark.css"),
-        GLISTENDARK("Glisten Dark (Beta)", "/main/app/glistendark.css"),
-        MODENATOUCH("Modena (Beta)", "/main/app/modena.css"),
-        MODENAWOB("Modena - White On Black (Beta)", "/main/app/whiteOnBlack.css"),
-        CASPIAN("Caspian (Beta)", "/main/app/caspian.css"),
-        CASPIANEM("Caspian Embedded (Beta)", "/main/app/embedded.css");
+        BOOTSTRAP(
+                "Bootstrap3", "/main/app/bootstrap3.css"),
+        WIN7(
+                "Windows 7", "/main/app/win7.css"),
+        FLAT(
+                "FlatBee", "/main/app/flatbee.css"),
+        MATERIAL(
+                "Material FX", "/main/app/material.css"),
+        DARK(
+                "Dark (Beta)", "/main/app/dark.css"),
+        GLISTENDARK(
+                "Glisten Dark (Beta)", "/main/app/glistendark.css"),
+        MODENATOUCH(
+                "Modena (Beta)", "/main/app/modena.css"),
+        MODENAWOB(
+                "Modena - White On Black (Beta)", "/main/app/whiteOnBlack.css"),
+        CASPIAN(
+                "Caspian (Beta)", "/main/app/caspian.css"),
+        CASPIANEM(
+                "Caspian Embedded (Beta)", "/main/app/embedded.css");
 
         private final String name;
         private final String location;
@@ -75,8 +84,6 @@ public class Util {
         }
     }
 
-//    public static String STYLE_SHEET_LOCATION
-//            = Themes.BOOTSTRAP.getLocation();
     public static final String FILTER_ALL = "Tất cả";
     public static final String FILTER_ACTIVE = "Đang ở";
     public static final String FILTER_OLD = "Đã hết hạn";
@@ -87,6 +94,7 @@ public class Util {
     public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
     public static void main(String[] args) {
+        checkLogin(null);
     }
 
     public static void setWindowIcon(Stage stage) {
@@ -102,23 +110,44 @@ public class Util {
     public static AnchorPane loadPane(URL loc) {
         try {
             FXMLLoader loader = new FXMLLoader(loc);
-
             loader.getController();
             return loader.load();
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(MainController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
-    public static void loadLoginPane(Stage parentStage) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    Util.class.getResource("/main/ui/login"));
-            loader.getController();
-            loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+    /**
+     * show login
+     *
+     * @param parentStage
+     */
+    public static void checkLogin(Stage parentStage) {
+        if (Setting.getInstance().checkPassword("")) {
+            Setting.IS_VERIFIED = true;
+        } else if (!Setting.IS_VERIFIED) {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        Main.class.getResource(
+                                "/main/ui/login/login.fxml"));
+                loader.getController();
+                Parent login = loader.load();
+
+                Stage stage = new Stage(StageStyle.DECORATED);
+                stage.initOwner(parentStage);
+                stage.initModality(Modality.WINDOW_MODAL);
+
+                Scene scene = new Scene(login);
+                scene.getStylesheets().add(Util.class.getResource(
+                        Setting.getInstance().getSTYLE_SHEET()).toString());
+                stage.setScene(scene);
+                stage.setTitle("Đăng nhập");
+                setWindowIcon(stage);
+                stage.showAndWait();
+            } catch (IOException | IllegalStateException ex) {
+                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -148,7 +177,7 @@ public class Util {
             setWindowIcon(stage);
             return stage;
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(MainController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -187,37 +216,6 @@ public class Util {
 
     public static String bitToGender(Boolean b) {
         return b == true ? "Nữ" : "Nam";
-    }
-
-    public static void loadResultSetToTable(ObservableList list, ResultSet rs, TableView tableView) throws SQLException {
-        list.clear();
-
-        for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-            final int j = i;
-            TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
-            col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-                @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-                    return new SimpleStringProperty(param.getValue().get(j).toString());
-                }
-            });
-
-            tableView.getColumns().addAll(col);
-            System.out.println("Column [" + i + "] ");
-        }
-
-        while (rs.next()) {
-            //Iterate Row
-            ObservableList<String> row = FXCollections.observableArrayList();
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                //Iterate Column
-                row.add(rs.getString(i));
-            }
-            System.out.println("Row [1] added " + row);
-            list.add(row);
-
-        }
-        tableView.setItems(list);
     }
 
     public static void loadResultSetToList(ResultSet rs, ObservableList list) {

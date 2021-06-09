@@ -205,6 +205,12 @@ public class AddRoomController implements Initializable {
 
     @FXML
     private void handleAddRoom(ActionEvent evt) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+        
         if (isEditing) {
             handleEditRoom();
             return;
@@ -242,6 +248,12 @@ public class AddRoomController implements Initializable {
     }
 
     private void handleEditRoom() {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+        
         if (!checkEntries()) {
             return;
         }

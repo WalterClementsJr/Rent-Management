@@ -13,6 +13,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import main.app.settings.Setting;
+import main.ui.alert.CustomAlert;
 
 /**
  * FXML Controller class
@@ -24,23 +28,36 @@ public class LoginController implements Initializable {
     @FXML
     private Label icon;
     @FXML
+    private AnchorPane root;
+    @FXML
     private PasswordField password;
     @FXML
     private Button cancel;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @FXML
     private void handleVerify(ActionEvent event) {
+        if (Setting.getInstance().checkPassword(password.getText())) {
+            Setting.IS_VERIFIED = true;
+            getStage().close();
+        } else {
+            CustomAlert.showErrorMessage(
+                    "Sai mật khẩu",
+                    "Hãy nhập lại mật khẩu");
+            password.clear();
+        }
     }
 
     @FXML
     private void handleCancel(ActionEvent event) {
+        getStage().close();
+    }
+
+    private Stage getStage() {
+        return (Stage) root.getScene().getWindow();
     }
 }

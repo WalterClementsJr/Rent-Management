@@ -19,10 +19,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Maintenance;
 import main.model.Room;
 import main.ui.alert.CustomAlert;
+import main.util.Util;
 
 public class AddMaintenanceController implements Initializable {
 
@@ -88,6 +90,11 @@ public class AddMaintenanceController implements Initializable {
 
     @FXML
     private void handleAdd(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (isEditing) {
             handleEdit();
             return;
@@ -116,6 +123,11 @@ public class AddMaintenanceController implements Initializable {
     }
 
     private void handleEdit() {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (!checkEntries()) {
             return;
         }

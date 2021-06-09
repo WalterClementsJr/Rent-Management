@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Invoice;
 import main.model.InvoiceData;
@@ -111,6 +112,11 @@ public class AddInvoiceController implements Initializable {
 
     @FXML
     private void handleAdd(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         if (!checkEntries()) {
             return;
         }

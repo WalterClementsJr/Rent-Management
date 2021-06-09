@@ -57,7 +57,6 @@ public class ListInvoiceController implements Initializable {
         loadResultSetToList(handler.getInDebtContractsWithInvoiceInfo(), listOfAllInvoices);
 
         loadData();
-
     }
 
     @FXML

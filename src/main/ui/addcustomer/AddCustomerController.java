@@ -19,6 +19,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Customer;
 import main.ui.alert.CustomAlert;
@@ -147,12 +148,14 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     private void handleSave(ActionEvent event) {
-        if (isEditing) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        } else if (isEditing) {
             handleEdit();
             return;
-        }
-
-        if (!checkEntries()) {
+        } else if (!checkEntries()) {
             return;
         }
 
@@ -186,7 +189,11 @@ public class AddCustomerController implements Initializable {
     }
 
     private void handleEdit() {
-        if (!checkEntries()) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        } else if (!checkEntries()) {
             return;
         }
 
@@ -252,7 +259,7 @@ public class AddCustomerController implements Initializable {
                 || sdt.getText().matches("\\d{11}"))) {
             CustomAlert.showErrorMessage(
                     "Số điện thoại sai cú pháp",
-                    "CMND phải có 9 số hoặc 12 số");
+                    "Số điện thoại phải có 10 số hoặc 11 số");
             return false;
         } else if (cmnd.getText().isBlank()) {
             CustomAlert.showErrorMessage(
@@ -262,8 +269,8 @@ public class AddCustomerController implements Initializable {
         } else if (!(cmnd.getText().matches("\\d{9}")
                 || cmnd.getText().matches("\\d{12}"))) {
             CustomAlert.showErrorMessage(
-                    "Chứng minh nhân dân sai cú pháp",
-                    "CMND phải có 9 số hoặc 12 số");
+                    "",
+                    "Chứng minh nhân dân sai cú pháp");
             return false;
         }
         return true;

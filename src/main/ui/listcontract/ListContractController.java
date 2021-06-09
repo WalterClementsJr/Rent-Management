@@ -228,6 +228,12 @@ public class ListContractController implements Initializable {
 
     @FXML
     void handleDeleteButton(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
         ObservableList row;
         try {
             row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
@@ -264,6 +270,12 @@ public class ListContractController implements Initializable {
 
     @FXML
     void handleEditContract(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
         ObservableList row;
         try {
             row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
@@ -327,6 +339,12 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleReturn(ActionEvent e) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
@@ -385,7 +403,12 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleAddRoommate(ActionEvent evt) {
-        // TODO add roommate here
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
@@ -437,6 +460,12 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleEditRoommate(ActionEvent e) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
@@ -498,6 +527,11 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleRoommateReturn(ActionEvent e) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);
@@ -530,6 +564,11 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleDeleteRoommate(ActionEvent e) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         ObservableList selectedRow;
         try {
             selectedRow = (ObservableList) roommateTable.getSelectionModel().getSelectedItems().get(0);

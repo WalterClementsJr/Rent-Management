@@ -381,6 +381,11 @@ public class ListRoomController implements Initializable {
 
     @FXML
     private void handleDeleteButton(ActionEvent event) {
+        Util.checkLogin(getStage());
+
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
         Room selected = roomTable.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
@@ -411,7 +416,6 @@ public class ListRoomController implements Initializable {
 
     @FXML
     private void handleAddMaintenance(ActionEvent event) {
-        // TODO add maintenance
         Room selected = roomTable.getSelectionModel().getSelectedItem();
 
         if (selected == null) {

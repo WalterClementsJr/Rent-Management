@@ -48,10 +48,6 @@ public class SettingController implements Initializable {
 
     // extras
     Setting setting;
-    String strongRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
-    String wack = "^[0-9]{5,}$";
-
-    String mediumRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -70,18 +66,18 @@ public class SettingController implements Initializable {
                     ObservableValue<? extends String> observable,
                     String oldValue,
                     String newValue) {
-                if (newValue.matches(strongRegex)) {
-                    passwordBar.setProgress(0.95);
+                if (newValue.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")) {
+                    passwordBar.setProgress(0.99);
                     passwordBar.getStyleClass().clear();
                     passwordBar.getStyleClass().add("progress-bar");
                     passwordBar.getStyleClass().add("success");
                     notify.setText("Mật khẩu mạnh");
-                } else if (newValue.matches(mediumRegex)) {
+                } else if (newValue.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$")) {
                     passwordBar.setProgress(0.6);
                     passwordBar.getStyleClass().clear();
                     passwordBar.getStyleClass().add("progress-bar");
                     passwordBar.getStyleClass().add("warning");
-                    notify.setText("Mật khẩu chưa mạnh");
+                    notify.setText("Mật khẩu chưa đủ mạnh");
                 } else if (!newValue.isBlank()) {
                     passwordBar.setProgress(0.25);
                     passwordBar.getStyleClass().clear();
@@ -121,7 +117,6 @@ public class SettingController implements Initializable {
                     "Mật khẩu không chính xác",
                     "Hãy nhập lại mật khẩu");
             clearEntries();
-            return false;
         }
         return false;
     }
@@ -140,7 +135,6 @@ public class SettingController implements Initializable {
         setting.setPassword(newPwd1.getText());
         clearEntries();
         CustomAlert.showSimpleAlert("Thành công", "Đã đổi mật khẩu");
-        System.out.println(setting.getPassword());
     }
 
     private void setComboBox(String styleSheet) {
