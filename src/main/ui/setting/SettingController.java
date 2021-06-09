@@ -3,12 +3,16 @@ package main.ui.setting;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import main.app.settings.Setting;
@@ -31,6 +35,12 @@ public class SettingController implements Initializable {
     private PasswordField newPwd2;
 
     @FXML
+    private ProgressBar passwordBar;
+
+    @FXML
+    private Label notify;
+
+    @FXML
     private Button ok;
 
     @FXML
@@ -38,6 +48,10 @@ public class SettingController implements Initializable {
 
     // extras
     Setting setting;
+    String strongRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+    String wack = "^[0-9]{5,}$";
+
+    String mediumRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -48,11 +62,44 @@ public class SettingController implements Initializable {
         themeComboBox.getItems().addAll(Arrays.asList(themes));
         themeComboBox.getSelectionModel().selectFirst();
         setComboBox(setting.getSTYLE_SHEET());
+
+        // password strength dometer
+        newPwd1.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(
+                    ObservableValue<? extends String> observable,
+                    String oldValue,
+                    String newValue) {
+                if (newValue.matches(strongRegex)) {
+                    passwordBar.setProgress(0.95);
+                    passwordBar.getStyleClass().clear();
+                    passwordBar.getStyleClass().add("progress-bar");
+                    passwordBar.getStyleClass().add("success");
+                    notify.setText("Mật khẩu mạnh");
+                } else if (newValue.matches(mediumRegex)) {
+                    passwordBar.setProgress(0.6);
+                    passwordBar.getStyleClass().clear();
+                    passwordBar.getStyleClass().add("progress-bar");
+                    passwordBar.getStyleClass().add("warning");
+                    notify.setText("Mật khẩu chưa mạnh");
+                } else if (!newValue.isBlank()) {
+                    passwordBar.setProgress(0.25);
+                    passwordBar.getStyleClass().clear();
+                    passwordBar.getStyleClass().add("progress-bar");
+                    passwordBar.getStyleClass().add("danger");
+                    notify.setText("Mật khẩu yếu");
+                }
+            }
+        });
     }
 
     private boolean checkEntries() {
         if (setting.checkPassword(currentPwd.getText())) {
-            if (newPwd1.getText().equals(newPwd2.getText())) {
+            if (newPwd1.getText().isBlank()) {
+                CustomAlert.showErrorMessage(
+                        "Mật khẩu trống",
+                        "Hãy nhập mật khẩu khác");
+            } else if (newPwd1.getText().equals(newPwd2.getText())) {
                 if (setting.checkPassword(newPwd1.getText())) {
                     CustomAlert.showErrorMessage(
                             "Mật khẩu mới trùng mật khẩu cũ",
@@ -76,6 +123,7 @@ public class SettingController implements Initializable {
             clearEntries();
             return false;
         }
+        return false;
     }
 
     private void clearEntries() {

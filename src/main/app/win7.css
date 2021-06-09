@@ -77,6 +77,50 @@
 
 /*******************************************************************************
  *                                                                             *
+ * ProgressBar                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+.progress-bar>.track {
+    -fx-background-radius: 2.0;
+    -fx-padding: 0.0;
+}
+
+.progress-bar>.bar {
+    -fx-background-radius: 2.0;
+    -fx-background-insets: 0.0;
+    -fx-border-width: 0.0;
+    -fx-effect: null;
+}
+
+.progress-bar:indeterminate>.bar {
+    -fx-background-radius: 2.0;
+    -fx-background-insets: 0.0;
+    -fx-border-width: 0.0;
+    -fx-effect: null;
+}
+
+.progress-bar.success > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #5cb85c;
+}
+
+.progress-bar.info > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #5bc0de;
+}
+
+.progress-bar.warning > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #f0ad4e
+}
+
+.progress-bar.danger > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #d9534f;
+}
+
+/*******************************************************************************
+ *                                                                             *
  * Button                                                                      *
  *                                                                             *
  ******************************************************************************/

@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import main.app.Main;
 import main.app.settings.Setting;
 import main.ui.listcontract.ListContractController;
 import main.ui.main.MainController;
@@ -35,10 +36,10 @@ public class Util {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d-M-yyyy");
     public static final DateTimeFormatter SQL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-M-d");
 
-    public static final String APP_ICON_LOCATION =
-            "main/resources/icons/icon.png";
-    public static final String APP_NAME =
-            "Quản Lý Nhà Trọ";
+    public static final String APP_ICON_LOCATION
+            = "main/resources/icons/icon.png";
+    public static final String APP_NAME
+            = "Quản Lý Nhà Trọ";
 
     public static enum Themes {
         BOOTSTRAP("Bootstrap3", "/main/app/bootstrap3.css"),
@@ -76,7 +77,6 @@ public class Util {
 
 //    public static String STYLE_SHEET_LOCATION
 //            = Themes.BOOTSTRAP.getLocation();
-
     public static final String FILTER_ALL = "Tất cả";
     public static final String FILTER_ACTIVE = "Đang ở";
     public static final String FILTER_OLD = "Đã hết hạn";
@@ -94,8 +94,9 @@ public class Util {
     }
 
     /**
+     * load pane with its controller
      *
-     * @param loc đường dẫn đến file fxml cần load
+     * @param loc fxml file URL
      * @return AnchorPane
      */
     public static AnchorPane loadPane(URL loc) {
@@ -108,6 +109,17 @@ public class Util {
             java.util.logging.Logger.getLogger(MainController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public static void loadLoginPane(Stage parentStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    Util.class.getResource("/main/ui/login"));
+            loader.getController();
+            loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

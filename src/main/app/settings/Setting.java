@@ -1,7 +1,6 @@
 package main.app.settings;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,12 +10,9 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.ui.alert.CustomAlert;
 import main.util.Util;
-import main.util.Util.Themes;
 
 public final class Setting {
 

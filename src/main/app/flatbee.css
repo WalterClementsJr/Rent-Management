@@ -238,6 +238,31 @@
     -fx-background-color : -gray;
 }
 
+.progress-bar > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #337ab7;
+}
+
+.progress-bar.success > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #5cb85c;
+}
+
+.progress-bar.info > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #5bc0de;
+}
+
+.progress-bar.warning > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #f0ad4e
+}
+
+.progress-bar.danger > .bar {
+    -fx-background-insets: 0;
+    -fx-background-color: #d9534f;
+}
+
 /*
 * **********
 * DATE PICKER
