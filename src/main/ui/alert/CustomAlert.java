@@ -26,7 +26,7 @@ public class CustomAlert {
         alert.showAndWait();
     }
 
-    public static Alert confirmDelete(String title, String content) {
+    public static Alert confirmDialog(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         CustomAlert.setStyleForAlert(alert);
         alert.setTitle(title);

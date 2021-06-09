@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -267,17 +269,24 @@ public class AddRoomController implements Initializable {
             return;
         }
 
-        if (dbHandler.updateRoom(currentRoom)) {
-            CustomAlert.showSimpleAlert(
-                    "Thành công",
-                    "Đã sửa thông tin phòng");
-            currentRoom = null;
-            getStage().close();
-        } else {
-            CustomAlert.showErrorMessage(
-                    "Chỉnh sửa thất bại",
-                    "Kiểm tra lại thông tin và thử lại sau");
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDialog(
+                        "Chỉnh sửa phòng",
+                        "Xác nhận chỉnh sửa?").showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            if (dbHandler.updateRoom(currentRoom)) {
+                CustomAlert.showSimpleAlert(
+                        "Thành công",
+                        "Đã sửa thông tin phòng");
+                currentRoom = null;
+                getStage().close();
+            } else {
+                CustomAlert.showErrorMessage(
+                        "Chỉnh sửa thất bại",
+                        "Kiểm tra lại thông tin và thử lại sau");
+            }
         }
+
     }
 
     private Stage getStage() {

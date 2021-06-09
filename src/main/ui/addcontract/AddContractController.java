@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -14,6 +15,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
@@ -267,13 +269,22 @@ public class AddContractController implements Initializable {
         currentContract.setNgayTra(endDate.getValue());
         currentContract.setTienCoc(new BigDecimal(deposit.getText().trim()));
 
-        if (handler.updateContract(currentContract)) {
-            CustomAlert.showSimpleAlert("Thành công", "Đã sửa hợp đồng");
-            MasterController.getInstance().getListCustomerController()
-                    .handleRefresh(new ActionEvent());
-            currentContract = null;
-            getStage().close();
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDialog(
+                        "Chỉnh sửa hợp đồng",
+                        "Xác nhận chỉnh sửa?").showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            if (handler.updateContract(currentContract)) {
+                CustomAlert.showSimpleAlert("Thành công", "Đã sửa hợp đồng");
+                MasterController.getInstance().getListCustomerController()
+                        .handleRefresh(new ActionEvent());
+                currentContract = null;
+                getStage().close();
+            } else {
+                CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra");
+            }
         }
+
     }
 
     private Stage getStage() {

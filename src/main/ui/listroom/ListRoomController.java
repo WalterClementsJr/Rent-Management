@@ -394,7 +394,7 @@ public class ListRoomController implements Initializable {
         }
 
         Optional<ButtonType> answer
-                = CustomAlert.confirmDelete(
+                = CustomAlert.confirmDialog(
                         "Xóa phòng",
                         "Bạn có chắc muốn xóa phòng?").showAndWait();
         if (answer.get() == ButtonType.OK) {

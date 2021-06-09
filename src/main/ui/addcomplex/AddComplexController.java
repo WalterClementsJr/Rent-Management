@@ -108,12 +108,22 @@ public class AddComplexController implements Initializable {
         currentComplex.setTen(cName);
         currentComplex.setDiaChi(cAddr);
 
-        if (dbHandler.updateComplex(currentComplex)) {
-            CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
-            currentComplex = null;
-            getStage().close();
-        } else {
-            CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại sau");
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDialog(
+                        "Chỉnh sửa khu",
+                        "Xác nhận chỉnh sửa?"
+                ).showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            if (dbHandler.updateComplex(currentComplex)) {
+                CustomAlert.showSimpleAlert(
+                        "Thành công", "Chỉnh sửa thành công");
+                currentComplex = null;
+                getStage().close();
+            } else {
+                CustomAlert.showErrorMessage(
+                        "Thất bại",
+                        "Đã có lỗi xảy ra. Vui lòng thử lại sau");
+            }
         }
     }
 
@@ -125,7 +135,7 @@ public class AddComplexController implements Initializable {
         }
 
         Optional<ButtonType> answer
-                = CustomAlert.confirmDelete(
+                = CustomAlert.confirmDialog(
                         "Xóa khách",
                         "Bạn có chắc muốn xóa" + currentComplex.getTen() + "?").showAndWait();
         if (answer.get() == ButtonType.OK) {

@@ -74,19 +74,17 @@ public class ListInvoiceController implements Initializable {
 
             // TODO fix row.get
             int mahdong = Integer.parseInt(row.get(0).toString());
-            LocalDate lastPayDate = LocalDate.parse(row.get(12).toString(), Util.SQL_DATE_TIME_FORMATTER);
-            LocalDate ngaytra = LocalDate.parse(row.get(9).toString(), Util.SQL_DATE_TIME_FORMATTER);
-            BigDecimal giagoc = new BigDecimal(row.get(11).toString());
-            int songay = Integer.parseInt(row.get(13).toString());
+            LocalDate lastPayDate =
+                    LocalDate.parse(row.get(11).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate ngaytra =
+                    LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            BigDecimal giagoc =
+                    new BigDecimal(row.get(10).toString());
+            int songay =
+                    Integer.parseInt(row.get(12).toString());
 
-            System.out.println(mahdong);
-            System.out.println(lastPayDate);
-            System.out.println(ngaytra);
-            System.out.println(giagoc);
-            System.out.println(songay);
-
-            InvoiceData data = new InvoiceData(mahdong, lastPayDate, ngaytra, giagoc, songay);
-
+            InvoiceData data =
+                    new InvoiceData(mahdong, lastPayDate, ngaytra, giagoc, songay);
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addinvoice/addInvoice.fxml"));

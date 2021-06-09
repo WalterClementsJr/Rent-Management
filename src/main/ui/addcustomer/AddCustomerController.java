@@ -3,6 +3,7 @@ package main.ui.addcustomer;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -195,7 +197,7 @@ public class AddCustomerController implements Initializable {
         String customerSDT = sdt.getText().trim();
 
         if (dbHandler.isCMNDExist(currentCustomer.getId(), customerCMND)) {
-            CustomAlert.showSimpleAlert("CMND đã tồn tại", "");
+            CustomAlert.showSimpleAlert("CMND của khách đã tồn tại", "");
             return;
         }
 
@@ -205,13 +207,21 @@ public class AddCustomerController implements Initializable {
         currentCustomer.setSDT(customerSDT);
         currentCustomer.setCMND(customerCMND);
 
-        if (dbHandler.updateCustomer(currentCustomer)) {
-            CustomAlert.showSimpleAlert("Thành công", "Chỉnh sửa thành công");
-            currentCustomer = null;
-            getStage().close();
-        } else {
-            CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra");
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDialog(
+                        "Chỉnh sửa khách",
+                        "Xác nhận chỉnh sửa?").showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            if (dbHandler.updateCustomer(currentCustomer)) {
+                CustomAlert.showSimpleAlert(
+                        "Thành công", "Chỉnh sửa thành công");
+                currentCustomer = null;
+                getStage().close();
+            } else {
+                CustomAlert.showErrorMessage("Thất bại", "Đã có lỗi xảy ra");
+            }
         }
+
     }
 
     @FXML

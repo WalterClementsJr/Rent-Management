@@ -238,7 +238,7 @@ public class ListContractController implements Initializable {
                 return;
             }
             Optional<ButtonType> answer
-                    = CustomAlert.confirmDelete(
+                    = CustomAlert.confirmDialog(
                             "Xóa hợp đồng",
                             "Bạn có chắc muốn xóa hợp đồng này cùng các thông tin liên quan"
                             + "\n(Bao gồm thông tin khách ở ghép và hóa đơn)?")
@@ -268,16 +268,18 @@ public class ListContractController implements Initializable {
         try {
             row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
-                CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
                 return;
             }
             Contract con = new Contract(
                     Integer.parseInt(row.get(0).toString()),
                     Integer.parseInt(row.get(3).toString()),
                     Integer.parseInt(row.get(5).toString()),
+                    LocalDate.parse(row.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER),
                     LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER),
-                    LocalDate.parse(row.get(9).toString(), Util.SQL_DATE_TIME_FORMATTER),
-                    new BigDecimal(row.get(10).toString()));
+                    new BigDecimal(row.get(9).toString()));
+            System.out.println(row.get(8).toString());
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addcontract/addContract.fxml"));
@@ -344,7 +346,7 @@ public class ListContractController implements Initializable {
                 if (activeConId == selectedConId) {
                     if (handler.isContractEndable(selectedConId)) {
                         Optional<ButtonType> answer
-                                = CustomAlert.confirmDelete(
+                                = CustomAlert.confirmDialog(
                                         "Kết thúc hợp đồng",
                                         "Bạn có chắc muốn kết thúc hợp đồng này?")
                                         .showAndWait();
@@ -538,7 +540,7 @@ public class ListContractController implements Initializable {
                 return;
             }
             Optional<ButtonType> answer
-                    = CustomAlert.confirmDelete(
+                    = CustomAlert.confirmDialog(
                             "Xóa thông tin khách ở ghép",
                             "Bạn có chắc muốn xóa?").showAndWait();
             if (answer.get() == ButtonType.OK) {

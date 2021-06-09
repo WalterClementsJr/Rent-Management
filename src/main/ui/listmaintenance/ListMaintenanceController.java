@@ -159,7 +159,6 @@ public class ListMaintenanceController implements Initializable {
         ObservableList list = tableView.getSelectionModel().getSelectedItems();
         ObservableList row;
 
-        // get row data
         try {
             row = (ObservableList) tableView.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
@@ -173,7 +172,6 @@ public class ListMaintenanceController implements Initializable {
                     LocalDate.parse(row.get(4).toString(), Util.SQL_DATE_TIME_FORMATTER),
                     row.get(5).toString());
             try {
-                // load edit pane
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addmaintenance/addMaintenance.fxml"));
                 Parent parent = loader.load();
@@ -194,14 +192,12 @@ public class ListMaintenanceController implements Initializable {
                 stage.show();
                 Util.setWindowIcon(stage);
 
-                // refresh on close
                 stage.setOnHiding((e) -> {
                     handleRefresh(new ActionEvent());
                 });
             } catch (IOException ex) {
                 Logger.getLogger(ListMaintenanceController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         } catch (IndexOutOfBoundsException ex) {
             CustomAlert.showErrorMessage("Chưa chọn.", "Hãy chọn thông tin bảo trì để chỉnh sửa");
         }
@@ -219,7 +215,7 @@ public class ListMaintenanceController implements Initializable {
             }
 
             Optional<ButtonType> answer
-                    = CustomAlert.confirmDelete(
+                    = CustomAlert.confirmDialog(
                             "Xóa bảo trì",
                             "Bạn có chắc muốn xóa thông tin bảo trì?").showAndWait();
 
@@ -265,7 +261,7 @@ public class ListMaintenanceController implements Initializable {
         tenPhongCol.setMinWidth(200);
         chiphiCol.setMinWidth(150);
         ngayCol.setMinWidth(150);
-        moTaCol.setMinWidth(300);
+        moTaCol.setMinWidth(400);
 
         idCol.setVisible(false);
         maphongCol.setVisible(false);

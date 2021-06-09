@@ -3,6 +3,7 @@ package main.ui.addroommate;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -11,6 +12,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
@@ -177,19 +179,27 @@ public class AddRoommateController implements Initializable {
             return;
         }
 
-        if (handler.updateRoommateStayingPeriod(
-                currenthdkID,
-                startDate.getValue(),
-                endDate.getValue())) {
-            CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin");
-            MasterController.getInstance().getListCustomerController()
-                    .handleRefresh(new ActionEvent());
-            getStage().close();
-        } else {
-            CustomAlert.showErrorMessage(
-                    "Thất bại",
-                    "Hãy kiểm lại tra thông tin và thử lại");
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDialog(
+                        "Chỉnh sửa khách ở ghép",
+                        "Xác nhận chỉnh sửa?").showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            if (handler.updateRoommateStayingPeriod(
+                    currenthdkID,
+                    startDate.getValue(),
+                    endDate.getValue())) {
+                CustomAlert.showSimpleAlert(
+                        "Thành công", "Đã sửa thông tin");
+                MasterController.getInstance().getListCustomerController()
+                        .handleRefresh(new ActionEvent());
+                getStage().close();
+            } else {
+                CustomAlert.showErrorMessage(
+                        "Thất bại",
+                        "Hãy kiểm lại tra thông tin và thử lại");
+            }
         }
+
     }
 
     @FXML

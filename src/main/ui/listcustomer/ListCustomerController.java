@@ -238,13 +238,12 @@ public class ListCustomerController implements Initializable {
         }
 
         Optional<ButtonType> answer
-                = CustomAlert.confirmDelete(
+                = CustomAlert.confirmDialog(
                         "Xóa khách",
                         "Bạn có chắc muốn xóa" + selectedForDeletion.getHoTen() + "?"
                 ).showAndWait();
         if (answer.get() == ButtonType.OK) {
-            Boolean result = handler.deleteCustomer(selectedForDeletion);
-            if (result) {
+            if (handler.deleteCustomer(selectedForDeletion)) {
                 CustomAlert.showSimpleAlert(
                         "Thành công",
                         "Đã xóa " + selectedForDeletion.getHoTen());
@@ -310,9 +309,9 @@ public class ListCustomerController implements Initializable {
 
         idCol.setVisible(false);
 
-        hotenCol.setMinWidth(150);
-        ngaysinhCol.setMinWidth(200);
+        hotenCol.setMinWidth(200);
+        ngaysinhCol.setMinWidth(150);
+        sdtCol.setMinWidth(200);
         cmndCol.setMinWidth(200);
     }
-
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -82,7 +84,6 @@ public class AddMaintenanceController implements Initializable {
                 }
             }
         });
-
     }
 
     @FXML
@@ -119,22 +120,31 @@ public class AddMaintenanceController implements Initializable {
             return;
         }
         if (currentMaintenance == null) {
-            CustomAlert.showSimpleAlert("Lỗi", "Chưa chọn thông tin bảo trì cần chỉnh sửa");
+            CustomAlert.showSimpleAlert(
+                    "Lỗi", "Chưa chọn thông tin bảo trì cần chỉnh sửa");
             return;
         }
         currentMaintenance.setMoTa(desc.getText().trim());
         currentMaintenance.setChiPhi(new BigDecimal(price.getText().trim()));
         currentMaintenance.setNgay(date.getValue());
 
-        if (DatabaseHandler.getInstance().updateMaintenance(currentMaintenance)) {
-            CustomAlert.showSimpleAlert("Thành công", "Đã sửa thông tin bảo trì");
-            currentMaintenance = null;
-            getStage().close();
-        } else {
-            CustomAlert.showErrorMessage(
-                    "Thất bại",
-                    "Hãy kiểm lại tra thông tin và thử lại");
+        Optional<ButtonType> answer
+                = CustomAlert.confirmDialog(
+                        "Chỉnh sửa thông tin bảo trì",
+                        "Xác nhận chỉnh sửa?").showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            if (DatabaseHandler.getInstance().updateMaintenance(currentMaintenance)) {
+                CustomAlert.showSimpleAlert(
+                        "Thành công", "Đã sửa thông tin bảo trì");
+                currentMaintenance = null;
+                getStage().close();
+            } else {
+                CustomAlert.showErrorMessage(
+                        "Thất bại",
+                        "Hãy kiểm lại tra thông tin và thử lại");
+            }
         }
+
     }
 
     @FXML
