@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.sql.CallableStatement;
+import java.sql.Types;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.model.Complex;
@@ -20,6 +22,10 @@ import main.util.Util;
 public final class DatabaseHandler {
 
     public static void main(String[] args) {
+        DatabaseHandler.getInstance();
+        System.out.println(dbHandler.isRoomFull(1));
+        System.out.println(dbHandler.getNumberOfCustomersInRoom(1));
+
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -27,8 +33,9 @@ public final class DatabaseHandler {
     private static final String DB_URL
             = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=NhaTro";
 
-    private static Connection conn = null;
-    private static PreparedStatement stmt = null;
+    private Connection conn = null;
+    private CallableStatement cstmt = null;
+    private PreparedStatement stmt = null;
 
     public static DatabaseHandler getInstance() {
         if (dbHandler == null) {
@@ -39,10 +46,6 @@ public final class DatabaseHandler {
 
     public DatabaseHandler() {
         createConnection();
-    }
-
-    public static PreparedStatement getStmt() {
-        return stmt;
     }
 
     public void createConnection() {
@@ -283,18 +286,28 @@ public final class DatabaseHandler {
 
     public int getNumberOfCustomersInRoom(int roomId) {
         try {
-            stmt = conn.prepareStatement(
-                    "SELECT * FROM dbo.GetSoKhachTrongPhong(?)");
-            stmt.setInt(1, roomId);
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.getsonguoitrongphong(?) }");
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setInt(2, roomId);
 
-            ResultSet rs = stmt.executeQuery();
-            if (!rs.next()) {
-                return -1;
-            } else {
-                int t = rs.getInt("songuoi");
-                rs.close();
-                return t;
-            }
+            cstmt.execute();
+            return cstmt.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public int getNumberOfCustomersInComplex(int complexId) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.getsonguoitrongkhu(?) }");
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setInt(2, complexId);
+
+            cstmt.execute();
+            return cstmt.getInt(1);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -438,6 +451,21 @@ public final class DatabaseHandler {
             stmt.setInt(1, room.getId());
 
             return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean isRoomFull(int roomId) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.isphongfull(?) }");
+            cstmt.registerOutParameter(1, Types.BOOLEAN);
+            cstmt.setInt(2, roomId);
+
+            cstmt.execute();
+            return cstmt.getBoolean(1);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

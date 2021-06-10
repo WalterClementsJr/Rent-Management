@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import main.app.settings.Setting;
@@ -36,7 +37,12 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        // add enter listener for password field
+        password.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleVerify(new ActionEvent());
+            }
+        });
     }
 
     @FXML

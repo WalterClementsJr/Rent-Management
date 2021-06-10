@@ -117,7 +117,7 @@
 .scroll-bar:horizontal > .increment-button > .increment-arrow,
 .scroll-bar:vertical > .decrement-button > .decrement-arrow,
 .scroll-bar:vertical > .increment-button > .increment-arrow {
-    -fx-effect: null;
+    -fx-effect: unset;
 }
 .scroll-bar > .thumb:pressed {
     -fx-background-color: -fx-outer-border, -fx-pressed-base, -fx-pressed-base;
@@ -292,7 +292,7 @@
  *                                                                             *
  ******************************************************************************/
 .menu-up-arrow, .menu-down-arrow {
-    -fx-effect: null;
+    -fx-effect: unset;
 }
 .menu > .right-container > .arrow {
     -fx-background-color: -fx-hover-base;
@@ -361,7 +361,7 @@
 .titled-pane:focused > .title > .arrow-button > .arrow {
     -fx-background-color: -fx-mark-color;
     -fx-background-insets: 0;
-    -fx-effect: null;
+    -fx-effect: unset;
 }
 .titled-pane > .title:hover > .arrow-button > .arrow {
     -fx-background-color: -fx-mark-highlight-color;
@@ -493,7 +493,7 @@
  *                                                                             *
  ******************************************************************************/
 .axis {
-    AXIS_COLOR: -fx-light-text-color;
+    -AXIS_COLOR: -fx-light-text-color;
     -fx-tick-label-fill: -fx-hover-base;
 }
 /*******************************************************************************

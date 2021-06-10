@@ -71,7 +71,6 @@ public class ListInvoiceController implements Initializable {
                 return;
             }
 
-            // TODO fix row.get
             int mahdong = Integer.parseInt(row.get(0).toString());
             LocalDate lastPayDate =
                     LocalDate.parse(row.get(11).toString(), Util.SQL_DATE_TIME_FORMATTER);
@@ -149,7 +148,6 @@ public class ListInvoiceController implements Initializable {
     }
 
     public void initTableColumns() {
-
         TableColumn mahdongCol
                 = new TableColumn<>("Mã hợp đồng");
         TableColumn maKhuCol

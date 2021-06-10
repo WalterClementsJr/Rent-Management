@@ -200,7 +200,7 @@
 .SBKIT-library-panel, 
 .SBKIT-library-panel .accordion > .titled-pane > .content,
 .SBKIT-hierarchy-panel .tree-view {
-    -fx-border-color: null;
+    -fx-border-color: unset;
     -fx-border-width: 0;
     -fx-background-color: -sb-content-background;
     -fx-background-insets: 0;
@@ -307,7 +307,7 @@
     -fx-padding: 2 0 0 4;
 }
 .SBKIT-library-panel .list-view .list-cell:filled:hover {
-    -fx-background-color: null; /* no hover effect on list view */
+    -fx-background-color: unset; /* no hover effect on list view */
 }
 .SBKIT-library-panel .list-view:focused .list-cell:filled:selected {
     -fx-background-color: -sb-selected-bar-color;
@@ -315,7 +315,7 @@
 .SBKIT-library-panel .list-view .list-cell:filled:selected {
     /* When the ListView is not focused there is no need to highlight
     the selected item */
-    -fx-background-color: null;
+    -fx-background-color: unset;
 }
 .SBKIT-library-panel .list-view .scroll-bar {    
     /* Cursor may dynamically change when working in library / hierarchy.
@@ -518,24 +518,24 @@
 }
 
 .SBKIT-content-panel .selection-rect {
-    -fx-stroke: null; 
+    -fx-stroke: unset; 
     -fx-fill: rgba(0, 0, 0, 0.05);
 }
 
 .SBKIT-content-panel .selection-wire {
     -fx-stroke: rgb(25, 164, 255);
     -fx-stroke-width: 1;
-    -fx-fill: null;
+    -fx-fill: unset;
 }
 
 .SBKIT-content-panel .selection-pipe {
     -fx-stroke: rgb(25, 164, 255);
     -fx-stroke-width: 3;
-    -fx-fill: null;
+    -fx-fill: unset;
 }
 
 .SBKIT-content-panel .selection-gap {
-    -fx-stroke: null;
+    -fx-stroke: unset;
     -fx-fill: lightgrey;
     -fx-opacity: 0.5;
 }
@@ -545,7 +545,7 @@
     -fx-stroke-width: 7;
     -fx-stroke-type: outside;
     -fx-opacity: 0.5;
-    -fx-fill: null;
+    -fx-fill: unset;
 }
 
 .SBKIT-content-panel .target-ring {
@@ -553,7 +553,7 @@
     -fx-stroke-width: 7;
     -fx-stroke-type: inside;
     -fx-opacity: 0.9;
-    -fx-fill: null;
+    -fx-fill: unset;
 }
 
 .SBKIT-content-panel .target-crack {
@@ -562,7 +562,7 @@
     -fx-stroke-line-cap: butt;
     -fx-stroke: black;
     -fx-opacity: 0.5;
-    -fx-fill: null;
+    -fx-fill: unset;
 }
 
 .SBKIT-content-panel .resize-rudder {
@@ -623,7 +623,7 @@
 }
 
 .SBKIT-content-panel .tray.west .text {
-    -fx-rotate: +90;
+    -fx-rotate: 90;
 }
 
 .SBKIT-content-panel .tray.east .text {
@@ -782,7 +782,7 @@
     -fx-background-color: -sb-content-detail, derive(-sb-content-background, 10%);
     -fx-background-insets: 2, 3;
     -fx-background-radius: 0;
-    -fx-effect: null;
+    -fx-effect: unset;
 }
 
 .property-sheet .check-box {
@@ -909,7 +909,7 @@
     -fx-padding: 0;
 }
 .property-sheet .cog-menubutton > .arrow {
-    -fx-shape: null;
+    -fx-shape: unset;
     -fx-padding: 0;
 }
 
@@ -987,7 +987,7 @@
     -fx-max-height: 8;
 }
 .property-sheet .insets-copy-button {
-    -fx-background-color: null;
+    -fx-background-color: unset;
     -fx-background-radius: 0;
     -fx-min-width: 10;
     -fx-max-width: 10;
@@ -1347,7 +1347,7 @@
 .SBKIT-css-panel .lookup-button .arrow-button > .arrow {
     -fx-padding: 0 0.231em 0.154em 0.154em;
     -fx-background-color: derive(-sb-header-detail, -20%);
-    -fx-effect: null;
+    -fx-effect: unset;
 }
 .SBKIT-css-panel .lookup-button:hover .arrow-button {
     -fx-background-color: black, white;
@@ -1390,6 +1390,6 @@
     -fx-padding: 0;
 }
 .SBKIT-css-panel .css-panel-cog-menubutton > .arrow {
-    -fx-shape: null;
+    -fx-shape: unset;
     -fx-padding: 0;
 }

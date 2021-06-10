@@ -72,7 +72,7 @@
 /* Page Corner. */
 .page-corner {
 
-    -fx-shape: null;
+    -fx-shape: unset;
 }
 
 /*******************************************************************************
@@ -89,14 +89,14 @@
     -fx-background-radius: 2.0;
     -fx-background-insets: 0.0;
     -fx-border-width: 0.0;
-    -fx-effect: null;
+    -fx-effect: unset;
 }
 
 .progress-bar:indeterminate>.bar {
     -fx-background-radius: 2.0;
     -fx-background-insets: 0.0;
     -fx-border-width: 0.0;
-    -fx-effect: null;
+    -fx-effect: unset;
 }
 
 .progress-bar.success > .bar {
@@ -548,7 +548,7 @@
 .menu-bar .menu .arrow {
     -fx-padding: 0;
     -fx-background-color: transparent;
-    -fx-shape: null;
+    -fx-shape: unset;
 }
 
 .menu-bar .menu .arrow-button {

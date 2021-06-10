@@ -321,10 +321,10 @@
  * 
  */
 .tab-pane>*.tab-header-area{
-    -fx-padding : 0,0,0,0;
+    -fx-padding : 0 0 0 0;
 }
 .tab-pane>*.tab-header-area>*.headers-region>*.tab:selected:top{
-    -fx-padding : 6,6,6,6;
+    -fx-padding : 6 6 6 6;
     -fx-text-fill : -white;
     -fx-background-color : -color;
 }
@@ -334,7 +334,7 @@
 }
 
 .tab-pane>*.tab-header-area>*.headers-region>*.tab:top{
-    -fx-padding : 4,4,4,4;
+    -fx-padding : 4 4 4 4;
     -fx-text-fill : -white;
     -fx-background-color : -white;
 }
