@@ -27,9 +27,9 @@
                             <contextMenu>
                                 <ContextMenu>
                                     <items>
-                                        <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditButton" text="Edit" />
-                                        <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
-                                        <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+                                        <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
+                                        <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditButton" text="Chỉnh sửa" />
+                                        <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDelete" text="Xóa" />
                                     </items>
                                 </ContextMenu>
                             </contextMenu>

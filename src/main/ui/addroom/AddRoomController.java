@@ -226,7 +226,10 @@ public class AddRoomController implements Initializable {
         BigDecimal rPrice = new BigDecimal(price.getText().trim());
         BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
         int rSize = Integer.parseInt(size.getText().trim());
-        String rDescript = desc.getText().trim();
+        String rDescript =
+                !desc.getText().isBlank() ?
+                desc.getText().trim()
+                : "";
 
         Room newRoom = new Room(rName, rNOfPeople, rPrice, rDeposit, rSize, rDescript, chosenComplex.getId());
 
@@ -264,7 +267,10 @@ public class AddRoomController implements Initializable {
         BigDecimal rPrice = new BigDecimal(price.getText().trim());
         BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
         int rSize = Integer.parseInt(size.getText().trim());
-        String rDescript = desc.getText().trim();
+        String rDescript =
+                !desc.getText().isBlank() ?
+                desc.getText().trim()
+                : "";
 
         currentRoom.setTenPhong(rName);
         currentRoom.setSoNguoi(rNOfPeople);

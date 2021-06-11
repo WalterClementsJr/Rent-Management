@@ -19,6 +19,7 @@
                             <contextMenu>
                                 <ContextMenu>
                                     <items>
+                                        <MenuItem fx:id="refresh" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
                                         <MenuItem fx:id="addInvoice" mnemonicParsing="false" onAction="#handleAddInvoice" text="Thêm hóa đơn" />
                                     </items>
                                 </ContextMenu>

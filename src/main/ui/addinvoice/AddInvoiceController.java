@@ -18,7 +18,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Invoice;
 import main.model.InvoiceData;
@@ -34,7 +33,7 @@ public class AddInvoiceController implements Initializable {
     @FXML
     private DatePicker endDate;
     @FXML
-    private TextField deposit;
+    private TextField rent;
     @FXML
     private Button save;
     @FXML
@@ -96,15 +95,15 @@ public class AddInvoiceController implements Initializable {
         });
 
         // deposit field format
-        deposit.textProperty().addListener(new ChangeListener<String>() {
+        rent.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                     String newValue) {
                 if (newValue.matches("\\d{0,15}")) {
                     String value = newValue;
                 } else {
-                    deposit.setText(oldValue);
-                    deposit.positionCaret(deposit.getLength());
+                    rent.setText(oldValue);
+                    rent.positionCaret(rent.getLength());
                 }
             }
         });
@@ -112,18 +111,13 @@ public class AddInvoiceController implements Initializable {
 
     @FXML
     private void handleAdd(ActionEvent event) {
-        Util.checkLogin(getStage());
-
-        if (!Setting.IS_VERIFIED) {
-            return;
-        }
         if (!checkEntries()) {
             return;
         }
 
         Invoice newInvoice = new Invoice(
                 currentdata.getMahdong(),
-                new BigDecimal(deposit.getText()),
+                new BigDecimal(rent.getText()),
                 endDate.getValue());
 
         if (DatabaseHandler.getInstance().insertNewInvoice(newInvoice)) {
@@ -153,27 +147,38 @@ public class AddInvoiceController implements Initializable {
                 startDate.getValue(),
                 endDate.getValue());
 
-        deposit.setText(suggestion.setScale(-3, RoundingMode.CEILING).stripTrailingZeros().toPlainString());
+        rent.setText(suggestion.setScale(-3, RoundingMode.CEILING).stripTrailingZeros().toPlainString());
     }
 
     public void loadEntries(InvoiceData data) {
         startDate.setValue(data.getLastPayDate());
-        endDate.setValue(data.getNgaytra());
+        
+        if (data.getLastPayDate().plusMonths(1).isBefore(data.getNgaytra())) {
+            endDate.setValue(data.getLastPayDate().plusMonths(1));
+        } else {
+            endDate.setValue(data.getNgaytra());
+        }
 
         endDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                setDisable(empty || date.compareTo(data.getNgaytra()) > 0);
-                setDisable(empty || date.compareTo(startDate.getValue()) < 0);
+                setDisable(
+                        date.compareTo(startDate.getValue()) < 0
+                        || date.compareTo(data.getNgaytra()) > 0);
             }
         });
-        BigDecimal suggestion = Util.getRent(data.getGiagoc(), data.getSongay());
-        deposit.setText(suggestion.setScale(-3, RoundingMode.CEILING).stripTrailingZeros().toPlainString());
+        
+        // calculate rent money as suggestion
+        BigDecimal suggestion = Util.getRent(
+                data.getGiagoc(),
+                startDate.getValue(),
+                endDate.getValue());
+        rent.setText(suggestion.setScale(-3, RoundingMode.CEILING).stripTrailingZeros().toPlainString());
 
         startDate.setDisable(true);
-        startDate.setStyle("-fx-opacity: 1");
-        startDate.getEditor().setStyle("-fx-opacity: 1");
+        startDate.setStyle("-fx-opacity: 0.8");
+        startDate.getEditor().setStyle("-fx-opacity: 0.6");
 
         currentdata = data;
     }
@@ -182,11 +187,10 @@ public class AddInvoiceController implements Initializable {
         if (endDate.getValue() == null) {
             CustomAlert.showErrorMessage("Chưa nhập hạn thanh toán", "");
             return false;
-        } else if (deposit.getText().isBlank()) {
+        } else if (rent.getText().isBlank()) {
             CustomAlert.showErrorMessage("Số tiền trống", "Hãy nhập số tiền");
             return false;
         }
         return true;
     }
-
 }

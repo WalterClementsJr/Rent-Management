@@ -61,6 +61,11 @@ public class ListInvoiceController implements Initializable {
 
     @FXML
     private void handleAddInvoice(ActionEvent event) {
+        Util.checkLogin(getStage());
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
         ObservableList row;
         try {
             row = (ObservableList) tableView.getSelectionModel().getSelectedItems().get(0);

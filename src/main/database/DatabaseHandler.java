@@ -1,5 +1,6 @@
 package main.database;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,9 +24,16 @@ public final class DatabaseHandler {
 
     public static void main(String[] args) {
         DatabaseHandler.getInstance();
-        System.out.println(dbHandler.isRoomFull(1));
-        System.out.println(dbHandler.getNumberOfCustomersInRoom(1));
-
+//        System.out.println(dbHandler.getTotalRevenueOfComplex(1));
+//        System.out.println(dbHandler.getTotalRevenueOfComplex(2));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(1, LocalDate.now()));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(2, LocalDate.now()));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(1, LocalDate.now()));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(2, LocalDate.now()));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(3, LocalDate.now()));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(4, LocalDate.now()));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(3, LocalDate.now()));
+        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(4, LocalDate.now()));
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -290,21 +298,6 @@ public final class DatabaseHandler {
                     "{ ? = call dbo.getsonguoitrongphong(?) }");
             cstmt.registerOutParameter(1, Types.INTEGER);
             cstmt.setInt(2, roomId);
-
-            cstmt.execute();
-            return cstmt.getInt(1);
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return -1;
-    }
-
-    public int getNumberOfCustomersInComplex(int complexId) {
-        try {
-            cstmt = conn.prepareCall(
-                    "{ ? = call dbo.getsonguoitrongkhu(?) }");
-            cstmt.registerOutParameter(1, Types.INTEGER);
-            cstmt.setInt(2, complexId);
 
             cstmt.execute();
             return cstmt.getInt(1);
@@ -793,7 +786,7 @@ public final class DatabaseHandler {
     public boolean insertNewInvoice(Invoice invoice) {
         try {
             stmt = conn.prepareStatement(
-                    "INSERT INTO HOADON VALUES(?,?,?)");
+                    "INSERT INTO HOADON VALUES(?,?,?, getdate())");
             stmt.setInt(
                     1, invoice.getMahdong());
             stmt.setBigDecimal(
@@ -874,5 +867,68 @@ public final class DatabaseHandler {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    // methods for looking up stat
+    public int getNumberOfCustomersInComplex(int complexId) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.getsonguoitrongkhu(?) }");
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setInt(2, complexId);
+
+            cstmt.execute();
+            return cstmt.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public BigDecimal getTotalRevenueOfComplexInMonth(int complexId, LocalDate date) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.gettongtientrongthangcuakhu(?,?) }");
+            cstmt.registerOutParameter(1, Types.DECIMAL);
+            cstmt.setInt(2, complexId);
+            cstmt.setDate(3, Util.LocalDateToSQLDate(date));
+
+            cstmt.execute();
+            return cstmt.getBigDecimal(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return BigDecimal.valueOf(-1);
+    }
+
+    public BigDecimal getTotalRevenueOfComplexInYear(int complexId, LocalDate date) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.gettongtientrongnamcuakhu(?,?) }");
+            cstmt.registerOutParameter(1, Types.DECIMAL);
+            cstmt.setInt(2, complexId);
+            cstmt.setDate(3, Util.LocalDateToSQLDate(date));
+
+            cstmt.execute();
+            return cstmt.getBigDecimal(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return BigDecimal.valueOf(-1);
+    }
+
+    public BigDecimal getTotalRevenueOfComplex(int complexId) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.gettongtiencuakhu(?) }");
+            cstmt.registerOutParameter(1, Types.DECIMAL);
+            cstmt.setInt(2, complexId);
+
+            cstmt.execute();
+            return cstmt.getBigDecimal(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return BigDecimal.valueOf(-1);
     }
 }

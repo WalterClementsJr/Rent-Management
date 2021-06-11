@@ -47,7 +47,7 @@
                                         <Font name="Arial" size="15.0" />
                                     </font>
                                 </Label>
-                                <TextField fx:id="deposit" prefWidth="272.0" />
+                                <TextField fx:id="rent" prefWidth="272.0" />
                             </children>
                         </VBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="78.0" prefWidth="585.0" spacing="10.0">
