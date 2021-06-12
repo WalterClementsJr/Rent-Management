@@ -127,10 +127,14 @@ public class ListCustomerController implements Initializable {
 
     private void loadListToTable() {
         switch (comboBox.getSelectionModel().getSelectedItem()) {
-            case Util.FILTER_ALL -> customerTable.setItems(allFilteredList);
-            case Util.FILTER_CUSTOMER_NO_ROOM -> customerTable.setItems(noRoomFilteredList);
-            case Util.FILTER_CUSTOMER_HAS_ROOM -> customerTable.setItems(withRoomFilteredList);
-            case Util.FILTER_CUSTOMER_MOVED -> customerTable.setItems(oldFilteredList);
+            case Util.FILTER_ALL ->
+                customerTable.setItems(allFilteredList);
+            case Util.FILTER_CUSTOMER_NO_ROOM ->
+                customerTable.setItems(noRoomFilteredList);
+            case Util.FILTER_CUSTOMER_HAS_ROOM ->
+                customerTable.setItems(withRoomFilteredList);
+            case Util.FILTER_CUSTOMER_MOVED ->
+                customerTable.setItems(oldFilteredList);
         }
     }
 

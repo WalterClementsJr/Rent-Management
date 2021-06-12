@@ -68,7 +68,7 @@
                         <VBox alignment="CENTER_LEFT" prefHeight="134.0" prefWidth="367.0" spacing="10.0">
                             <children>
                                 <Label text="Mô tả" />
-                                <TextArea fx:id="desc" prefHeight="76.0" prefWidth="300.0" />
+                                <TextArea fx:id="desc" prefHeight="76.0" prefWidth="300.0" wrapText="true" />
                             </children>
                         </VBox>
                         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="369.0" spacing="10.0">

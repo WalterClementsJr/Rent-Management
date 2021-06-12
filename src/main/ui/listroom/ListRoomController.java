@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -71,6 +73,9 @@ public class ListRoomController implements Initializable {
     private ComboBox<String> filter;
 
     @FXML
+    private TextField filterField;
+
+    @FXML
     private TableView<Room> roomTable;
 
     @FXML
@@ -89,6 +94,10 @@ public class ListRoomController implements Initializable {
     public static ObservableList<Room> listOfAllRooms = FXCollections.observableArrayList();
     public static ObservableList<Room> listOfEmptyRooms = FXCollections.observableArrayList();
     public static ObservableList<Room> listOfOccupiedRooms = FXCollections.observableArrayList();
+
+    FilteredList<Room> allFilteredList;
+    FilteredList<Room> emptyFilteredList;
+    FilteredList<Room> occupiedFilteredList;
 
     public static ObservableList<Complex> complexList = FXCollections.observableArrayList();
     DatabaseHandler handler;
@@ -117,10 +126,19 @@ public class ListRoomController implements Initializable {
 
         Image editimg
                 = new Image(MainController.class.getResourceAsStream(
-                        "/main/resources/icons/edit.png"));
+                        "/main/resources/icons/edit24.png"));
         editComplex.setGraphic(new ImageView(editimg));
 
+        allFilteredList = new FilteredList<>(listOfAllRooms);
+        emptyFilteredList = new FilteredList<>(listOfEmptyRooms);
+        occupiedFilteredList = new FilteredList<>(listOfOccupiedRooms);
+
+        setFilterFieldProperty(allFilteredList);
+        setFilterFieldProperty(emptyFilteredList);
+        setFilterFieldProperty(occupiedFilteredList);
+
         loadData();
+        loadListToTable();
     }
 
     private Stage getStage() {
@@ -154,20 +172,16 @@ public class ListRoomController implements Initializable {
         loadEmptyRooms(chosenComplex.getId());
         loadOccupiedRooms(chosenComplex.getId());
 
-        loadListToTable();
     }
 
     private void loadListToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
-            case Util.FILTER_ALL:
-                roomTable.setItems(listOfAllRooms);
-                break;
-            case Util.FILTER_ROOM_EMPTY:
-                roomTable.setItems(listOfEmptyRooms);
-                break;
-            case Util.FILTER_ROOM_OCCUPIED:
-                roomTable.setItems(listOfOccupiedRooms);
-                break;
+            case Util.FILTER_ALL ->
+                roomTable.setItems(allFilteredList);
+            case Util.FILTER_ROOM_EMPTY ->
+                roomTable.setItems(emptyFilteredList);
+            case Util.FILTER_ROOM_OCCUPIED ->
+                roomTable.setItems(occupiedFilteredList);
         }
     }
 
@@ -231,7 +245,10 @@ public class ListRoomController implements Initializable {
 
     @FXML
     private void handleRefresh(ActionEvent event) {
+        filterField.clear();
+
         loadData();
+        loadListToTable();
     }
 
     @FXML
@@ -521,4 +538,17 @@ public class ListRoomController implements Initializable {
         moTaCol.prefWidthProperty().bind(tableView.widthProperty().divide(1.5));
     }
 
+    void setFilterFieldProperty(FilteredList<Room> f) {
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            f.setPredicate(customer -> {
+                if (newValue == null || newValue.isBlank()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (customer.getTenPhong().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else return customer.getMoTa().contains(lowerCaseFilter);
+            });
+        });
+    }
 }
