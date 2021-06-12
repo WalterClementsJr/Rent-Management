@@ -1,11 +1,15 @@
 package main.ui.addinvoice;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -22,6 +26,7 @@ import main.database.DatabaseHandler;
 import main.model.Invoice;
 import main.model.InvoiceData;
 import main.ui.alert.CustomAlert;
+import main.ui.listinvoice.ListInvoiceController;
 import main.util.Util;
 
 public class AddInvoiceController implements Initializable {
@@ -152,7 +157,7 @@ public class AddInvoiceController implements Initializable {
 
     public void loadEntries(InvoiceData data) {
         startDate.setValue(data.getLastPayDate());
-        
+
         if (data.getLastPayDate().plusMonths(1).isBefore(data.getNgaytra())) {
             endDate.setValue(data.getLastPayDate().plusMonths(1));
         } else {
@@ -168,7 +173,7 @@ public class AddInvoiceController implements Initializable {
                         || date.compareTo(data.getNgaytra()) > 0);
             }
         });
-        
+
         // calculate rent money as suggestion
         BigDecimal suggestion = Util.getRent(
                 data.getGiagoc(),
@@ -192,5 +197,16 @@ public class AddInvoiceController implements Initializable {
             return false;
         }
         return true;
+    }
+
+    @FXML
+    void handleOpenCalc(ActionEvent event) {
+        try {
+            Runtime.getRuntime().exec(
+                    "C:\\Windows\\System32", null,
+                    new File("C:\\Windows\\System32"));
+        } catch (IOException ex) {
+            Logger.getLogger(ListInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

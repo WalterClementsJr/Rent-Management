@@ -1,11 +1,13 @@
 package main.ui.listinvoice;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -39,22 +42,44 @@ public class ListInvoiceController implements Initializable {
 
     @FXML
     private AnchorPane root;
+
     @FXML
-    private TableView tableView;
+    private TableView paidContract;
+
+    @FXML
+    private MenuItem refresh1;
+
+    @FXML
+    private MenuItem addInvoice1;
+
+    @FXML
+    private MenuItem delete1;
+
+    @FXML
+    private TableView indebtContract;
+
+    @FXML
+    private MenuItem refresh;
+
     @FXML
     private MenuItem addInvoice;
+
+    @FXML
+    private MenuItem delete;
 
     // extra elements
     DatabaseHandler handler = null;
 
-    ObservableList listOfAllInvoices = FXCollections.observableArrayList();
+    ObservableList listOfInDebtInvoices = FXCollections.observableArrayList();
+    ObservableList listOfPaidInvoices = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         handler = DatabaseHandler.getInstance();
 
-        initTableColumns();
-        loadResultSetToList(handler.getInDebtContractsWithInvoiceInfo(), listOfAllInvoices);
+        initInDebtTableColumns();
+        initPaidTableColumns();
+        loadAllInvoices();
 
         loadData();
     }
@@ -68,26 +93,26 @@ public class ListInvoiceController implements Initializable {
 
         ObservableList row;
         try {
-            row = (ObservableList) tableView.getSelectionModel().getSelectedItems().get(0);
+            row = (ObservableList) indebtContract.getSelectionModel().getSelectedItems().get(0);
             if (row == null) {
                 CustomAlert.showErrorMessage(
                         "Chưa chọn.",
-                        "Hãy chọn một dòng để thêm hóa đơn");
+                        "Hãy chọn một hợp đồng để thêm hóa đơn");
                 return;
             }
 
             int mahdong = Integer.parseInt(row.get(0).toString());
-            LocalDate lastPayDate =
-                    LocalDate.parse(row.get(11).toString(), Util.SQL_DATE_TIME_FORMATTER);
-            LocalDate ngaytra =
-                    LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER);
-            BigDecimal giagoc =
-                    new BigDecimal(row.get(10).toString());
-            int songay =
-                    Integer.parseInt(row.get(12).toString());
+            LocalDate lastPayDate
+                    = LocalDate.parse(row.get(11).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate ngaytra
+                    = LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            BigDecimal giagoc
+                    = new BigDecimal(row.get(10).toString());
+            int songay
+                    = Integer.parseInt(row.get(12).toString());
 
-            InvoiceData data =
-                    new InvoiceData(mahdong, lastPayDate, ngaytra, giagoc, songay);
+            InvoiceData data
+                    = new InvoiceData(mahdong, lastPayDate, ngaytra, giagoc, songay);
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addinvoice/addInvoice.fxml"));
@@ -122,37 +147,178 @@ public class ListInvoiceController implements Initializable {
         }
     }
 
+    @FXML
+    private void handleDeleteInvoice(ActionEvent event) {
+        Util.checkLogin(getStage());
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
+        ObservableList row;
+        try {
+            row = (ObservableList) indebtContract.getSelectionModel().getSelectedItems().get(0);
+            if (row == null) {
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn",
+                        "Hãy chọn một hóa đơn để xóa");
+                return;
+            }
+
+            int mahdon = Integer.parseInt(row.get(13).toString());
+            Optional<ButtonType> answer
+                    = CustomAlert.confirmDialog(
+                            "Xác nhận xóa",
+                            "Bạn có chắc muốn xóa hóa đơn"
+                    ).showAndWait();
+            if (answer.get() == ButtonType.OK) {
+                if (handler.deleteInvoice(mahdon)) {
+                    CustomAlert.showSimpleAlert(
+                            "Xóa thành công",
+                            "Đã xóa hóa đơn mới nhất của hơp đồng này");
+                    handleRefresh(new ActionEvent());
+                } else {
+                    CustomAlert.showErrorMessage(
+                            "Không thể xóa hóa đơn này",
+                            "Đã có lỗi xảy ra");
+                }
+            }
+
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn.",
+                    "Chọn một hợp đồng để thêm hóa đơn");
+        }
+    }
+
+    @FXML
+    private void handleAddInvoice1(ActionEvent event) {
+        Util.checkLogin(getStage());
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
+        ObservableList row;
+        try {
+            row = (ObservableList) paidContract.getSelectionModel().getSelectedItems().get(0);
+            if (row == null) {
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn một hợp đồng để thêm hóa đơn");
+                return;
+            }
+
+            int mahdong = Integer.parseInt(row.get(0).toString());
+            LocalDate lastPayDate
+                    = LocalDate.parse(row.get(11).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate ngaytra
+                    = LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            BigDecimal giagoc
+                    = new BigDecimal(row.get(10).toString());
+            int songay
+                    = Integer.parseInt(row.get(12).toString());
+
+            InvoiceData data
+                    = new InvoiceData(mahdong, lastPayDate, ngaytra, giagoc, songay);
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass()
+                        .getResource("/main/ui/addinvoice/addInvoice.fxml"));
+                Parent parent = loader.load();
+
+                AddInvoiceController controller = loader.getController();
+                controller.loadEntries(data);
+
+                Stage stage = new Stage(StageStyle.DECORATED);
+                stage.initOwner(getStage());
+                stage.initModality(Modality.WINDOW_MODAL);
+
+                Scene scene = new Scene(parent);
+                scene.getStylesheets().add(getClass()
+                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
+
+                stage.setScene(scene);
+                stage.setTitle("Thêm hóa đơn");
+                stage.show();
+                Util.setWindowIcon(stage);
+
+                stage.setOnHiding((e) -> {
+                    handleRefresh(new ActionEvent());
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(ListInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn.",
+                    "Chọn một hợp đồng để thêm hóa đơn");
+        }
+    }
+
+    @FXML
+    private void handleDeleteInvoice1(ActionEvent event) {
+        Util.checkLogin(getStage());
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
+        ObservableList row;
+        try {
+            row = (ObservableList) paidContract.getSelectionModel().getSelectedItems().get(0);
+            if (row == null) {
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn một hóa đơn để xóa");
+                return;
+            }
+
+            int mahdon = Integer.parseInt(row.get(13).toString());
+            Optional<ButtonType> answer
+                    = CustomAlert.confirmDialog(
+                            "Xác nhận xóa",
+                            "Bạn có chắc muốn xóa hóa đơn này"
+                    ).showAndWait();
+            if (answer.get() == ButtonType.OK) {
+                if (handler.deleteInvoice(mahdon)) {
+                    CustomAlert.showSimpleAlert(
+                            "Xóa thành công",
+                            "Đã xóa hóa đơn mới nhất của hơp đồng này");
+                    handleRefresh(new ActionEvent());
+                } else {
+                    CustomAlert.showErrorMessage(
+                            "Không thể xóa hóa đơn này",
+                            "Đã có lỗi xảy ra");
+                }
+            }
+
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn",
+                    "Chọn một hợp đồng để thêm hóa đơn");
+        }
+    }
+
     private void loadData() {
-        listOfAllInvoices.clear();
+        listOfInDebtInvoices.clear();
+        listOfPaidInvoices.clear();
         loadAllInvoices();
         loadListToTable();
     }
 
     private void loadListToTable() {
-        tableView.setItems(listOfAllInvoices);
+        indebtContract.setItems(listOfInDebtInvoices);
+        paidContract.setItems(listOfPaidInvoices);
     }
 
     public void loadAllInvoices() {
-        loadResultSetToList(handler.getInDebtContractsWithInvoiceInfo(), listOfAllInvoices);
+        // TODO load new sql function for payment
+        Util.loadResultSetToList(
+                handler.getInDebtContractsWithInvoiceInfo(),
+                listOfInDebtInvoices);
+        Util.loadResultSetToList(
+                handler.getPaidContractsWithInvoiceInfo(),
+                listOfPaidInvoices);
     }
 
-    public void loadResultSetToList(ResultSet rs, ObservableList list) {
-        list.clear();
-        try {
-            while (rs.next()) {
-                ObservableList row = FXCollections.observableArrayList();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    row.add(rs.getString(i).trim());
-                }
-                list.add(row);
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void initTableColumns() {
+    public void initInDebtTableColumns() {
         TableColumn mahdongCol
                 = new TableColumn<>("Mã hợp đồng");
         TableColumn maKhuCol
@@ -179,10 +345,13 @@ public class ListInvoiceController implements Initializable {
                 = new TableColumn<>("ngayttgannhat");
         TableColumn songayCol
                 = new TableColumn<>("Số ngày nợ");
+        TableColumn hdonIdCol
+                = new TableColumn<>("id");
 
-        tableView.getColumns().addAll(
-                mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol, tenkhachCol,
-                ngayNhanCol, ngayTraCol, tienCocCol, giaGocCol, ngayttgannhatCol, songayCol);
+        indebtContract.getColumns().addAll(
+                mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol,
+                makhCol, tenkhachCol, ngayNhanCol, ngayTraCol, tienCocCol,
+                giaGocCol, ngayttgannhatCol, songayCol, hdonIdCol);
 
         tenPhongCol.setMinWidth(200);
         tenkhachCol.setMinWidth(200);
@@ -195,12 +364,12 @@ public class ListInvoiceController implements Initializable {
         makhCol.setVisible(false);
         giaGocCol.setVisible(false);
         tienCocCol.setVisible(false);
-//        songayCol.setVisible(false);
         ngayttgannhatCol.setVisible(false);
+        hdonIdCol.setVisible(false);
 
-        for (int i = 0; i < tableView.getColumns().size(); i++) {
+        for (int i = 0; i < indebtContract.getColumns().size(); i++) {
             final int t = i;
-            TableColumn col = (TableColumn) tableView.getColumns().get(i);
+            TableColumn col = (TableColumn) indebtContract.getColumns().get(i);
             col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
                 @Override
                 public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
@@ -239,6 +408,100 @@ public class ListInvoiceController implements Initializable {
                         LocalDate d = LocalDate.parse(item, Util.SQL_DATE_TIME_FORMATTER);
                         setText(Util.DATE_TIME_FORMATTER.format(d));
                         d = null;
+                    }
+                }
+            };
+        });
+    }
+
+    public void initPaidTableColumns() {
+        TableColumn mahdongCol
+                = new TableColumn<>("Mã hợp đồng");
+        TableColumn maKhuCol
+                = new TableColumn<>("Mã khu");
+        TableColumn tenKhuCol
+                = new TableColumn<>("Tên khu");
+        TableColumn maphongCol
+                = new TableColumn<>("Mã phòng");
+        TableColumn tenPhongCol
+                = new TableColumn<>("Tên phòng");
+        TableColumn makhCol
+                = new TableColumn<>("Mã khách");
+        TableColumn tenkhachCol
+                = new TableColumn<>("Tên khách");
+        TableColumn ngayNhanCol
+                = new TableColumn<>("Ngày nhận");
+        TableColumn ngayTraCol
+                = new TableColumn<>("Ngày trả");
+        TableColumn tienCocCol
+                = new TableColumn<>("Tiền cọc");
+        TableColumn giaGocCol
+                = new TableColumn<>("Giá gốc");
+        TableColumn ngayttgannhatCol
+                = new TableColumn<>("ngayttgannhat");
+        TableColumn songayCol
+                = new TableColumn<>("Số ngày tới ngày đóng tiếp theo");
+        TableColumn hdonIdCol
+                = new TableColumn<>("id");
+
+        paidContract.getColumns().addAll(
+                mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol,
+                makhCol, tenkhachCol, ngayNhanCol, ngayTraCol, tienCocCol,
+                giaGocCol, ngayttgannhatCol, songayCol, hdonIdCol);
+
+        tenPhongCol.setMinWidth(200);
+        tenkhachCol.setMinWidth(200);
+
+        mahdongCol.setVisible(false);
+        maKhuCol.setVisible(false);
+        maphongCol.setVisible(false);
+        ngayNhanCol.setVisible(false);
+        ngayTraCol.setVisible(false);
+        makhCol.setVisible(false);
+        giaGocCol.setVisible(false);
+        tienCocCol.setVisible(false);
+        ngayttgannhatCol.setVisible(false);
+        hdonIdCol.setVisible(false);
+
+        for (int i = 0; i < paidContract.getColumns().size(); i++) {
+            final int t = i;
+            TableColumn col = (TableColumn) paidContract.getColumns().get(i);
+            col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+                @Override
+                public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+                    return new SimpleStringProperty(param.getValue().get(t).toString());
+                }
+            });
+        }
+
+        ngayNhanCol.setCellFactory(column -> {
+            return new TableCell<String, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, true);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        LocalDate d = LocalDate.parse(item, Util.SQL_DATE_TIME_FORMATTER);
+                        setText(Util.DATE_TIME_FORMATTER.format(d));
+                    }
+                }
+            };
+        });
+        ngayTraCol.setCellFactory(column -> {
+            return new TableCell<String, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, true);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        LocalDate d = LocalDate.parse(item, Util.SQL_DATE_TIME_FORMATTER);
+                        setText(Util.DATE_TIME_FORMATTER.format(d));
                     }
                 }
             };

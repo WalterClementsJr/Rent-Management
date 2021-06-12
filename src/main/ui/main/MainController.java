@@ -54,6 +54,7 @@ public class MainController implements Initializable {
     private AnchorPane lInvoice;
     private AnchorPane lMaintenance;
     private AnchorPane setting;
+    private AnchorPane statistic;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -72,10 +73,12 @@ public class MainController implements Initializable {
                 = Util.loadPane(getClass().getResource("/main/ui/listmaintenance/listmaintenance.fxml"));
         setting
                 = Util.loadPane(getClass().getResource("/main/ui/setting/setting.fxml"));
+        statistic
+                = Util.loadPane(getClass().getResource("/main/ui/statistic/statistic.fxml"));
 
         rootPane.getChildren().addAll(
                 lCustomer, lRoom, lContract, lInvoice, lMaintenance,
-                setting);
+                setting, statistic);
         showNode(rootPane.getChildren(), lContract);
     }
 
@@ -111,6 +114,11 @@ public class MainController implements Initializable {
     @FXML
     private void loadSetting(ActionEvent event) {
         showNode(rootPane.getChildren(), setting);
+    }
+    
+    @FXML
+    private void loadStat(ActionEvent event) {
+        showNode(rootPane.getChildren(), statistic);
     }
 
     @FXML

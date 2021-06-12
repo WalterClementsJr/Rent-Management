@@ -18,6 +18,7 @@
                         <Button fx:id="menuBtnMaintenance" mnemonicParsing="false" onAction="#loadListMaintenance" prefHeight="32.0" prefWidth="220.0" text="Bảo trì" />
                         <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Khách" textAlignment="CENTER" />
                         <Button fx:id="menuBtnBill" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListInvoice" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Hóa đơn" textAlignment="CENTER" />
+                        <Button fx:id="menuBtnStat" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadStat" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Thống kê" textAlignment="CENTER" />
                     </children>
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="240.0" prefWidth="200.0">

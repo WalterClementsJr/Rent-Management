@@ -27,7 +27,7 @@
                             <children>
                                 <Label text="Giới tính" />
                                 <RadioButton fx:id="btnMale" mnemonicParsing="false" text="Nam" />
-                                <RadioButton fx:id="btnFemale" mnemonicParsing="false" text="Nu" />
+                                <RadioButton fx:id="btnFemale" mnemonicParsing="false" text="Nữ" />
                                 <Group />
                             </children>
                         </VBox>

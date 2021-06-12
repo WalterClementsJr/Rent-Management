@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,6 +26,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -58,6 +61,9 @@ public class ListCustomerController implements Initializable {
     private TableView<Customer> customerTable;
 
     @FXML
+    private TextField filterField;
+
+    @FXML
     private MenuItem editMenu;
 
     @FXML
@@ -71,6 +77,10 @@ public class ListCustomerController implements Initializable {
     public static ObservableList<Customer> listOfCustomersWithNoRoom = FXCollections.observableArrayList();
     public static ObservableList<Customer> listOfCustomersWithRoom = FXCollections.observableArrayList();
     public static ObservableList<Customer> listOfOldCustomers = FXCollections.observableArrayList();
+    FilteredList<Customer> allFilteredList;
+    FilteredList<Customer> noRoomFilteredList;
+    FilteredList<Customer> withRoomFilteredList;
+    FilteredList<Customer> oldFilteredList;
 
     DatabaseHandler handler;
 
@@ -93,6 +103,16 @@ public class ListCustomerController implements Initializable {
         loadCustomersWithRoom();
         loadOldCustomers();
 
+        allFilteredList = new FilteredList<>(listOfAllCustomers);
+        noRoomFilteredList = new FilteredList<>(listOfCustomersWithNoRoom);
+        withRoomFilteredList = new FilteredList<>(listOfCustomersWithRoom);
+        oldFilteredList = new FilteredList<>(listOfOldCustomers);
+
+        setFilterFieldProperty(allFilteredList);
+        setFilterFieldProperty(noRoomFilteredList);
+        setFilterFieldProperty(withRoomFilteredList);
+        setFilterFieldProperty(oldFilteredList);
+
         loadListToTable();
     }
 
@@ -107,19 +127,29 @@ public class ListCustomerController implements Initializable {
 
     private void loadListToTable() {
         switch (comboBox.getSelectionModel().getSelectedItem()) {
-            case Util.FILTER_ALL:
-                customerTable.setItems(listOfAllCustomers);
-                break;
-            case Util.FILTER_CUSTOMER_NO_ROOM:
-                customerTable.setItems(listOfCustomersWithNoRoom);
-                break;
-            case Util.FILTER_CUSTOMER_HAS_ROOM:
-                customerTable.setItems(listOfCustomersWithRoom);
-                break;
-            case Util.FILTER_CUSTOMER_MOVED:
-                customerTable.setItems(listOfOldCustomers);
-                break;
+            case Util.FILTER_ALL -> customerTable.setItems(allFilteredList);
+            case Util.FILTER_CUSTOMER_NO_ROOM -> customerTable.setItems(noRoomFilteredList);
+            case Util.FILTER_CUSTOMER_HAS_ROOM -> customerTable.setItems(withRoomFilteredList);
+            case Util.FILTER_CUSTOMER_MOVED -> customerTable.setItems(oldFilteredList);
         }
+    }
+
+    void setFilterFieldProperty(FilteredList<Customer> f) {
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            f.setPredicate(customer -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (customer.getHoTen().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (customer.getSDT().contains(lowerCaseFilter) || customer.getCMND().contains(lowerCaseFilter)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
     }
 
     private void loadDataToList(ResultSet rs, ObservableList list) {
@@ -132,8 +162,8 @@ public class ListCustomerController implements Initializable {
                                 rs.getString("HOTEN"),
                                 rs.getBoolean("GIOITINH"),
                                 Util.SQLDateToLocalDate(rs.getDate("NGAYSINH")),
-                                rs.getString("CMND"),
-                                rs.getString("SDT")));
+                                rs.getString("SDT"),
+                                rs.getString("CMND")));
             }
             rs.close();
         } catch (SQLException ex) {
@@ -171,7 +201,6 @@ public class ListCustomerController implements Initializable {
     @FXML
     private void handleEditButton(ActionEvent event) {
         Customer selectedForEdit = customerTable.getSelectionModel().getSelectedItem();
-
         if (selectedForEdit == null) {
             CustomAlert.showErrorMessage(
                     "Chưa chọn.",
@@ -210,6 +239,8 @@ public class ListCustomerController implements Initializable {
 
     @FXML
     public void handleRefresh(ActionEvent event) {
+        filterField.clear();
+
         loadAllCustomers();
         loadCustomersWithNoRoom();
         loadCustomersWithRoom();
@@ -235,7 +266,8 @@ public class ListCustomerController implements Initializable {
 
         //  check if customer has any related data before deleting
         if (!DatabaseHandler.getInstance().isCustomerDeletable(selectedForDeletion.getId())) {
-            CustomAlert.showErrorMessage("Lỗi",
+            CustomAlert.showErrorMessage(
+                    "Lỗi",
                     "Không thể xóa khách đã/đang sử dụng dịch vụ trong hệ thống."
                     + "\nHãy xóa các thông tin liên quan và thử lại");
             return;
@@ -251,7 +283,7 @@ public class ListCustomerController implements Initializable {
                 CustomAlert.showSimpleAlert(
                         "Thành công",
                         "Đã xóa " + selectedForDeletion.getHoTen());
-                listOfAllCustomers.remove(selectedForDeletion);
+                handleRefresh(new ActionEvent());
             } else {
                 CustomAlert.showSimpleAlert(
                         "Thất bại",

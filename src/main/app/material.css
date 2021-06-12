@@ -92,7 +92,7 @@
 }
 
 .card-title {
-    -fx-font-size: 20.0px;
+    -fx-font-size: 14.0px;
     -fx-padding: 5 0 5 0;
 }
 
@@ -101,7 +101,7 @@
 }
 
 .card-subtitle {
-    -fx-font-size: 16.0px;
+    -fx-font-size: 14.0px;
     -fx-padding: 5 0 5 0;
 }
 
@@ -232,7 +232,7 @@
 
 .icon-button .text {
     -fx-font-family: 'MaterialDesignIconicFont';
-    -fx-font-size: 24px;
+    -fx-font-size: 15px;
 }
 
 /*******************************************************************************
@@ -820,7 +820,7 @@
 }
 
 .tool-bar .label {
-    -fx-font-size: 18;
+    -fx-font-size: 15;
 }
 
 .tool-bar .combo-box-base, .menu-bar .combo-base {

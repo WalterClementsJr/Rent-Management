@@ -24,8 +24,6 @@ public final class DatabaseHandler {
 
     public static void main(String[] args) {
         DatabaseHandler.getInstance();
-//        System.out.println(dbHandler.getTotalRevenueOfComplex(1));
-//        System.out.println(dbHandler.getTotalRevenueOfComplex(2));
         System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(1, LocalDate.now()));
         System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(2, LocalDate.now()));
         System.out.println(dbHandler.getTotalRevenueOfComplexInYear(1, LocalDate.now()));
@@ -669,14 +667,38 @@ public final class DatabaseHandler {
     public ResultSet getInDebtContractsWithInvoiceInfo() {
         try {
             stmt = conn.prepareStatement(
-                    "select * from viewhopdongvaextrainfo where songay>0");
-
+                    "select * from ViewHoadonvaextrainfo where songay>0");
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public ResultSet getPaidContractsWithInvoiceInfo() {
+        try {
+            stmt = conn.prepareStatement(
+                    "select * from ViewHoadonvaextrainfo where songay<=0");
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public boolean deleteInvoice(int invoiceId) {
+        try {
+            stmt = conn.prepareStatement(
+                    "DELETE FROM HOADON WHERE MAHDON=?");
+            stmt.setInt(1, invoiceId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     public boolean insertNewContract(Contract c) {
@@ -869,7 +891,9 @@ public final class DatabaseHandler {
         return null;
     }
 
-    // methods for looking up stat
+    /**
+     * Methods for looking up statistic
+     */
     public int getNumberOfCustomersInComplex(int complexId) {
         try {
             cstmt = conn.prepareCall(
