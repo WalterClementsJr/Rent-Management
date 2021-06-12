@@ -19,6 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -27,6 +29,7 @@ import main.model.Invoice;
 import main.model.InvoiceData;
 import main.ui.alert.CustomAlert;
 import main.ui.listinvoice.ListInvoiceController;
+import main.ui.main.MainController;
 import main.util.Util;
 
 public class AddInvoiceController implements Initializable {
@@ -43,6 +46,8 @@ public class AddInvoiceController implements Initializable {
     private Button save;
     @FXML
     private Button cancel;
+    @FXML
+    private Button calc;
 
     InvoiceData currentdata = null;
 
@@ -112,6 +117,11 @@ public class AddInvoiceController implements Initializable {
                 }
             }
         });
+
+        Image editimg
+                = new Image(MainController.class.getResourceAsStream(
+                        "/main/resources/icons/calculator.png"));
+        calc.setGraphic(new ImageView(editimg));
     }
 
     @FXML
@@ -203,10 +213,12 @@ public class AddInvoiceController implements Initializable {
     void handleOpenCalc(ActionEvent event) {
         try {
             Runtime.getRuntime().exec(
-                    "C:\\Windows\\System32", null,
-                    new File("C:\\Windows\\System32"));
+                    "C:\\Windows\\System32\\calc.exe", null,
+                    new File("C:\\Windows\\System32")).waitFor();
         } catch (IOException ex) {
             Logger.getLogger(ListInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AddInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
