@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="395.0" prefWidth="692.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addinvoice.AddInvoiceController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="395.0" prefWidth="692.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addinvoice.AddInvoiceController">
     <children>
         <Pane prefHeight="623.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -59,8 +59,8 @@
                            </tooltip>
                         </Button>
                         <HBox prefHeight="71.0" prefWidth="293.0" />
-                                <Button fx:id="save" mnemonicParsing="false" onAction="#handleAdd" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
-                                <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
+                                <Button fx:id="save" defaultButton="true" mnemonicParsing="false" onAction="#handleAdd" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
+                                <Button fx:id="cancel" cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
                             </children>
                         </HBox>
                     </children>

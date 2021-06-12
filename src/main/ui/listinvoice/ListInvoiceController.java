@@ -1,11 +1,8 @@
 package main.ui.listinvoice;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -124,6 +121,7 @@ public class ListInvoiceController implements Initializable {
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.initOwner(getStage());
                 stage.initModality(Modality.WINDOW_MODAL);
+                stage.setResizable(false);
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
@@ -230,6 +228,7 @@ public class ListInvoiceController implements Initializable {
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.initOwner(getStage());
                 stage.initModality(Modality.WINDOW_MODAL);
+                stage.setResizable(false);
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
@@ -502,6 +501,21 @@ public class ListInvoiceController implements Initializable {
                     } else {
                         LocalDate d = LocalDate.parse(item, Util.SQL_DATE_TIME_FORMATTER);
                         setText(Util.DATE_TIME_FORMATTER.format(d));
+                    }
+                }
+            };
+        });
+        songayCol.setCellFactory(column -> {
+            return new TableCell<String, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, true);
+
+                    if (item == null || empty) {
+                        setText(null);
+                    } else {
+                        int t = Integer.parseInt(item);
+                        setText(Math.abs(t) + "");
                     }
                 }
             };

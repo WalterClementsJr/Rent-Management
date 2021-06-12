@@ -16,7 +16,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,6 +26,7 @@ import javafx.stage.StageStyle;
 import main.app.Main;
 import main.app.settings.Setting;
 import main.ui.listcontract.ListContractController;
+import main.ui.main.MainController;
 
 public class Util {
 
@@ -132,6 +135,7 @@ public class Util {
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.initOwner(parentStage);
                 stage.initModality(Modality.WINDOW_MODAL);
+                stage.setResizable(false);                
 
                 Scene scene = new Scene(login);
                 scene.getStylesheets().add(Util.class.getResource(
@@ -161,6 +165,7 @@ public class Util {
             stage.initOwner(parentStage);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initStyle(StageStyle.DECORATED);
+            stage.setResizable(false);
 
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(Setting.getInstance().getSTYLE_SHEET());
@@ -175,6 +180,12 @@ public class Util {
             Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static void loadIconToButton(String url, Button button) {
+        Image icon = new Image(MainController.class
+                .getResourceAsStream(url));
+        button.setGraphic(new ImageView(icon));
     }
 
     public static LocalDate stringToLocalDate(String string) {

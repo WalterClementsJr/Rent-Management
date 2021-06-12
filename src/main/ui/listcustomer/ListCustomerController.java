@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -223,6 +222,7 @@ public class ListCustomerController implements Initializable {
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
             stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
 
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(getClass().getResource(

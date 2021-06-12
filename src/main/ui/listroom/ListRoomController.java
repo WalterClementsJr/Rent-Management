@@ -30,8 +30,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -45,7 +43,6 @@ import main.ui.addcontract.AddContractController;
 import main.ui.addmaintenance.AddMaintenanceController;
 import main.ui.addroom.AddRoomController;
 import main.ui.alert.CustomAlert;
-import main.ui.main.MainController;
 import main.util.MasterController;
 import main.util.Util;
 
@@ -119,15 +116,8 @@ public class ListRoomController implements Initializable {
         filter.getSelectionModel().selectFirst();
         complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
 
-        Image addimg
-                = new Image(MainController.class.getResourceAsStream(
-                        "/main/resources/icons/add.png"));
-        addComplex.setGraphic(new ImageView(addimg));
-
-        Image editimg
-                = new Image(MainController.class.getResourceAsStream(
-                        "/main/resources/icons/edit24.png"));
-        editComplex.setGraphic(new ImageView(editimg));
+        Util.loadIconToButton("/main/resources/icons/add.png", addComplex);
+        Util.loadIconToButton("/main/resources/icons/edit24.png", editComplex);
 
         allFilteredList = new FilteredList<>(listOfAllRooms);
         emptyFilteredList = new FilteredList<>(listOfEmptyRooms);
@@ -281,6 +271,7 @@ public class ListRoomController implements Initializable {
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
             stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
 
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(getClass().getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
@@ -328,6 +319,7 @@ public class ListRoomController implements Initializable {
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
             stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
 
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(getClass()
@@ -370,6 +362,7 @@ public class ListRoomController implements Initializable {
                     Stage stage = new Stage(StageStyle.DECORATED);
                     stage.initOwner(getStage());
                     stage.initModality(Modality.WINDOW_MODAL);
+                    stage.setResizable(false);
 
                     Scene scene = new Scene(parent);
                     scene.getStylesheets().add(getClass()
@@ -451,6 +444,7 @@ public class ListRoomController implements Initializable {
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.initOwner(getStage());
             stage.initModality(Modality.WINDOW_MODAL);
+            stage.setResizable(false);
 
             Scene scene = new Scene(parent);
             scene.getStylesheets().add(getClass()
@@ -547,7 +541,9 @@ public class ListRoomController implements Initializable {
                 String lowerCaseFilter = newValue.toLowerCase();
                 if (customer.getTenPhong().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
-                } else return customer.getMoTa().contains(lowerCaseFilter);
+                } else {
+                    return customer.getMoTa().contains(lowerCaseFilter);
+                }
             });
         });
     }

@@ -70,8 +70,8 @@
                         <HBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="638.0" spacing="10.0" />
                         <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="369.0" spacing="10.0">
                             <children>
-                                <Button fx:id="save" mnemonicParsing="false" onAction="#handleAdd" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
-                                <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
+                                <Button fx:id="save" defaultButton="true" mnemonicParsing="false" onAction="#handleAdd" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
+                                <Button fx:id="cancel" cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
                             </children>
                         </HBox>
                     </children>

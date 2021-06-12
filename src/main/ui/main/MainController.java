@@ -30,19 +30,25 @@ public class MainController implements Initializable {
     private VBox menu;
 
     @FXML
-    private Button menuBtnHome;
-
-    @FXML
-    private Button menuBtnCustomer;
+    private Button menuBtnContract;
 
     @FXML
     private Button menuBtnRoom;
 
     @FXML
-    private Button menuBtnPayment;
+    private Button menuBtnMaintenance;
 
     @FXML
-    private Button menuBtnMaintenance;
+    private Button menuBtnCustomer;
+
+    @FXML
+    private Button menuBtnBill;
+
+    @FXML
+    private Button menuBtnStat;
+
+    @FXML
+    private Button menuBtnSetting;
 
     @FXML
     private StackPane rootPane;
@@ -80,6 +86,22 @@ public class MainController implements Initializable {
                 lCustomer, lRoom, lContract, lInvoice, lMaintenance,
                 setting, statistic);
         showNode(rootPane.getChildren(), lContract);
+
+        // load icon to buttons
+        Util.loadIconToButton(
+                "/main/resources/icons/contract.png", menuBtnContract);
+        Util.loadIconToButton(
+                "/main/resources/icons/room.png", menuBtnRoom);
+        Util.loadIconToButton(
+                "/main/resources/icons/maintenance.png", menuBtnMaintenance);
+        Util.loadIconToButton(
+                "/main/resources/icons/customer.png", menuBtnCustomer);
+        Util.loadIconToButton(
+                "/main/resources/icons/pay.png", menuBtnBill);
+        Util.loadIconToButton(
+                "/main/resources/icons/stat.png", menuBtnStat);
+        Util.loadIconToButton(
+                "/main/resources/icons/settings.png", menuBtnSetting);
     }
 
     private Stage getStage() {
@@ -115,7 +137,7 @@ public class MainController implements Initializable {
     private void loadSetting(ActionEvent event) {
         showNode(rootPane.getChildren(), setting);
     }
-    
+
     @FXML
     private void loadStat(ActionEvent event) {
         showNode(rootPane.getChildren(), statistic);

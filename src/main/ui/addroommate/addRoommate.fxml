@@ -47,8 +47,8 @@
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="284.0" spacing="10.0">
                     <children>
-                        <Button fx:id="save" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
-                        <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
+                        <Button fx:id="save" defaultButton="true" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
+                        <Button fx:id="cancel" cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
                     </children>
                 </HBox>
             </children>

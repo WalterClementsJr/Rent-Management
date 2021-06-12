@@ -303,6 +303,7 @@ public class ListContractController implements Initializable {
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.initOwner(getStage());
                 stage.initModality(Modality.WINDOW_MODAL);
+                stage.setResizable(false);
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()
@@ -451,6 +452,7 @@ public class ListContractController implements Initializable {
                         Stage stage = new Stage(StageStyle.DECORATED);
                         stage.initOwner(getStage());
                         stage.initModality(Modality.WINDOW_MODAL);
+                        stage.setResizable(false);
 
                         Scene scene = new Scene(parent);
                         scene.getStylesheets().add(getClass()
@@ -522,6 +524,7 @@ public class ListContractController implements Initializable {
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.initOwner(getStage());
                 stage.initModality(Modality.WINDOW_MODAL);
+                stage.setResizable(false);
 
                 Scene scene = new Scene(parent);
                 scene.getStylesheets().add(getClass()

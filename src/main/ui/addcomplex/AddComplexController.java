@@ -47,7 +47,7 @@ public class AddComplexController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         dbHandler = DatabaseHandler.getInstance();
 
-        delete.setVisible(isEditing);
+        delete.setVisible(false);
     }
 
     public void loadEntries(Complex c) {
@@ -55,6 +55,7 @@ public class AddComplexController implements Initializable {
         address.setText(c.getDiaChi());
 
         isEditing = true;
+        delete.setVisible(true);
         currentComplex = c;
     }
 
