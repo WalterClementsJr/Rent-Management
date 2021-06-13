@@ -39,6 +39,8 @@ import main.model.Complex;
 import main.model.Maintenance;
 import main.ui.addmaintenance.AddMaintenanceController;
 import main.ui.alert.CustomAlert;
+import main.ui.listroom.ListRoomController;
+import main.util.MasterController;
 import main.util.Util;
 
 public class ListMaintenanceController implements Initializable {
@@ -59,10 +61,7 @@ public class ListMaintenanceController implements Initializable {
     private Button help;
 
     // extra elements
-    // TODO remove this line in production
-    ObservableList<Complex> complexList = FXCollections.observableArrayList();
-//    ObservableList<Complex> complexList = ListRoomController.complexList;
-
+    ObservableList<Complex> complexList = ListRoomController.complexList;
     ObservableList<Complex> listOfAllMaintenance = FXCollections.observableArrayList();
 
     DatabaseHandler handler;
@@ -70,14 +69,13 @@ public class ListMaintenanceController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        MasterController.getInstance().registerListMaintenanceController(this);
+
         handler = DatabaseHandler.getInstance();
         setting = Setting.getInstance();
         initTableColumns(tableView);
 
-        // TODO uncomment these lines when running in production
-//        comboBox.getItems().addAll(complexList);
-//        comboBox.getSelectionModel().selectFirst();
-        loadComplexData();
+        comboBox.setItems(complexList);
         comboBox.getSelectionModel().selectFirst();
 
         loadData();
@@ -86,28 +84,6 @@ public class ListMaintenanceController implements Initializable {
     @FXML
     private void complexChanged(ActionEvent event) {
         loadData();
-    }
-
-    private void loadComplexData() {
-        complexList.clear();
-        comboBox.getItems().clear();
-
-        String query = "SELECT * FROM KHU";
-        ResultSet rs = handler.execQuery(query);
-
-        try {
-            while (rs.next()) {
-                int id = rs.getInt("MAKHU");
-                String ten = rs.getString("TENKHU");
-                String diaChi = rs.getString("DIACHI");
-                complexList.add(new Complex(id, ten, diaChi));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListMaintenanceController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        comboBox.getItems().addAll(complexList);
     }
 
     private void loadData() {
@@ -124,23 +100,7 @@ public class ListMaintenanceController implements Initializable {
 
     private void loadAllMaintenance(int complexId) {
         listOfAllMaintenance.clear();
-        loadResultSetToList(handler.getMaintenanceFromComplex(complexId), listOfAllMaintenance);
-    }
-
-    private void loadResultSetToList(ResultSet rs, ObservableList list) {
-        list.clear();
-        try {
-            while (rs.next()) {
-                ObservableList row = FXCollections.observableArrayList();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    row.add(rs.getString(i).trim());
-                }
-                list.add(row);
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListMaintenanceController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Util.loadResultSetToList(handler.getMaintenanceFromComplex(complexId), listOfAllMaintenance);
     }
 
     private void loadListToTable() {
@@ -148,10 +108,7 @@ public class ListMaintenanceController implements Initializable {
     }
 
     @FXML
-    private void handleRefresh(ActionEvent event) {
-        // TODO remove this line in production
-        loadComplexData();
-
+    public void handleRefresh(ActionEvent event) {
         comboBox.getSelectionModel().selectFirst();
         loadData();
     }
@@ -324,5 +281,9 @@ public class ListMaintenanceController implements Initializable {
 
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
+    }
+
+    public void comboBoxSelectFirst() {
+        comboBox.getSelectionModel().selectFirst();
     }
 }

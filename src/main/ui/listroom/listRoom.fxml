@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.listroom.ListRoomController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.listroom.ListRoomController">
     <children>
         <Pane prefHeight="700.0" prefWidth="1000.0">
             <children>
@@ -47,7 +47,7 @@
                                     <children>
                                         <Label prefHeight="17.0" prefWidth="32.0" text="Lọc" />
                                         <ComboBox fx:id="filter" onAction="#filterChanged" prefWidth="143.0" />
-                              <TextField fx:id="filterField" prefWidth="215.0">
+                              <TextField fx:id="filterField" prefWidth="215.0" promptText="Tìm kiếm">
                                  <HBox.margin>
                                     <Insets left="60.0" />
                                  </HBox.margin>

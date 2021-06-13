@@ -323,15 +323,15 @@ public class ListInvoiceController implements Initializable {
         TableColumn maKhuCol
                 = new TableColumn<>("Mã khu");
         TableColumn tenKhuCol
-                = new TableColumn<>("Tên khu");
+                = new TableColumn<>("Khu");
         TableColumn maphongCol
                 = new TableColumn<>("Mã phòng");
         TableColumn tenPhongCol
-                = new TableColumn<>("Tên phòng");
+                = new TableColumn<>("Phòng");
         TableColumn makhCol
                 = new TableColumn<>("Mã khách");
         TableColumn tenkhachCol
-                = new TableColumn<>("Tên khách");
+                = new TableColumn<>("Chủ hợp đồng");
         TableColumn ngayNhanCol
                 = new TableColumn<>("Ngày nhận");
         TableColumn ngayTraCol
@@ -419,15 +419,15 @@ public class ListInvoiceController implements Initializable {
         TableColumn maKhuCol
                 = new TableColumn<>("Mã khu");
         TableColumn tenKhuCol
-                = new TableColumn<>("Tên khu");
+                = new TableColumn<>("Khu");
         TableColumn maphongCol
                 = new TableColumn<>("Mã phòng");
         TableColumn tenPhongCol
-                = new TableColumn<>("Tên phòng");
+                = new TableColumn<>("Phòng");
         TableColumn makhCol
                 = new TableColumn<>("Mã khách");
         TableColumn tenkhachCol
-                = new TableColumn<>("Tên khách");
+                = new TableColumn<>("Chủ hợp đồng");
         TableColumn ngayNhanCol
                 = new TableColumn<>("Ngày nhận");
         TableColumn ngayTraCol

@@ -59,11 +59,6 @@ public class AddComplexController implements Initializable {
         currentComplex = c;
     }
 
-    public void clearEntries() {
-        name.setText("");
-        address.setText("");
-    }
-
     @FXML
     private void handleSave(ActionEvent event) {
         Util.checkLogin(getStage());
@@ -142,15 +137,15 @@ public class AddComplexController implements Initializable {
 
     @FXML
     private void handleDeleteComplex(ActionEvent event) {
-        if (DatabaseHandler.getInstance().isComplexDeletable(currentComplex.getId())) {
+        if (!DatabaseHandler.getInstance().isComplexDeletable(currentComplex.getId())) {
             CustomAlert.showErrorMessage("Lỗi", "Không thể xóa khu nhà có phòng.");
             return;
         }
 
         Optional<ButtonType> answer
                 = CustomAlert.confirmDialog(
-                        "Xóa khách",
-                        "Bạn có chắc muốn xóa" + currentComplex.getTen() + "?").showAndWait();
+                        "Xác nhận xóa",
+                        "Bạn có chắc muốn xóa " + currentComplex.getTen() + "?").showAndWait();
         if (answer.get() == ButtonType.OK) {
             if (dbHandler.deleteComplex(currentComplex)) {
                 CustomAlert.showSimpleAlert(

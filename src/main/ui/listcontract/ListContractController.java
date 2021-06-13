@@ -107,8 +107,7 @@ public class ListContractController implements Initializable {
         MasterController.getInstance().registerListContractController(this);
         handler = DatabaseHandler.getInstance();
 
-        // TODO remove this complex loading in production
-        loadComplexData();
+        comboBox.setItems(complexList);
         comboBox.getSelectionModel().selectFirst();
 
         initContractTableColumns();
@@ -134,7 +133,10 @@ public class ListContractController implements Initializable {
         listOfActiveRoommates.clear();
         listOfOldRoommates.clear();
 
-        complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
+        try {
+            complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
+        } catch (NullPointerException ex) {
+        }
 
         loadContractData();
         loadRoommatesData();
@@ -175,31 +177,37 @@ public class ListContractController implements Initializable {
     }
 
     private void loadContractData() {
-        listOfAllContracts.clear();
-        listOfActiveContracts.clear();
-        listOfOldContracts.clear();
+        try {
+            listOfAllContracts.clear();
+            listOfActiveContracts.clear();
+            listOfOldContracts.clear();
 
-        int id = comboBox.getSelectionModel().getSelectedItem().getId();
+            int id = comboBox.getSelectionModel().getSelectedItem().getId();
 
-        loadAllContracts(id);
-        loadActiveContracts(id);
-        loadOldContracts(id);
+            loadAllContracts(id);
+            loadActiveContracts(id);
+            loadOldContracts(id);
 
-        loadContractsToTable();
+            loadContractsToTable();
+        } catch (Exception e) {
+        }
     }
 
     private void loadRoommatesData() {
-        listOfAllRoommates.clear();
-        listOfActiveRoommates.clear();
-        listOfOldRoommates.clear();
+        try {
+            listOfAllRoommates.clear();
+            listOfActiveRoommates.clear();
+            listOfOldRoommates.clear();
 
-        int id = comboBox.getSelectionModel().getSelectedItem().getId();
+            int id = comboBox.getSelectionModel().getSelectedItem().getId();
 
-        loadAllRoommates(id);
-        loadActiveRoommates(id);
-        loadOldRoommates(id);
+            loadAllRoommates(id);
+            loadActiveRoommates(id);
+            loadOldRoommates(id);
 
-        loadRoommatesToTable();
+            loadRoommatesToTable();
+        } catch (Exception e) {
+        }
     }
 
     public void loadAllContracts(int id) {
@@ -329,8 +337,13 @@ public class ListContractController implements Initializable {
 
     @FXML
     public void handleRefresh(ActionEvent event) {
+        comboBox.getSelectionModel().selectFirst();
         loadContractData();
         loadRoommatesData();
+    }
+
+    public void comboBoxSelectFirst() {
+        comboBox.getSelectionModel().selectFirst();
     }
 
     @FXML

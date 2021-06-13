@@ -32,6 +32,8 @@ import javafx.util.StringConverter;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.ui.alert.CustomAlert;
+import main.ui.listroom.ListRoomController;
+import main.util.MasterController;
 
 /**
  * FXML Controller class
@@ -61,7 +63,7 @@ public class StatisticController implements Initializable {
     @FXML
     private NumberAxis yAxis;
 
-    ObservableList<Complex> complexList = FXCollections.observableArrayList();
+    ObservableList<Complex> complexList = ListRoomController.complexList;
 
     ObservableList<PieChart.Data> customerChartData = FXCollections.observableArrayList();
 
@@ -69,12 +71,16 @@ public class StatisticController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        MasterController.getInstance().registerStatisticController(this);
+        handler = DatabaseHandler.getInstance();
+
         filter.getItems().addAll("Tháng", "Năm");
         filter.getSelectionModel().selectFirst();
 
         customerChart.setTitle("SỐ KHÁCH ĐANG Ở TRONG KHU");
         customerChart.setStartAngle(90);
-        
+        customerChart.setData(customerChartData);
+
         revenueChart.setAnimated(false);
 
         datePicker.getEditor().setEditable(false);
@@ -102,15 +108,14 @@ public class StatisticController implements Initializable {
         });
         datePicker.setValue(LocalDate.now());
 
-        handler = DatabaseHandler.getInstance();
-        loadComplexData();
         loadCustomerChart();
-
         loadRevenueData();
     }
 
     @FXML
     void loadCustomerChart() {
+        customerChart.getData().clear();
+
         complexList.forEach(c -> {
             int nOfCustomer = handler.getNumberOfCustomersInComplex(c.getId());
             if (nOfCustomer == -1) {
@@ -124,16 +129,19 @@ public class StatisticController implements Initializable {
 
         customerChartData.forEach(data
                 -> data.nameProperty().bind(Bindings.concat(
-                        data.getName(), ": ", (int) data.getPieValue(), " khách")
+                        data.getName(), ": ", (int) data.getPieValue(), " người")
                 )
         );
-
-        customerChart.getData().addAll(customerChartData);
     }
 
     @FXML
     void filterChanged(ActionEvent e) {
         loadRevenueData();
+    }
+
+    @FXML
+    public void handleRefresh(ActionEvent e) {
+        loadCustomerChart();
     }
 
     @FXML
@@ -143,8 +151,10 @@ public class StatisticController implements Initializable {
 
     void loadRevenueData() {
         switch (filter.getSelectionModel().getSelectedItem()) {
-            case "Tháng" -> loadRevenueMonth();
-            case "Năm" -> loadRevenueYear();
+            case "Tháng" ->
+                loadRevenueMonth();
+            case "Năm" ->
+                loadRevenueYear();
         }
     }
 
@@ -158,9 +168,9 @@ public class StatisticController implements Initializable {
                         d.getYear()));
 
         XYChart.Series complexSeries = new XYChart.Series();
-        complexSeries.setName("Tháng %d NĂM %d".formatted(
-                        d.getMonthValue(),
-                        d.getYear()));
+        complexSeries.setName("Tháng %d Năm %d".formatted(
+                d.getMonthValue(),
+                d.getYear()));
 
         complexList.forEach(c -> {
             BigDecimal rev = handler.getTotalRevenueOfComplexInMonth(c.getId(), d);
@@ -197,21 +207,5 @@ public class StatisticController implements Initializable {
             }
         });
         revenueChart.getData().add(complexSeries);
-    }
-
-    private void loadComplexData() {
-        complexList.clear();
-        ResultSet rs = handler.execQuery("SELECT * FROM KHU");
-        try {
-            while (rs.next()) {
-                complexList.add(new Complex(
-                        rs.getInt("MAKHU"),
-                        rs.getString("TENKHU"),
-                        rs.getString("DIACHI")));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(StatisticController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }

@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.main.MainController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.main.MainController">
     <left>
         <VBox fx:id="menu" alignment="TOP_CENTER" prefHeight="700.0" prefWidth="192.0" BorderPane.alignment="CENTER">
             <children>
                 <Label prefHeight="127.0" prefWidth="200.0" />
                 <VBox prefHeight="319.0" prefWidth="175.0">
                     <children>
-                        <Button fx:id="menuBtnContract" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListContract" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Hợp đồng" textAlignment="CENTER">
+                        <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Khách" textAlignment="CENTER">
                      <font>
                         <Font size="13.0" />
                      </font></Button>
@@ -26,7 +26,7 @@
                      <font>
                         <Font size="13.0" />
                      </font></Button>
-                        <Button fx:id="menuBtnCustomer" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListCustomer" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Khách" textAlignment="CENTER">
+                        <Button fx:id="menuBtnContract" contentDisplay="TOP" mnemonicParsing="false" onAction="#loadListContract" prefHeight="50.0" prefWidth="200.0" style="-fx-border-color: #f4f4f4;" styleClass="default" text="Hợp đồng" textAlignment="CENTER">
                      <font>
                         <Font size="13.0" />
                      </font></Button>

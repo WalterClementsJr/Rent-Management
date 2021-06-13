@@ -110,11 +110,13 @@ public class ListRoomController implements Initializable {
         initRoomTableColumns(roomTable);
 
         loadComplexData();
+        comboBox.setItems(complexList);
         comboBox.getSelectionModel().selectFirst();
+        complexTooltip.setText(
+                comboBox.getSelectionModel().getSelectedItem().getDescription());
 
         filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_ROOM_EMPTY, Util.FILTER_ROOM_OCCUPIED);
         filter.getSelectionModel().selectFirst();
-        complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
 
         Util.loadIconToButton("/main/resources/icons/add.png", addComplex);
         Util.loadIconToButton("/main/resources/icons/edit24.png", editComplex);
@@ -141,8 +143,11 @@ public class ListRoomController implements Initializable {
         listOfAllRooms.clear();
         listOfEmptyRooms.clear();
         listOfOccupiedRooms.clear();
-        complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
 
+        try {
+            complexTooltip.setText(comboBox.getSelectionModel().getSelectedItem().getDescription());
+        } catch (NullPointerException ex) {
+        }
         loadData();
     }
 
@@ -152,16 +157,17 @@ public class ListRoomController implements Initializable {
     }
 
     private void loadData() {
-        Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
+        try {
+            Complex chosenComplex = comboBox.getSelectionModel().getSelectedItem();
+            listOfAllRooms.clear();
+            listOfEmptyRooms.clear();
+            listOfOccupiedRooms.clear();
 
-        listOfAllRooms.clear();
-        listOfEmptyRooms.clear();
-        listOfOccupiedRooms.clear();
-
-        loadAllRooms(chosenComplex.getId());
-        loadEmptyRooms(chosenComplex.getId());
-        loadOccupiedRooms(chosenComplex.getId());
-
+            loadAllRooms(chosenComplex.getId());
+            loadEmptyRooms(chosenComplex.getId());
+            loadOccupiedRooms(chosenComplex.getId());
+        } catch (Exception e) {
+        }
     }
 
     private void loadListToTable() {
@@ -176,11 +182,7 @@ public class ListRoomController implements Initializable {
     }
 
     private void loadAllRooms(int complexId) {
-        loadResultSetToList(handler.getEmptyRoomsFromComplex(complexId), listOfEmptyRooms);
-        loadResultSetToList(handler.getOccuppiedRoomsFromComplex(complexId), listOfOccupiedRooms);
-        listOfAllRooms.clear();
-        listOfAllRooms.addAll(listOfEmptyRooms);
-        listOfAllRooms.addAll(listOfOccupiedRooms);
+        loadResultSetToList(handler.getAllRoomsFromComplex(complexId), listOfAllRooms);
     }
 
     private void loadEmptyRooms(int complexId) {
@@ -189,6 +191,41 @@ public class ListRoomController implements Initializable {
 
     private void loadOccupiedRooms(int complexId) {
         loadResultSetToList(handler.getOccuppiedRoomsFromComplex(complexId), listOfOccupiedRooms);
+    }
+
+    private void loadComplexData() {
+        complexList.clear();
+
+        ResultSet rs = handler.execQuery("SELECT * FROM KHU");
+
+        try {
+            while (rs.next()) {
+                int id = rs.getInt("MAKHU");
+                String ten = rs.getString("TENKHU");
+                String diaChi = rs.getString("DIACHI");
+                complexList.add(new Complex(id, ten, diaChi));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        comboBox.getSelectionModel().selectFirst();
+
+        // select combobox from listcontract and listmaintenance
+        try {
+            MasterController.getInstance().getListContractController().comboBoxSelectFirst();
+            MasterController.getInstance().getListMaintenanceController().comboBoxSelectFirst();
+        } catch (NullPointerException e) {
+        }
+    }
+
+    @FXML
+    private void handleRefresh(ActionEvent event) {
+        filterField.clear();
+
+        loadComplexData();
+        loadData();
+        loadListToTable();
     }
 
     private void loadResultSetToList(ResultSet rs, ObservableList list) {
@@ -210,35 +247,6 @@ public class ListRoomController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    private void loadComplexData() {
-        complexList.clear();
-        comboBox.getItems().clear();
-
-        String query = "SELECT * FROM KHU";
-        ResultSet rs = handler.execQuery(query);
-
-        try {
-            while (rs.next()) {
-                int id = rs.getInt("MAKHU");
-                String ten = rs.getString("TENKHU");
-                String diaChi = rs.getString("DIACHI");
-                complexList.add(new Complex(id, ten, diaChi));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListRoomController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        comboBox.getItems().addAll(complexList);
-    }
-
-    @FXML
-    private void handleRefresh(ActionEvent event) {
-        filterField.clear();
-
-        loadData();
-        loadListToTable();
     }
 
     @FXML

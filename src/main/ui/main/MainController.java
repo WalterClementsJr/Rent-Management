@@ -85,7 +85,7 @@ public class MainController implements Initializable {
         rootPane.getChildren().addAll(
                 lCustomer, lRoom, lContract, lInvoice, lMaintenance,
                 setting, statistic);
-        showNode(rootPane.getChildren(), lContract);
+        showNode(rootPane.getChildren(), lCustomer);
 
         // load icon to buttons
         Util.loadIconToButton(
@@ -141,6 +141,10 @@ public class MainController implements Initializable {
     @FXML
     private void loadStat(ActionEvent event) {
         showNode(rootPane.getChildren(), statistic);
+        try {
+            MasterController.getInstance().getStatisticController().handleRefresh(new ActionEvent());
+        } catch (NullPointerException e) {
+        }
     }
 
     @FXML

@@ -6,6 +6,7 @@ import main.ui.listcustomer.ListCustomerController;
 import main.ui.listmaintenance.ListMaintenanceController;
 import main.ui.listroom.ListRoomController;
 import main.ui.main.MainController;
+import main.ui.statistic.StatisticController;
 
 public final class MasterController {
 
@@ -16,6 +17,8 @@ public final class MasterController {
     private ListRoomController listRoomController = null;
     private ListContractController listContractController = null;
     private ListMaintenanceController listMaintenanceController = null;
+    private StatisticController statController = null;
+    
 
     public MainController getMainController() {
         return mainController;
@@ -35,6 +38,10 @@ public final class MasterController {
 
     public ListMaintenanceController getListMaintenanceController() {
         return listMaintenanceController;
+    }
+    
+    public StatisticController getStatisticController() {
+        return statController;
     }
 
     public static MasterController getInstance() {
@@ -58,6 +65,14 @@ public final class MasterController {
 
     public void registerListContractController(ListContractController con) {
         this.listContractController = con;
+    }
+    
+    public void registerListMaintenanceController(ListMaintenanceController con) {
+        this.listMaintenanceController = con;
+    }
+    
+    public void registerStatisticController(StatisticController con) {
+        this.statController = con;
     }
 
     public void ListContractControllerRefresh() {
