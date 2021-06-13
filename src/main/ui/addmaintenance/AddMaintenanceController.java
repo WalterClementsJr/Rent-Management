@@ -186,6 +186,9 @@ public class AddMaintenanceController implements Initializable {
         if (desc.getText().isBlank()) {
             CustomAlert.showErrorMessage("Mô tả trống", "Hãy nhập sơ lược thông tin sửa chữa/bảo trì");
             return false;
+        } else if (desc.getText().length() > 100) {
+            CustomAlert.showErrorMessage("Mô tả lớn hơn 100 ký tự", "Hãy nhập sơ lược thông tin sửa chữa/bảo trì (ngắn hơn 100 ký tự)");
+            return false;
         } else if (price.getText().isBlank()) {
             CustomAlert.showErrorMessage("Chưa nhập chi phí", "Hãy nhập đầy đủ thông tin");
             return false;

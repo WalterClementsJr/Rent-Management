@@ -76,7 +76,7 @@ public class AddComplexController implements Initializable {
         }
 
         String cName = name.getText().trim();
-        String cAddr = address.getText().trim();
+        String cAddr = !address.getText().isBlank() ? address.getText().trim() : "";
 
         if (dbHandler.isComplexExist(-1, cName)) {
             CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
@@ -106,7 +106,7 @@ public class AddComplexController implements Initializable {
         }
 
         String cName = name.getText().trim();
-        String cAddr = address.getText().trim();
+        String cAddr = !address.getText().isBlank() ? address.getText().trim() : "";
 
         if (dbHandler.isComplexExist(currentComplex.getId(), cName)) {
             CustomAlert.showErrorMessage("Tên khu đã tồn tại", "Hãy nhập tên khác");
@@ -170,8 +170,8 @@ public class AddComplexController implements Initializable {
         if (name.getText().isBlank()) {
             CustomAlert.showErrorMessage("Tên khu trống", "Hãy nhập tên khu");
             return false;
-        } else if (address.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Địa chỉ trống", "Hãy nhập địa chỉ");
+        } else if (address.getText().length() > 100) {
+            CustomAlert.showErrorMessage("Địa chỉ lớn hơn 100 ký tự", "Hãy nhập lại địa chỉ (ngắn hơn 100 ký tự)");
             return false;
         }
         return true;

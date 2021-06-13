@@ -195,7 +195,7 @@ public class ListCustomerController implements Initializable {
     private void handleAddButton(ActionEvent event) {
         Stage stage = (Stage) Util.loadWindow(getClass().getResource(
                 "/main/ui/addcustomer/addCustomer.fxml"),
-                "Add New Customer", getStage());
+                "Thêm khách", getStage());
         stage.setOnHiding((e) -> {
             handleRefresh(new ActionEvent());
         });

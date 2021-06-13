@@ -24,14 +24,9 @@ public final class DatabaseHandler {
 
     public static void main(String[] args) {
         DatabaseHandler.getInstance();
-        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(1, LocalDate.now()));
-        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(2, LocalDate.now()));
-        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(1, LocalDate.now()));
-        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(2, LocalDate.now()));
-        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(3, LocalDate.now()));
-        System.out.println(dbHandler.getTotalRevenueOfComplexInMonth(4, LocalDate.now()));
-        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(3, LocalDate.now()));
-        System.out.println(dbHandler.getTotalRevenueOfComplexInYear(4, LocalDate.now()));
+        System.out.println(dbHandler.isCMNDExist(1, "000000000000"));
+        System.out.println(dbHandler.isCMNDExist(-1, "000000000001"));
+
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -99,6 +94,13 @@ public final class DatabaseHandler {
         }
     }
 
+    /**
+     *
+     * @param id -1 là kiểm tra lúc thêm, không thì kiểm tra nếu id trùng nếu
+     * trùng thì là chính nó
+     * @param cmnd
+     * @return
+     */
     public boolean isCMNDExist(int id, String cmnd) {
         try {
             stmt = conn.prepareStatement(
@@ -107,11 +109,16 @@ public final class DatabaseHandler {
             ResultSet rs = stmt.executeQuery();
             int makh;
 
-            if (rs.next()) {
+            if (!rs.next()) {
+                System.out.println("doesnt have anything");
+//                if (id == -1) {
+//                    return true;
+//                }
+                return false;
+            } else {
                 if (id == -1) {
                     return true;
                 }
-
                 do {
                     makh = rs.getInt("MAKH");
                     if (id == makh) {
@@ -119,8 +126,6 @@ public final class DatabaseHandler {
                     }
                 } while (rs.next());
                 rs.close();
-                return true;
-            } else {
                 return false;
             }
         } catch (SQLException ex) {
@@ -675,7 +680,7 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public ResultSet getPaidContractsWithInvoiceInfo() {
         try {
             stmt = conn.prepareStatement(
@@ -687,7 +692,7 @@ public final class DatabaseHandler {
         }
         return null;
     }
-    
+
     public boolean deleteInvoice(int invoiceId) {
         try {
             stmt = conn.prepareStatement(

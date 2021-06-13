@@ -323,13 +323,16 @@ public class AddRoomController implements Initializable {
             CustomAlert.showErrorMessage("Số người trống", "Hãy nhập số người ở tối đa");
             return false;
         } else if (price.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Giá phòng trống", "");
+            CustomAlert.showErrorMessage("Giá phòng trống", "Hãy nhập lại");
             return false;
         } else if (deposit.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Tiền cọc trống", "");
+            CustomAlert.showErrorMessage("Tiền cọc trống", "Hãy nhập lại");
             return false;
         } else if (size.getText().isBlank()) {
-            CustomAlert.showErrorMessage("Diện tích trống", "");
+            CustomAlert.showErrorMessage("Diện tích trống", "Hãy nhập lại");
+            return false;
+        } else if (desc.getText().length() > 100) {
+            CustomAlert.showErrorMessage("Mô tả quá dài", "Hãy nhập lại mô tả (ngắn hơn 100 ký tự)");
             return false;
         }
         return true;

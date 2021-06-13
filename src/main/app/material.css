@@ -52,7 +52,7 @@
     -fx-background-color: -dark;
     /*default font */
     -fx-font-family: 'Roboto Medium';
-    -fx-font-size: 14.0px;
+    -fx-font-size: 13.0px;
     -fx-disabled-opacity: 0.6;
     /*default colors */
     -swatch-grey: rgb(200.0, 200.0, 200.0);
@@ -377,7 +377,7 @@
 .title-bar .title-label {
     -fx-padding: 0 10 0 10;
     -fx-alignment: center;
-    -fx-font-size: 36;
+    -fx-font-size: 20;
     -fx-font-weight: bolder;
 }
 

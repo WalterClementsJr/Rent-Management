@@ -162,21 +162,21 @@ public class AddCustomerController implements Initializable {
         String customerName = Util.chuanHoaTen(name.getText().trim());
         boolean customerSex = sex.getSelectedToggle().equals(btnFemale);
         LocalDate customerBDay = datePicker.getValue();
-        String customerCMND = sdt.getText().trim();
-        String customerSDT = cmnd.getText().trim();
+        String customerCMND = cmnd.getText().trim();
+        String customerSDT = sdt.getText().trim();
 
         if (dbHandler.isCMNDExist(-1, customerCMND)) {
             CustomAlert.showErrorMessage(
                     "CMND đã tồn tại",
-                    "Số CMND của %s đã tồn tại.".formatted(customerName));
+                    "Số CMND của %s đã tồn tại".formatted(customerName));
             return;
         }
         Customer customer = new Customer(
                 customerName,
                 customerSex,
                 customerBDay,
-                customerCMND,
-                customerSDT);
+                customerSDT,
+                customerCMND);
 
         if (dbHandler.insertNewCustomer(customer)) {
             CustomAlert.showSimpleAlert(
@@ -208,7 +208,7 @@ public class AddCustomerController implements Initializable {
         if (dbHandler.isCMNDExist(currentCustomer.getId(), customerCMND)) {
             CustomAlert.showSimpleAlert(
                     "CMND đã tồn tại",
-                    "Số CMND của %s đã tồn tại.");
+                    "Số CMND của %s đã tồn tại.".formatted(currentCustomer.getHoTen()));
             return;
         }
 
