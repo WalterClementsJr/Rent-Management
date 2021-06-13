@@ -24,9 +24,10 @@ public final class DatabaseHandler {
 
     public static void main(String[] args) {
         DatabaseHandler.getInstance();
-        System.out.println(dbHandler.isCMNDExist(1, "000000000000"));
-        System.out.println(dbHandler.isCMNDExist(-1, "000000000001"));
-
+        System.out.println(dbHandler.isRoomNameExist(3, 1, "A3"));
+        System.out.println(dbHandler.isRoomNameExist(1, 1, "A3"));
+        
+        System.out.println(dbHandler.isRoomNameExist(-1, 1, "A3"));
     }
 
     private static DatabaseHandler dbHandler = null;
@@ -110,10 +111,6 @@ public final class DatabaseHandler {
             int makh;
 
             if (!rs.next()) {
-                System.out.println("doesnt have anything");
-//                if (id == -1) {
-//                    return true;
-//                }
                 return false;
             } else {
                 if (id == -1) {
@@ -126,7 +123,7 @@ public final class DatabaseHandler {
                     }
                 } while (rs.next());
                 rs.close();
-                return false;
+                return true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,21 +140,23 @@ public final class DatabaseHandler {
             ResultSet rs = stmt.executeQuery();
             int maphong;
 
-            if (rs.next()) {
+            if (!rs.next()) {
+                return false;
+            } else {
+                System.out.println("result set found");
+                
                 if (roomId == -1) {
                     return true;
                 }
-
                 do {
                     maphong = rs.getInt("MAPHONG");
+                    System.out.println(maphong);
                     if (roomId == maphong) {
                         return false;
                     }
                 } while (rs.next());
                 rs.close();
                 return true;
-            } else {
-                return false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);

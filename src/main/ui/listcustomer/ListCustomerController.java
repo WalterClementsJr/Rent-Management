@@ -280,7 +280,7 @@ public class ListCustomerController implements Initializable {
         Optional<ButtonType> answer
                 = CustomAlert.confirmDialog(
                         "Xóa khách",
-                        "Bạn có chắc muốn xóa" + selectedForDeletion.getHoTen() + "?"
+                        "Bạn có chắc muốn xóa " + selectedForDeletion.getHoTen() + "?"
                 ).showAndWait();
         if (answer.get() == ButtonType.OK) {
             if (handler.deleteCustomer(selectedForDeletion)) {
