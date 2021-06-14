@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.listinvoice.ListInvoiceController">
+    <children>
+        <Pane prefHeight="700.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <VBox prefHeight="700.0" prefWidth="1000.0">
+                    <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" />
+                  <TabPane prefHeight="607.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab text="Đã trả đủ">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="paidContract" prefHeight="171.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <contextMenu>
+                                          <ContextMenu>
+                                             <items>
+                                                <MenuItem fx:id="refresh1" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
+                                                <MenuItem fx:id="addInvoice1" mnemonicParsing="false" onAction="#handleAddInvoice1" text="Thêm hóa đơn" />
+                                                <MenuItem fx:id="delete1" mnemonicParsing="false" onAction="#handleDeleteInvoice1" text="Xóa hóa đơn này" />
+                                             </items>
+                                          </ContextMenu>
+                                       </contextMenu>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab text=" Còn nợ">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                          <TableView fx:id="indebtContract" prefHeight="171.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                              <contextMenu>
+                                                  <ContextMenu>
+                                                      <items>
+                                                          <MenuItem fx:id="refresh" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
+                                                          <MenuItem fx:id="addInvoice" mnemonicParsing="false" onAction="#handleAddInvoice" text="Thêm hóa đơn" />
+                                                          <MenuItem fx:id="delete" mnemonicParsing="false" onAction="#handleDeleteInvoice" text="Xóa hóa đơn này" />                                        
+                                                      </items>
+                                                  </ContextMenu>
+                                              </contextMenu>
+                                          </TableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>

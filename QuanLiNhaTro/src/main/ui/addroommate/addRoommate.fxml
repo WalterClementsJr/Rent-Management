@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="357.0" prefWidth="511.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.addroommate.AddRoommateController">
+    <children>
+        <VBox layoutX="31.0" prefHeight="357.0" prefWidth="449.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox fx:id="box" alignment="CENTER_LEFT" prefHeight="103.0" prefWidth="562.0">
+                    <children>
+                        <Label prefHeight="40.0" prefWidth="88.0" text="Tìm khách">
+                            <font>
+                                <Font size="13.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="178.0" prefWidth="463.0" spacing="20.0">
+                    <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="132.0" prefWidth="296.0">
+                            <children>
+                                <Label text="Từ ngày">
+                                    <font>
+                                        <Font name="Arial" size="15.0" />
+                                    </font>
+                                </Label>
+                                <DatePicker fx:id="startDate" editable="false" prefHeight="25.0" prefWidth="196.0" />
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER_LEFT" prefHeight="132.0" prefWidth="287.0">
+                            <children>
+                                <Label text="Đến ngày">
+                                    <font>
+                                        <Font name="Arial" size="15.0" />
+                                    </font>
+                                </Label>
+                                <DatePicker fx:id="endDate" prefHeight="25.0" prefWidth="213.0" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="284.0" spacing="10.0">
+                    <children>
+                        <Button fx:id="save" defaultButton="true" mnemonicParsing="false" onAction="#handleSave" prefHeight="32.0" prefWidth="79.0" text="Lưu" />
+                        <Button fx:id="cancel" cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefHeight="32.0" prefWidth="75.0" text="Hủy" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
