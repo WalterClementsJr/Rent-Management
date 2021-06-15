@@ -134,12 +134,14 @@ public class AddContractController implements Initializable {
                 }
             }
         });
-        // disable dates after startdate
+
+        // disable dates after startdate and today
         endDate.setDayCellFactory(param -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 setDisable(empty || date.compareTo(startDate.getValue()) <= 0);
+                setDisable(empty || date.compareTo(LocalDate.now()) <= 0);
             }
         });
         // deposit field format
@@ -162,7 +164,7 @@ public class AddContractController implements Initializable {
 
     private void loadCustomer() {
         list.addAll(ListCustomerController.listOfCustomersWithNoRoom);
-        findCustomer = new AutoCompleteTextField(list);
+        findCustomer = new AutoCompleteTextField<>(list);
     }
 
     private boolean checkEntries() {
@@ -206,7 +208,7 @@ public class AddContractController implements Initializable {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 setDisable(empty || date.compareTo(c.getNgayTra()) < 0);
-                setDisable(empty || date.compareTo(startDate.getValue()) < 0);
+//                setDisable(empty || date.compareTo(startDate.getValue()) < 0);
             }
         });
 
@@ -242,6 +244,12 @@ public class AddContractController implements Initializable {
                 endDate.getValue(),
                 new BigDecimal(deposit.getText().trim()));
 
+        if (handler.isContractOverlap(-1, 6, con.getNgayNhan(), con.getNgayTra())) {
+            CustomAlert.showErrorMessage(
+                    "Lỗi",
+                    "Không thêm được hợp đồng do trùng thời hạn của một hợp đồng khác");
+            return;
+        }
         if (handler.insertNewContract(con)) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm hợp đồng");
@@ -281,6 +289,16 @@ public class AddContractController implements Initializable {
         currentContract.setNgayTra(endDate.getValue());
         currentContract.setTienCoc(new BigDecimal(deposit.getText().trim()));
 
+        if (handler.isContractOverlap(
+                currentContract.getId(),
+                currentContract.getMaPhong(),
+                startDate.getValue(),
+                endDate.getValue())) {
+            CustomAlert.showErrorMessage(
+                    "Lỗi",
+                    "Không sửa được hợp đồng do trùng thời hạn của một hợp đồng khác");
+            return;
+        }
         Optional<ButtonType> answer
                 = CustomAlert.confirmDialog(
                         "Chỉnh sửa hợp đồng",

@@ -49,6 +49,7 @@ public class AddMaintenanceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // date format
+        date.setValue(LocalDate.now());
         date.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d-M-yyyy");
 

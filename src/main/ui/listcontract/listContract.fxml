@@ -49,10 +49,11 @@
                                                         <ContextMenu>
                                                             <items>
                                                                 <MenuItem fx:id="refreshMenu" mnemonicParsing="false" onAction="#handleRefresh" text="Làm mới" />
-                                                                <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditContract" text="Chỉnh sửa" />
+                                                                <MenuItem fx:id="addInvoice" mnemonicParsing="false" onAction="#handleAddInvoice" text="Thêm hóa đơn" />
+                                                                <MenuItem fx:id="editMenu" mnemonicParsing="false" onAction="#handleEditContract" text="Gia hạn" />
                                                                 <MenuItem fx:id="addRoommate" mnemonicParsing="false" onAction="#handleAddRoommate" text=" Thêm khách ở ghép" />
-                                                                <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Xóa" />
                                                                 <MenuItem fx:id="returnMenu" mnemonicParsing="false" onAction="#handleReturn" text="Trả phòng" />
+                                                                <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#handleDeleteButton" text="Xóa" />
                                                             </items>
                                                         </ContextMenu>
                                                     </contextMenu>

@@ -3,8 +3,6 @@ package main.ui.listmaintenance;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -62,7 +60,7 @@ public class ListMaintenanceController implements Initializable {
 
     // extra elements
     ObservableList<Complex> complexList = ListRoomController.complexList;
-    ObservableList<Complex> listOfAllMaintenance = FXCollections.observableArrayList();
+    ObservableList listOfAllMaintenance = FXCollections.observableArrayList();
 
     DatabaseHandler handler;
     Setting setting;
@@ -94,7 +92,6 @@ public class ListMaintenanceController implements Initializable {
             loadAllMaintenance(chosenComplex.getId());
             loadListToTable();
         } catch (NullPointerException ex) {
-            return;
         }
     }
 

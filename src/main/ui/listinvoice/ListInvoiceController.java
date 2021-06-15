@@ -308,7 +308,6 @@ public class ListInvoiceController implements Initializable {
     }
 
     public void loadAllInvoices() {
-        // TODO load new sql function for payment
         Util.loadResultSetToList(
                 handler.getInDebtContractsWithInvoiceInfo(),
                 listOfInDebtInvoices);

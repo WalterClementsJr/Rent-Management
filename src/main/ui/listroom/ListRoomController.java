@@ -112,13 +112,13 @@ public class ListRoomController implements Initializable {
         loadComplexData();
         comboBox.setItems(complexList);
         comboBox.getSelectionModel().selectFirst();
-        
+
         try {
-        complexTooltip.setText(
-                comboBox.getSelectionModel().getSelectedItem().getDescription());
+            complexTooltip.setText(
+                    comboBox.getSelectionModel().getSelectedItem().getDescription());
         } catch (NullPointerException e) {
         }
-        
+
         filter.getItems().addAll(Util.FILTER_ALL, Util.FILTER_ROOM_EMPTY, Util.FILTER_ROOM_OCCUPIED);
         filter.getSelectionModel().selectFirst();
 
@@ -224,7 +224,7 @@ public class ListRoomController implements Initializable {
     }
 
     @FXML
-    private void handleRefresh(ActionEvent event) {
+    public void handleRefresh(ActionEvent event) {
         filterField.clear();
 
         loadComplexData();
@@ -359,7 +359,7 @@ public class ListRoomController implements Initializable {
             return;
         }
 
-        // if room is empty
+        // only add contract for empty room
         for (Room r : listOfEmptyRooms) {
             if (r.equals(selected)) {
                 // load add contract pane
@@ -396,9 +396,9 @@ public class ListRoomController implements Initializable {
                 }
             }
         }
-        // room is not empty, can't make contract -> display error
+
         CustomAlert.showErrorMessage(
-                "Không thể thực hiện", "Phòng đã có hợp đồng");
+                "Không thể thực hiện", "Phòng đang có hợp đồng");
     }
 
     @FXML

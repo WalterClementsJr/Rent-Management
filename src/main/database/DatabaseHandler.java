@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.CallableStatement;
 import java.sql.Types;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.model.Complex;
@@ -24,16 +25,18 @@ public final class DatabaseHandler {
 
     public static void main(String[] args) {
         DatabaseHandler.getInstance();
-        System.out.println(dbHandler.isRoomDeletable(7));
-        System.out.println(dbHandler.isRoomDeletable(1));
+//        System.out.println(dbHandler.isContractOverlap(
+//                6,
+//                LocalDate.parse("2021-07-1", Util.SQL_DATE_TIME_FORMATTER),
+//                LocalDate.parse("2021-07-14", Util.SQL_DATE_TIME_FORMATTER)
+//        ));
 
-        
     }
 
     private static DatabaseHandler dbHandler = null;
 
     private static final String DB_URL
-            = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=NhaTro";
+            = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=NhaTro2";
 
     private Connection conn = null;
     private CallableStatement cstmt = null;
@@ -697,6 +700,24 @@ public final class DatabaseHandler {
         return false;
     }
 
+    public boolean isContractOverlap(int mahdong, int maphong, LocalDate start, LocalDate end) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.isphongcohopdongtrong(?,?,?,?) }");
+            cstmt.registerOutParameter(1, Types.BOOLEAN);
+            cstmt.setInt(2, mahdong);
+            cstmt.setInt(3, maphong);
+            cstmt.setDate(4, Util.LocalDateToSQLDate(start));
+            cstmt.setDate(5, Util.LocalDateToSQLDate(end));
+
+            cstmt.execute();
+            return cstmt.getBoolean(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public boolean insertNewContract(Contract c) {
         try {
             stmt = conn.prepareStatement(
@@ -801,6 +822,22 @@ public final class DatabaseHandler {
         return false;
     }
 
+    public boolean endContractAtDate(int mahdong, LocalDate ngaytra) {
+        try {
+            stmt = conn.prepareStatement(
+                    "UPDATE hopdong SET ngaytra=? WHERE MAHDONG=?");
+            stmt.setDate(
+                    1, Util.LocalDateToSQLDate(ngaytra));
+            stmt.setInt(
+                    2, mahdong);
+            return (stmt.executeUpdate() > 0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public boolean insertNewInvoice(Invoice invoice) {
         try {
             stmt = conn.prepareStatement(
@@ -889,8 +926,9 @@ public final class DatabaseHandler {
 
     /**
      * Methods for looking up statistic
+     *
      * @param complexId
-     * @return 
+     * @return
      */
     public int getNumberOfCustomersInComplex(int complexId) {
         try {

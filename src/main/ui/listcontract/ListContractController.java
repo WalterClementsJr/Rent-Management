@@ -38,9 +38,12 @@ import main.app.settings.Setting;
 import main.database.DatabaseHandler;
 import main.model.Complex;
 import main.model.Contract;
+import main.model.InvoiceData;
 import main.ui.addcontract.AddContractController;
+import main.ui.addinvoice.AddInvoiceController;
 import main.ui.addroommate.AddRoommateController;
 import main.ui.alert.CustomAlert;
+import main.ui.listinvoice.ListInvoiceController;
 import main.ui.listroom.ListRoomController;
 import main.util.MasterController;
 import main.util.Util;
@@ -283,21 +286,21 @@ public class ListContractController implements Initializable {
             return;
         }
 
-        ObservableList row;
+        ObservableList selectedRow;
         try {
-            row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
-            if (row == null) {
+            selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
+            if (selectedRow == null) {
                 CustomAlert.showErrorMessage(
                         "Chưa chọn.", "Hãy chọn một hợp đồng để chỉnh sửa");
                 return;
             }
             Contract con = new Contract(
-                    Integer.parseInt(row.get(0).toString()),
-                    Integer.parseInt(row.get(3).toString()),
-                    Integer.parseInt(row.get(5).toString()),
-                    LocalDate.parse(row.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER),
-                    LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER),
-                    new BigDecimal(row.get(9).toString()));
+                    Integer.parseInt(selectedRow.get(0).toString()),
+                    Integer.parseInt(selectedRow.get(3).toString()),
+                    Integer.parseInt(selectedRow.get(5).toString()),
+                    LocalDate.parse(selectedRow.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER),
+                    LocalDate.parse(selectedRow.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER),
+                    new BigDecimal(selectedRow.get(9).toString()));
             try {
                 FXMLLoader loader = new FXMLLoader(getClass()
                         .getResource("/main/ui/addcontract/addContract.fxml"));
@@ -334,8 +337,71 @@ public class ListContractController implements Initializable {
     }
 
     @FXML
+    private void handleAddInvoice(ActionEvent event) {
+        Util.checkLogin(getStage());
+        if (!Setting.IS_VERIFIED) {
+            return;
+        }
+
+        ObservableList row;
+        try {
+            row = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
+            if (row == null) {
+                CustomAlert.showErrorMessage(
+                        "Chưa chọn.",
+                        "Hãy chọn một hợp đồng để thêm hóa đơn");
+                return;
+            }
+
+            int mahdong = Integer.parseInt(row.get(0).toString());
+            LocalDate lastPayDate
+                    = LocalDate.parse(row.get(11).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            LocalDate ngaytra
+                    = LocalDate.parse(row.get(8).toString(), Util.SQL_DATE_TIME_FORMATTER);
+            BigDecimal giagoc
+                    = new BigDecimal(row.get(10).toString());
+            int songay
+                    = Integer.parseInt(row.get(12).toString());
+
+            InvoiceData data
+                    = new InvoiceData(mahdong, lastPayDate, ngaytra, giagoc, songay);
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass()
+                        .getResource("/main/ui/addinvoice/addInvoice.fxml"));
+                Parent parent = loader.load();
+
+                AddInvoiceController controller = loader.getController();
+                controller.loadEntries(data);
+
+                Stage stage = new Stage(StageStyle.DECORATED);
+                stage.initOwner(getStage());
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.setResizable(false);
+
+                Scene scene = new Scene(parent);
+                scene.getStylesheets().add(getClass()
+                        .getResource(Setting.getInstance().getSTYLE_SHEET()).toString());
+
+                stage.setScene(scene);
+                stage.setTitle("Thêm hóa đơn");
+                stage.show();
+                Util.setWindowIcon(stage);
+
+                stage.setOnHiding((e) -> {
+                    handleRefresh(new ActionEvent());
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(ListInvoiceController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IndexOutOfBoundsException ex) {
+            CustomAlert.showErrorMessage(
+                    "Chưa chọn.",
+                    "Chọn một hợp đồng để thêm hóa đơn");
+        }
+    }
+
+    @FXML
     public void handleRefresh(ActionEvent event) {
-        comboBox.getSelectionModel().selectFirst();
         loadContractData();
         loadRoommatesData();
     }
@@ -369,6 +435,9 @@ public class ListContractController implements Initializable {
             List activeConRow;
             int activeConId;
 
+            // check contract ngaynhan > today set ngaytra to ngaynhan, else set ngaytra to today
+            LocalDate ngaynhan = LocalDate.parse(selectedRow.get(7).toString(), Util.SQL_DATE_TIME_FORMATTER);
+
             for (int i = 0; i < listOfActiveContracts.size(); i++) {
                 activeConRow = (List) listOfActiveContracts.get(i);
                 activeConId = Integer.parseInt((String) activeConRow.get(0));
@@ -380,20 +449,36 @@ public class ListContractController implements Initializable {
                                         "Bạn có chắc muốn kết thúc hợp đồng này?")
                                         .showAndWait();
                         if (answer.get() == ButtonType.OK) {
-                            if (handler.endContractToday(selectedConId)) {
-                                CustomAlert.showSimpleAlert(
-                                        "Thành công",
-                                        "Đã kết thúc hợp đồng ");
-                                // TODO only run this line in main
-                                MasterController.getInstance().getListCustomerController()
-                                        .handleRefresh(new ActionEvent());
-                                handleRefresh(new ActionEvent());
+                            if (LocalDate.now().isAfter(ngaynhan)) {
+                                if (handler.endContractToday(selectedConId)) {
+                                    CustomAlert.showSimpleAlert(
+                                            "Thành công",
+                                            "Đã kết thúc hợp đồng");
+                                    MasterController.getInstance().getListCustomerController()
+                                            .handleRefresh(new ActionEvent());
+                                    MasterController.getInstance().getListRoomController()
+                                            .handleRefresh(new ActionEvent());
+                                    handleRefresh(new ActionEvent());
+                                } else {
+                                    CustomAlert.showErrorMessage(
+                                            "Không thể thực hiện", "Đã có lỗi xảy ra");
+                                }
                             } else {
-                                CustomAlert.showErrorMessage(
-                                        "Không thể thực hiện", "Đã có lỗi xảy ra");
+                                if (handler.endContractAtDate(selectedConId, ngaynhan)) {
+                                    CustomAlert.showSimpleAlert(
+                                            "Thành công",
+                                            "Đã kết thúc hợp đồng");
+                                    MasterController.getInstance().getListCustomerController()
+                                            .handleRefresh(new ActionEvent());
+                                    MasterController.getInstance().getListRoomController()
+                                            .handleRefresh(new ActionEvent());
+                                    handleRefresh(new ActionEvent());
+                                } else {
+                                    CustomAlert.showErrorMessage(
+                                            "Không thể thực hiện", "Đã có lỗi xảy ra");
+                                }
                             }
                         }
-                        handler.endContractToday(selectedConId);
                     } else {
                         CustomAlert.showErrorMessage(
                                 "Không thể thực hiện",
@@ -420,7 +505,6 @@ public class ListContractController implements Initializable {
         }
 
         ObservableList selectedRow;
-
         try {
             selectedRow = (ObservableList) contractTable.getSelectionModel().getSelectedItems().get(0);
             if (selectedRow == null) {
@@ -437,7 +521,7 @@ public class ListContractController implements Initializable {
                 activeConRow = (List) listOfActiveContracts.get(i);
                 activeConId = Integer.parseInt((String) activeConRow.get(0));
                 if (activeConId == selectedConId) {
-                    if (handler.isRoomFull(Integer.parseInt((String) selectedRow.get(0)))) {
+                    if (handler.isRoomFull(Integer.parseInt((String) selectedRow.get(3)))) {
                         CustomAlert.showErrorMessage(
                                 "Phòng %s đã đủ người".formatted(selectedRow.get(4).toString()),
                                 "Hãy chọn phòng khác");
@@ -654,15 +738,15 @@ public class ListContractController implements Initializable {
         TableColumn ngayNhanCol
                 = new TableColumn<>("Ngày nhận");
         TableColumn ngayTraCol
-                = new TableColumn<>("Ngày trả");
+                = new TableColumn<>("Ngày trả");//8
         TableColumn tienCocCol
-                = new TableColumn<>("Tiền cọc");
+                = new TableColumn<>("Tiền cọc");//9
         TableColumn giaGocCol
-                = new TableColumn<>("Giá gốc");
+                = new TableColumn<>("Giá gốc");//10
         TableColumn ngayttgannhatCol
-                = new TableColumn<>("ngayttgannhat");
+                = new TableColumn<>("ngayttgannhat");//11
         TableColumn songayCol
-                = new TableColumn<>("Số ngày");
+                = new TableColumn<>("Số ngày");//12
 
         contractTable.getColumns().addAll(
                 mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,

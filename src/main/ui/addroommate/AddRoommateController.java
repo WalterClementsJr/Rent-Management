@@ -45,7 +45,6 @@ public class AddRoommateController implements Initializable {
     private Button cancel;
 
     // extra elements
-    @FXML
     private AutoCompleteTextField<Customer> findCustomer;
     private SortedSet<Customer> list
             = new TreeSet<>((Customer c1, Customer c2) -> c1.toString().compareTo(c2.toString()));
@@ -321,7 +320,7 @@ public class AddRoommateController implements Initializable {
 
     private void loadCustomer() {
         list.addAll(ListCustomerController.listOfCustomersWithNoRoom);
-        findCustomer = new AutoCompleteTextField(list);
+        findCustomer = new AutoCompleteTextField<>(list);
     }
 
     private Stage getStage() {
