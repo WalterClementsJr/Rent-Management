@@ -85,11 +85,20 @@ public class AddRoomController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                     String newValue) {
-                if (newValue.matches("\\d{0,15}")) {
-                    String value = newValue;
-                } else {
+                if (!newValue.matches("\\d{0,10}")) {
                     price.setText(oldValue);
                     price.positionCaret(price.getLength());
+                }
+            }
+        });
+
+        name.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches(".{0,50}")) {
+                    name.setText(oldValue);
+                    name.positionCaret(name.getLength());
                 }
             }
         });
@@ -98,11 +107,20 @@ public class AddRoomController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                     String newValue) {
-                if (newValue.matches("\\d{0,9}")) {
-                    String value = newValue;
-                } else {
+                if (!newValue.matches("\\d{0,9}")) {
                     size.setText(oldValue);
                     size.positionCaret(size.getLength());
+                }
+            }
+        });
+
+        desc.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("^[\\n\\s\\S\\w\\W\\d\\D]{0,200}$")) {
+                    desc.setText(oldValue);
+                    desc.positionCaret(desc.getLength());
                 }
             }
         });
@@ -111,9 +129,7 @@ public class AddRoomController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                     String newValue) {
-                if (newValue.matches("\\d{0,15}")) {
-                    String value = newValue;
-                } else {
+                if (!newValue.matches("\\d{0,10}")) {
                     deposit.setText(oldValue);
                     deposit.positionCaret(deposit.getLength());
                 }
@@ -208,7 +224,7 @@ public class AddRoomController implements Initializable {
         if (!Setting.IS_VERIFIED) {
             return;
         }
-        
+
         if (isEditing) {
             handleEditRoom();
             return;
@@ -224,9 +240,9 @@ public class AddRoomController implements Initializable {
         BigDecimal rPrice = new BigDecimal(price.getText().trim());
         BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
         int rSize = Integer.parseInt(size.getText().trim());
-        String rDescript =
-                !desc.getText().isBlank() ?
-                desc.getText().trim()
+        String rDescript
+                = !desc.getText().isBlank()
+                ? desc.getText().trim()
                 : "";
 
         Room newRoom = new Room(rName, rNOfPeople, rPrice, rDeposit, rSize, rDescript, chosenComplex.getId());
@@ -254,7 +270,7 @@ public class AddRoomController implements Initializable {
         if (!Setting.IS_VERIFIED) {
             return;
         }
-        
+
         if (!checkEntries()) {
             return;
         }
@@ -265,9 +281,9 @@ public class AddRoomController implements Initializable {
         BigDecimal rPrice = new BigDecimal(price.getText().trim());
         BigDecimal rDeposit = new BigDecimal(deposit.getText().trim());
         int rSize = Integer.parseInt(size.getText().trim());
-        String rDescript =
-                !desc.getText().isBlank() ?
-                desc.getText().trim()
+        String rDescript
+                = !desc.getText().isBlank()
+                ? desc.getText().trim()
                 : "";
 
         currentRoom.setTenPhong(rName);
@@ -327,9 +343,6 @@ public class AddRoomController implements Initializable {
             return false;
         } else if (size.getText().isBlank()) {
             CustomAlert.showErrorMessage("Diện tích trống", "Hãy nhập lại");
-            return false;
-        } else if (desc.getText().length() > 100) {
-            CustomAlert.showErrorMessage("Mô tả quá dài", "Hãy nhập lại mô tả (ngắn hơn 100 ký tự)");
             return false;
         }
         return true;

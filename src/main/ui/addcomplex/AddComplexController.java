@@ -3,6 +3,8 @@ package main.ui.addcomplex;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -46,6 +48,29 @@ public class AddComplexController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dbHandler = DatabaseHandler.getInstance();
+
+        // < 50 characters
+        name.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches(".{0,50}")) {
+                    name.setText(oldValue);
+                    name.positionCaret(name.getLength());
+                }
+            }
+        });
+
+        address.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches(".{0,200}")) {
+                    address.setText(oldValue);
+                    address.positionCaret(address.getLength());
+                }
+            }
+        });
 
         delete.setVisible(false);
     }
@@ -170,8 +195,8 @@ public class AddComplexController implements Initializable {
         if (name.getText().isBlank()) {
             CustomAlert.showErrorMessage("Tên khu trống", "Hãy nhập tên khu");
             return false;
-        } else if (address.getText().length() > 100) {
-            CustomAlert.showErrorMessage("Địa chỉ lớn hơn 100 ký tự", "Hãy nhập lại địa chỉ (ngắn hơn 100 ký tự)");
+        } else if (address.getText().length() > 200) {
+            CustomAlert.showErrorMessage("Địa chỉ lớn hơn 200 ký tự", "Hãy nhập lại địa chỉ");
             return false;
         }
         return true;

@@ -23,7 +23,7 @@
                                         <Font name="Arial" size="15.0" />
                                     </font>
                                 </Label>
-                                <TextArea fx:id="desc" prefHeight="58.0" prefWidth="613.0" />
+                                <TextArea fx:id="desc" prefHeight="58.0" prefWidth="613.0" wrapText="true"/>
                             </children>
                         </VBox>
                     </children>

@@ -110,9 +110,7 @@ public class AddInvoiceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                     String newValue) {
-                if (newValue.matches("\\d{0,15}")) {
-                    String value = newValue;
-                } else {
+                if (!newValue.matches("\\d{0,10}")) {
                     rent.setText(oldValue);
                     rent.positionCaret(rent.getLength());
                 }

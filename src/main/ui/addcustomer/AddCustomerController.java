@@ -96,16 +96,27 @@ public class AddCustomerController implements Initializable {
             }
         });
 
-        // sdt, cmnd number-only textArea
+        // non number text field
+        name.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                String nameRegex = "[a-zA-ZàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬđĐèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfìÌỉỈĩĨíÍịỊòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰỳỲỷỶỹỸýÝỵỴ ,.'-]{0,50}";
+                if (!newValue.matches(nameRegex)) {
+                    name.setText(oldValue);
+                    name.positionCaret(name.getLength());
+                }
+            }
+        });
+
+        // sdt, cmnd number-only text field
         sdt.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(
                     ObservableValue<? extends String> observable,
                     String oldValue,
                     String newValue) {
-                if (newValue.matches("\\d{0,11}")) {
-                    String value = newValue;
-                } else {
+                if (!newValue.matches("\\d{0,11}")) {
                     sdt.setText(oldValue);
                     sdt.positionCaret(sdt.getLength());
                 }
@@ -116,9 +127,7 @@ public class AddCustomerController implements Initializable {
             public void changed(ObservableValue<? extends String> observable,
                     String oldValue,
                     String newValue) {
-                if (newValue.matches("\\d{0,12}")) {
-                    String value = newValue;
-                } else {
+                if (!newValue.matches("\\d{0,12}")) {
                     cmnd.setText(oldValue);
                     cmnd.positionCaret(cmnd.getLength());
                 }

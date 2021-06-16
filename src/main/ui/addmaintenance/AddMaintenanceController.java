@@ -49,6 +49,18 @@ public class AddMaintenanceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // date format
+        
+        desc.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("^[\\n\\s\\S\\w\\W\\d\\D]{0,200}$")) {
+                    desc.setText(oldValue);
+                    desc.positionCaret(desc.getLength());
+                }
+            }
+        });
+        
         date.setValue(LocalDate.now());
         date.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d-M-yyyy");
@@ -79,9 +91,7 @@ public class AddMaintenanceController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                     String newValue) {
-                if (newValue.matches("\\d{0,15}")) {
-                    String value = newValue;
-                } else {
+                if (!newValue.matches("\\d{0,10}")) {
                     price.setText(oldValue);
                     price.positionCaret(price.getLength());
                 }
@@ -185,9 +195,6 @@ public class AddMaintenanceController implements Initializable {
     private boolean checkEntries() {
         if (desc.getText().isBlank()) {
             CustomAlert.showErrorMessage("Mô tả trống", "Hãy nhập sơ lược thông tin sửa chữa/bảo trì");
-            return false;
-        } else if (desc.getText().length() > 100) {
-            CustomAlert.showErrorMessage("Mô tả lớn hơn 100 ký tự", "Hãy nhập sơ lược thông tin sửa chữa/bảo trì (ngắn hơn 100 ký tự)");
             return false;
         } else if (price.getText().isBlank()) {
             CustomAlert.showErrorMessage("Chưa nhập chi phí", "Hãy nhập đầy đủ thông tin");
