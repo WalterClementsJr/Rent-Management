@@ -57,41 +57,6 @@ public final class DatabaseHandler {
     }
 
     /**
-     * thực hiện các query trả về data
-     *
-     * @param query
-     * @return ResultSet
-     */
-    public ResultSet execQuery(String query) {
-        ResultSet result;
-        try {
-            stmt = conn.prepareStatement(query);
-            result = stmt.executeQuery();
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-        return result;
-    }
-
-    /**
-     * thực hiện các query update data hoặc query không trả về giá trị
-     *
-     * @param query
-     * @return true nếu thành công
-     */
-    public boolean execUpdate(String query) {
-        try {
-            stmt = conn.prepareStatement(query);
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
-
-    /**
      *
      * @param id -1 là kiểm tra lúc thêm, không thì kiểm tra nếu id trùng nếu
      * trùng thì là chính nó
@@ -205,6 +170,16 @@ public final class DatabaseHandler {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    public ResultSet selectAllCustomer() {
+        try {
+            stmt = conn.prepareStatement("select * from khach");
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public boolean insertNewCustomer(Customer customer) {
@@ -328,6 +303,16 @@ public final class DatabaseHandler {
         try {
             stmt = conn.prepareStatement(
                     "select * from ViewKhachKhongCoPhong");
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public ResultSet selectAllComplex() {
+        try {
+            stmt = conn.prepareStatement("select * from khu");
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);

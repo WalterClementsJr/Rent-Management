@@ -200,8 +200,7 @@ public class ListRoomController implements Initializable {
     private void loadComplexData() {
         complexList.clear();
 
-        ResultSet rs = handler.execQuery("SELECT * FROM KHU");
-
+        ResultSet rs = handler.selectAllComplex();
         try {
             while (rs.next()) {
                 int id = rs.getInt("MAKHU");
@@ -215,7 +214,7 @@ public class ListRoomController implements Initializable {
         }
         comboBox.getSelectionModel().selectFirst();
 
-        // select combobox from listcontract and listmaintenance
+        // reselect combobox from listcontract and listmaintenance
         try {
             MasterController.getInstance().getListContractController().comboBoxSelectFirst();
             MasterController.getInstance().getListMaintenanceController().comboBoxSelectFirst();

@@ -128,9 +128,7 @@ public class AddRoomController implements Initializable {
         list.clear();
         comboBox.getItems().clear();
 
-        String query = "SELECT * FROM KHU";
-        ResultSet rs = dbHandler.execQuery(query);
-
+        ResultSet rs = dbHandler.selectAllComplex();
         try {
             while (rs.next()) {
                 int id = rs.getInt("MAKHU");
@@ -138,6 +136,7 @@ public class AddRoomController implements Initializable {
                 String diaChi = rs.getString("DIACHI");
                 list.add(new Complex(id, ten, diaChi));
             }
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(AddRoomController.class.getName()).log(Level.SEVERE, null, ex);
         }

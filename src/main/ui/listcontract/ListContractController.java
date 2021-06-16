@@ -935,9 +935,7 @@ public class ListContractController implements Initializable {
         complexList.clear();
         comboBox.getItems().clear();
 
-        String query = "SELECT * FROM KHU";
-        ResultSet rs = handler.execQuery(query);
-
+        ResultSet rs = handler.selectAllComplex();
         try {
             while (rs.next()) {
                 int id = rs.getInt("MAKHU");
@@ -949,7 +947,6 @@ public class ListContractController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         comboBox.getItems().addAll(complexList);
     }
 }

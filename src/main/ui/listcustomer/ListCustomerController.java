@@ -175,8 +175,7 @@ public class ListCustomerController implements Initializable {
     }
 
     private void loadAllCustomers() {
-        String query = "SELECT * FROM KHACH";
-        loadDataToList(handler.execQuery(query), listOfAllCustomers);
+        loadDataToList(handler.selectAllCustomer(), listOfAllCustomers);
     }
 
     private void loadCustomersWithNoRoom() {
