@@ -33,6 +33,7 @@ import main.database.DatabaseHandler;
 import main.model.InvoiceData;
 import main.ui.addinvoice.AddInvoiceController;
 import main.ui.alert.CustomAlert;
+import main.util.MasterController;
 import main.util.Util;
 
 public class ListInvoiceController implements Initializable {
@@ -72,6 +73,7 @@ public class ListInvoiceController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        MasterController.getInstance().registerListInvoiceController(this);
         handler = DatabaseHandler.getInstance();
 
         initInDebtTableColumns();
@@ -526,7 +528,7 @@ public class ListInvoiceController implements Initializable {
     }
 
     @FXML
-    void handleRefresh(ActionEvent event) {
+    public void handleRefresh(ActionEvent event) {
         loadData();
     }
 }

@@ -7,27 +7,30 @@ package main.ui.statistic;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 import main.database.DatabaseHandler;
 import main.model.Complex;
@@ -66,6 +69,7 @@ public class StatisticController implements Initializable {
     ObservableList<Complex> complexList = ListRoomController.complexList;
 
     ObservableList<PieChart.Data> customerChartData = FXCollections.observableArrayList();
+    ObservableList<BarChart.Series> revChartData = FXCollections.observableArrayList();
 
     DatabaseHandler handler;
 
@@ -82,11 +86,12 @@ public class StatisticController implements Initializable {
         customerChart.setData(customerChartData);
 
         revenueChart.setAnimated(false);
+        revenueChart.setData(revChartData);
 
         datePicker.getEditor().setEditable(false);
         datePicker.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter
-                    = DateTimeFormatter.ofPattern("M-yyyy");
+                    = DateTimeFormatter.ofPattern("yyyy");
 
             @Override
             public String toString(LocalDate date) {
@@ -159,31 +164,39 @@ public class StatisticController implements Initializable {
     }
 
     void loadRevenueMonth() {
-        LocalDate d = datePicker.getValue();
+        revChartData.clear();
+        LocalDate date = datePicker.getValue();
 
         revenueChart.getData().clear();
         revenueChart.setTitle(
-                "DOANH THU TRONG THÁNG %d NĂM %d".formatted(
-                        d.getMonthValue(),
-                        d.getYear()));
+                "DOANH THU TẤT CẢ CÁC THÁNG TRONG NĂM %d".formatted(date.getYear()));
 
-        XYChart.Series complexSeries = new XYChart.Series();
-        complexSeries.setName("Tháng %d Năm %d".formatted(
-                d.getMonthValue(),
-                d.getYear()));
+        for (int i = 1; i <= 12; i++) {
+            XYChart.Series complexSeries = new XYChart.Series();
+            complexSeries.setName("Tháng %d".formatted(i));
+            revChartData.add(complexSeries);
+        }
 
-        complexList.forEach(c -> {
-            BigDecimal rev = handler.getTotalRevenueOfComplexInMonth(c.getId(), d);
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < complexList.size(); j++) {
+                BigDecimal rev = handler.getTotalRevenueOfComplexInMonth(
+                        complexList.get(j).getId(),
+                        LocalDate.of(2021, i + 1, 1));
 
-            if (rev == BigDecimal.valueOf(-1)) {
-                CustomAlert.showErrorMessage(
-                        "Đã có lỗi xảy ra",
-                        "Hãy thử lại sau");
-            } else {
-                complexSeries.getData().add(new XYChart.Data(c.getTen(), rev));
+                if (rev == BigDecimal.valueOf(-1)) {
+                    CustomAlert.showErrorMessage(
+                            "Đã có lỗi xảy ra",
+                            "Hãy thử lại sau");
+                } else {
+                    XYChart.Data data = new XYChart.Data(complexList.get(j).getTen(), rev);
+
+                    revChartData.get(i).getData().add(data);
+                    Tooltip.install(data.getNode(), new Tooltip(
+                            new DecimalFormat("#,###")
+                                    .format(Double.parseDouble(data.getYValue().toString()))));
+                }
             }
-        });
-        revenueChart.getData().add(complexSeries);
+        }
     }
 
     void loadRevenueYear() {

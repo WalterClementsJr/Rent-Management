@@ -30,6 +30,7 @@ import main.model.InvoiceData;
 import main.ui.alert.CustomAlert;
 import main.ui.listinvoice.ListInvoiceController;
 import main.ui.main.MainController;
+import main.util.MasterController;
 import main.util.Util;
 
 public class AddInvoiceController implements Initializable {
@@ -138,6 +139,7 @@ public class AddInvoiceController implements Initializable {
         if (DatabaseHandler.getInstance().insertNewInvoice(newInvoice)) {
             CustomAlert.showSimpleAlert(
                     "Thành công", "Đã thêm hóa đơn");
+            MasterController.getInstance().getListInvoiceController().handleRefresh(new ActionEvent());
             getStage().close();
         } else {
             CustomAlert.showErrorMessage(

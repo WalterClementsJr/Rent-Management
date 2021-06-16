@@ -3,6 +3,7 @@ package main.util;
 import javafx.event.ActionEvent;
 import main.ui.listcontract.ListContractController;
 import main.ui.listcustomer.ListCustomerController;
+import main.ui.listinvoice.ListInvoiceController;
 import main.ui.listmaintenance.ListMaintenanceController;
 import main.ui.listroom.ListRoomController;
 import main.ui.main.MainController;
@@ -17,6 +18,7 @@ public final class MasterController {
     private ListRoomController listRoomController = null;
     private ListContractController listContractController = null;
     private ListMaintenanceController listMaintenanceController = null;
+    private ListInvoiceController listInvoiceController = null;
     private StatisticController statController = null;
     
 
@@ -40,6 +42,10 @@ public final class MasterController {
         return listMaintenanceController;
     }
     
+    public ListInvoiceController getListInvoiceController() {
+        return listInvoiceController;
+    }
+
     public StatisticController getStatisticController() {
         return statController;
     }
@@ -73,6 +79,10 @@ public final class MasterController {
     
     public void registerStatisticController(StatisticController con) {
         this.statController = con;
+    }
+    
+    public void registerListInvoiceController(ListInvoiceController con) {
+        this.listInvoiceController = con;
     }
 
     public void ListContractControllerRefresh() {
