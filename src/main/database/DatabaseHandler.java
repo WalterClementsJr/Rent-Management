@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.CallableStatement;
 import java.sql.Types;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.model.Complex;
@@ -24,19 +23,13 @@ import main.util.Util;
 public final class DatabaseHandler {
 
     public static void main(String[] args) {
-        DatabaseHandler.getInstance();
-//        System.out.println(dbHandler.isContractOverlap(
-//                6,
-//                LocalDate.parse("2021-07-1", Util.SQL_DATE_TIME_FORMATTER),
-//                LocalDate.parse("2021-07-14", Util.SQL_DATE_TIME_FORMATTER)
-//        ));
-
+//        DatabaseHandler.getInstance();
     }
 
     private static DatabaseHandler dbHandler = null;
 
     private static final String DB_URL
-            = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=NhaTro2";
+            = "jdbc:sqlserver://localhost\\MSSQLSERVER:1433;databaseName=NhaTro";
 
     private Connection conn = null;
     private CallableStatement cstmt = null;

@@ -10,8 +10,6 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -19,13 +17,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -164,6 +160,7 @@ public class StatisticController implements Initializable {
     }
 
     void loadRevenueMonth() {
+        xAxis.setLabel("Khu");
         revChartData.clear();
         LocalDate date = datePicker.getValue();
 
@@ -200,25 +197,31 @@ public class StatisticController implements Initializable {
     }
 
     void loadRevenueYear() {
+        xAxis.setLabel("Năm");
         LocalDate d = datePicker.getValue();
 
         revenueChart.getData().clear();
         revenueChart.setTitle(
                 "DOANH THU TRONG NĂM %d".formatted(datePicker.getValue().getYear()));
+        for (int i = 0; i < complexList.size(); i++) {
+            XYChart.Series complexSeries = new XYChart.Series();
+            complexSeries.setName("Khu %s".formatted(complexList.get(i).getTen()));
 
-        XYChart.Series complexSeries = new XYChart.Series();
-        complexSeries.setName(("NĂM %d".formatted(d.getYear())));
-
-        complexList.forEach(c -> {
-            BigDecimal rev = handler.getTotalRevenueOfComplexInYear(c.getId(), d);
+            BigDecimal rev = handler.getTotalRevenueOfComplexInYear(
+                    complexList.get(i).getId(), d);
             if (rev == BigDecimal.valueOf(-1)) {
                 CustomAlert.showErrorMessage(
                         "Đã có lỗi xảy ra",
                         "Hãy thử lại sau");
-            } else {
-                complexSeries.getData().add(new XYChart.Data(c.getTen(), rev));
+                return;
             }
-        });
-        revenueChart.getData().add(complexSeries);
+            XYChart.Data data = new XYChart.Data("" + d.getYear(), rev);
+            complexSeries.getData().add(data);
+            revenueChart.getData().add(complexSeries);
+
+            Tooltip.install(data.getNode(), new Tooltip(
+                    new DecimalFormat("#,###")
+                            .format(Double.parseDouble(data.getYValue().toString()))));
+        }
     }
 }
