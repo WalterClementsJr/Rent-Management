@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,6 +62,8 @@ public class ListMaintenanceController implements Initializable {
     // extra elements
     ObservableList<Complex> complexList = ListRoomController.complexList;
     ObservableList listOfAllMaintenance = FXCollections.observableArrayList();
+
+    FilteredList allFilteredList;
 
     DatabaseHandler handler;
     Setting setting;
@@ -283,4 +286,6 @@ public class ListMaintenanceController implements Initializable {
     public void comboBoxSelectFirst() {
         comboBox.getSelectionModel().selectFirst();
     }
+    
+    
 }

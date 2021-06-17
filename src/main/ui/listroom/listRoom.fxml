@@ -26,7 +26,7 @@
                                 <Label prefHeight="17.0" prefWidth="84.0" text="Chọn khu nhà" />
                                 <ComboBox fx:id="comboBox" onAction="#complexChanged" prefWidth="143.0">
                                     <tooltip>
-                                        <Tooltip fx:id="complexTooltip" text="Empty Tooltip">
+                                        <Tooltip fx:id="complexTooltip" text="">
                                             <font>
                                                 <Font size="13.0" />
                                             </font>
@@ -47,7 +47,7 @@
                                     <children>
                                         <Label prefHeight="17.0" prefWidth="32.0" text="Lọc" />
                                         <ComboBox fx:id="filter" onAction="#filterChanged" prefWidth="143.0" />
-                              <TextField fx:id="filterField" prefWidth="215.0" promptText="Tìm kiếm">
+                              <TextField fx:id="filterField" prefWidth="215.0" promptText="Nhập tên phòng/mô tả">
                                  <HBox.margin>
                                     <Insets left="60.0" />
                                  </HBox.margin>

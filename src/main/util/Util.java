@@ -1,9 +1,12 @@
 package main.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.net.URL;
+import java.nio.channels.FileLock;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -30,8 +33,10 @@ import main.ui.main.MainController;
 
 public class Util {
 
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("d-M-yyyy");
-    public static final DateTimeFormatter SQL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-M-d");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER
+            = DateTimeFormatter.ofPattern("d-M-yyyy");
+    public static final DateTimeFormatter SQL_DATE_TIME_FORMATTER
+            = DateTimeFormatter.ofPattern("yyyy-M-d");
 
     public static final String APP_ICON_LOCATION
             = "main/resources/icons/icon.png";
@@ -91,8 +96,28 @@ public class Util {
     public static final String FILTER_CUSTOMER_HAS_ROOM = "Đã có phòng";
     public static final String FILTER_CUSTOMER_MOVED = "Đã chuyển đi";
 
-    public static void main(String[] args) {
-        checkLogin(null);
+    public static boolean lockInstance(final String lockFile) {
+        try {
+            final File file = new File(lockFile);
+            final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+            final FileLock fileLock = randomAccessFile.getChannel().tryLock();
+            if (fileLock != null) {
+                Runtime.getRuntime().addShutdownHook(new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            fileLock.release();
+                            randomAccessFile.close();
+                            file.delete();
+                        } catch (IOException e) {
+                        }
+                    }
+                });
+                return true;
+            }
+        } catch (IOException e) {
+        }
+        return false;
     }
 
     public static void setWindowIcon(Stage stage) {
@@ -135,7 +160,7 @@ public class Util {
                 Stage stage = new Stage(StageStyle.DECORATED);
                 stage.initOwner(parentStage);
                 stage.initModality(Modality.WINDOW_MODAL);
-                stage.setResizable(false);                
+                stage.setResizable(false);
 
                 Scene scene = new Scene(login);
                 scene.getStylesheets().add(Util.class.getResource(
@@ -181,7 +206,7 @@ public class Util {
         }
         return null;
     }
-    
+
     public static void loadIconToButton(String url, Button button) {
         Image icon = new Image(MainController.class
                 .getResourceAsStream(url));

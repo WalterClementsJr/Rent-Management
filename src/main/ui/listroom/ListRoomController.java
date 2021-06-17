@@ -545,15 +545,15 @@ public class ListRoomController implements Initializable {
 
     void setFilterFieldProperty(FilteredList<Room> f) {
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
-            f.setPredicate(customer -> {
+            f.setPredicate(room -> {
                 if (newValue == null || newValue.isBlank()) {
                     return true;
                 }
                 String lowerCaseFilter = newValue.toLowerCase();
-                if (customer.getTenPhong().toLowerCase().contains(lowerCaseFilter)) {
+                if (room.getTenPhong().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 } else {
-                    return customer.getMoTa().contains(lowerCaseFilter);
+                    return room.getMoTa().contains(lowerCaseFilter);
                 }
             });
         });
