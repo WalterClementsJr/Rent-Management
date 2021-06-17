@@ -969,4 +969,51 @@ public final class DatabaseHandler {
         }
         return BigDecimal.valueOf(-1);
     }
+
+    public BigDecimal getMaintenaceFeeOfComplexInMonth(int complexId, LocalDate date) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.getphibaotritrongthangcuakhu(?,?) }");
+            cstmt.registerOutParameter(1, Types.DECIMAL);
+            cstmt.setInt(2, complexId);
+            cstmt.setDate(3, Util.LocalDateToSQLDate(date));
+
+            cstmt.execute();
+            return cstmt.getBigDecimal(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return BigDecimal.valueOf(-1);
+    }
+
+    public BigDecimal getMaintenanceFeeOfComplexInYear(int complexId, LocalDate date) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.getphibaotritrongnamcuakhu(?,?) }");
+            cstmt.registerOutParameter(1, Types.DECIMAL);
+            cstmt.setInt(2, complexId);
+            cstmt.setDate(3, Util.LocalDateToSQLDate(date));
+
+            cstmt.execute();
+            return cstmt.getBigDecimal(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return BigDecimal.valueOf(-1);
+    }
+
+    public BigDecimal getMaintenanceFeeOfComplex(int complexId) {
+        try {
+            cstmt = conn.prepareCall(
+                    "{ ? = call dbo.(?) }");
+            cstmt.registerOutParameter(1, Types.DECIMAL);
+            cstmt.setInt(2, complexId);
+
+            cstmt.execute();
+            return cstmt.getBigDecimal(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return BigDecimal.valueOf(-1);
+    }    
 }

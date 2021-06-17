@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.ui.statistic;
 
 import java.math.BigDecimal;
@@ -45,10 +40,22 @@ public class StatisticController implements Initializable {
     private PieChart customerChart;
 
     @FXML
-    private ComboBox<String> filter;
+    private ComboBox<String> filter1;
 
     @FXML
-    private Label pickLabel;
+    private DatePicker datePicker1;
+
+    @FXML
+    private BarChart maintenanceChart;
+
+    @FXML
+    private CategoryAxis rXAxis;
+
+    @FXML
+    private NumberAxis rYAxis;
+
+    @FXML
+    private ComboBox<String> filter;
 
     @FXML
     private DatePicker datePicker;
@@ -62,10 +69,12 @@ public class StatisticController implements Initializable {
     @FXML
     private NumberAxis yAxis;
 
+    // extra components
     ObservableList<Complex> complexList = ListRoomController.complexList;
 
     ObservableList<PieChart.Data> customerChartData = FXCollections.observableArrayList();
     ObservableList<BarChart.Series> revChartData = FXCollections.observableArrayList();
+    ObservableList<BarChart.Series> maintenanceChartData = FXCollections.observableArrayList();
 
     DatabaseHandler handler;
 
@@ -76,6 +85,8 @@ public class StatisticController implements Initializable {
 
         filter.getItems().addAll("Tháng", "Năm");
         filter.getSelectionModel().selectFirst();
+        filter1.getItems().addAll("Tháng", "Năm");
+        filter1.getSelectionModel().selectFirst();
 
         customerChart.setTitle("SỐ KHÁCH ĐANG Ở TRONG KHU");
         customerChart.setStartAngle(90);
@@ -84,8 +95,13 @@ public class StatisticController implements Initializable {
         revenueChart.setAnimated(false);
         revenueChart.setData(revChartData);
 
+        maintenanceChart.setAnimated(false);
+        maintenanceChart.setData(maintenanceChartData);
+
         datePicker.getEditor().setEditable(false);
-        datePicker.setConverter(new StringConverter<LocalDate>() {
+        datePicker1.getEditor().setEditable(false);
+
+        StringConverter converter = new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter
                     = DateTimeFormatter.ofPattern("yyyy");
 
@@ -106,11 +122,16 @@ public class StatisticController implements Initializable {
                     return null;
                 }
             }
-        });
+        };
+        datePicker.setConverter(converter);
+        datePicker1.setConverter(converter);
+
         datePicker.setValue(LocalDate.now());
+        datePicker1.setValue(LocalDate.now());
 
         loadCustomerChart();
         loadRevenueData();
+        loadMaintenanceData();
     }
 
     @FXML
@@ -141,13 +162,25 @@ public class StatisticController implements Initializable {
     }
 
     @FXML
-    public void handleRefresh(ActionEvent e) {
-        loadCustomerChart();
+    void filter1Changed(ActionEvent e) {
+        loadMaintenanceData();
     }
 
     @FXML
     void dateChanged(ActionEvent e) {
         loadRevenueData();
+    }
+
+    @FXML
+    void date1Changed(ActionEvent e) {
+        loadMaintenanceData();
+    }
+
+    @FXML
+    public void handleRefresh(ActionEvent e) {
+        loadCustomerChart();
+        loadRevenueData();
+        loadMaintenanceData();
     }
 
     void loadRevenueData() {
@@ -178,7 +211,7 @@ public class StatisticController implements Initializable {
             for (int j = 0; j < complexList.size(); j++) {
                 BigDecimal rev = handler.getTotalRevenueOfComplexInMonth(
                         complexList.get(j).getId(),
-                        LocalDate.of(2021, i + 1, 1));
+                        LocalDate.of(date.getYear(), i + 1, 1));
 
                 if (rev == BigDecimal.valueOf(-1)) {
                     CustomAlert.showErrorMessage(
@@ -218,6 +251,81 @@ public class StatisticController implements Initializable {
             XYChart.Data data = new XYChart.Data("" + d.getYear(), rev);
             complexSeries.getData().add(data);
             revenueChart.getData().add(complexSeries);
+
+            Tooltip.install(data.getNode(), new Tooltip(
+                    new DecimalFormat("#,###")
+                            .format(Double.parseDouble(data.getYValue().toString()))));
+        }
+    }
+
+    void loadMaintenanceData() {
+        switch (filter1.getSelectionModel().getSelectedItem()) {
+            case "Tháng" ->
+                loadMaintenanceMonth();
+            case "Năm" ->
+                loadMaintenanceYear();
+        }
+    }
+
+    void loadMaintenanceMonth() {
+        rXAxis.setLabel("Khu");
+        maintenanceChartData.clear();
+        LocalDate date = datePicker1.getValue();
+
+        maintenanceChart.getData().clear();
+        maintenanceChart.setTitle(
+                "PHÍ BẢO TRÌ TẤT CẢ CÁC THÁNG TRONG NĂM %d".formatted(date.getYear()));
+
+        for (int i = 1; i <= 12; i++) {
+            XYChart.Series complexSeries = new XYChart.Series();
+            complexSeries.setName("Tháng %d".formatted(i));
+            maintenanceChartData.add(complexSeries);
+        }
+
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < complexList.size(); j++) {
+                BigDecimal rev = handler.getMaintenaceFeeOfComplexInMonth(
+                        complexList.get(j).getId(),
+                        LocalDate.of(date.getYear(), i + 1, 1));
+
+                if (rev == BigDecimal.valueOf(-1)) {
+                    CustomAlert.showErrorMessage(
+                            "Đã có lỗi xảy ra",
+                            "Hãy thử lại sau");
+                } else {
+                    XYChart.Data data = new XYChart.Data(complexList.get(j).getTen(), rev);
+
+                    maintenanceChartData.get(i).getData().add(data);
+                    Tooltip.install(data.getNode(), new Tooltip(
+                            new DecimalFormat("#,###")
+                                    .format(Double.parseDouble(data.getYValue().toString()))));
+                }
+            }
+        }
+    }
+
+    void loadMaintenanceYear() {
+        rXAxis.setLabel("Năm");
+        LocalDate d = datePicker1.getValue();
+
+        maintenanceChart.getData().clear();
+        maintenanceChart.setTitle(
+                "PHÍ BẢO TRÌ TRONG NĂM %d".formatted(datePicker.getValue().getYear()));
+        for (int i = 0; i < complexList.size(); i++) {
+            XYChart.Series series = new XYChart.Series();
+            series.setName("Khu %s".formatted(complexList.get(i).getTen()));
+
+            BigDecimal rev = handler.getMaintenanceFeeOfComplexInYear(
+                    complexList.get(i).getId(), d);
+            if (rev == BigDecimal.valueOf(-1)) {
+                CustomAlert.showErrorMessage(
+                        "Đã có lỗi xảy ra",
+                        "Hãy thử lại sau");
+                return;
+            }
+            XYChart.Data data = new XYChart.Data("" + d.getYear(), rev);
+            series.getData().add(data);
+            maintenanceChart.getData().add(series);
 
             Tooltip.install(data.getNode(), new Tooltip(
                     new DecimalFormat("#,###")
