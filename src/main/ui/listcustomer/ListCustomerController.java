@@ -146,11 +146,7 @@ public class ListCustomerController implements Initializable {
                 String lowerCaseFilter = newValue.toLowerCase();
                 if (customer.getHoTen().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
-                } else if (customer.getSDT().contains(lowerCaseFilter) || customer.getCMND().contains(lowerCaseFilter)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                } else return customer.getSDT().contains(lowerCaseFilter) || customer.getCMND().contains(lowerCaseFilter);
             });
         });
     }

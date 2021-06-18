@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -25,11 +26,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -78,6 +81,9 @@ public class ListContractController implements Initializable {
     private MenuItem returnMenu;
 
     @FXML
+    private TextField filterField;
+
+    @FXML
     private TableView roommateTable;
 
     @FXML
@@ -99,9 +105,17 @@ public class ListContractController implements Initializable {
     public static ObservableList listOfActiveContracts = FXCollections.observableArrayList();
     public static ObservableList listOfOldContracts = FXCollections.observableArrayList();
 
+    FilteredList allConFilteredList;
+    FilteredList activeConFilteredList;
+    FilteredList oldConFilteredList;
+
     public static ObservableList listOfAllRoommates = FXCollections.observableArrayList();
     public static ObservableList listOfActiveRoommates = FXCollections.observableArrayList();
     public static ObservableList listOfOldRoommates = FXCollections.observableArrayList();
+
+    FilteredList allRmFilteredList;
+    FilteredList activeRmFilteredList;
+    FilteredList oldRmFilteredList;
 
     DatabaseHandler handler;
 
@@ -121,6 +135,22 @@ public class ListContractController implements Initializable {
 
         loadContractData();
         loadRoommatesData();
+
+        // set up filter search results
+        allConFilteredList = new FilteredList<>(listOfAllContracts);
+        activeConFilteredList = new FilteredList<>(listOfActiveContracts);
+        oldConFilteredList = new FilteredList<>(listOfOldContracts);
+        allRmFilteredList = new FilteredList<>(listOfAllRoommates);
+        activeRmFilteredList = new FilteredList<>(listOfActiveRoommates);
+        oldRmFilteredList = new FilteredList<>(listOfOldRoommates);
+
+        setContractFilterFieldProperty(allConFilteredList);
+        setContractFilterFieldProperty(activeConFilteredList);
+        setContractFilterFieldProperty(oldConFilteredList);
+        setRoommateFilterFieldProperty(allRmFilteredList);
+        setRoommateFilterFieldProperty(activeRmFilteredList);
+        setRoommateFilterFieldProperty(oldRmFilteredList);
+
         loadContractsToTable();
         loadRoommatesToTable();
     }
@@ -153,29 +183,17 @@ public class ListContractController implements Initializable {
 
     private void loadContractsToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
-            case Util.FILTER_ALL:
-                contractTable.setItems(listOfAllContracts);
-                break;
-            case Util.FILTER_ACTIVE:
-                contractTable.setItems(listOfActiveContracts);
-                break;
-            case Util.FILTER_OLD:
-                contractTable.setItems(listOfOldContracts);
-                break;
+            case Util.FILTER_ALL -> contractTable.setItems(allConFilteredList);
+            case Util.FILTER_ACTIVE -> contractTable.setItems(activeConFilteredList);
+            case Util.FILTER_OLD -> contractTable.setItems(oldConFilteredList);
         }
     }
 
     private void loadRoommatesToTable() {
         switch (filter.getSelectionModel().getSelectedItem()) {
-            case Util.FILTER_ALL:
-                roommateTable.setItems(listOfAllRoommates);
-                break;
-            case Util.FILTER_ACTIVE:
-                roommateTable.setItems(listOfActiveRoommates);
-                break;
-            case Util.FILTER_OLD:
-                roommateTable.setItems(listOfOldRoommates);
-                break;
+            case Util.FILTER_ALL -> roommateTable.setItems(allRmFilteredList);
+            case Util.FILTER_ACTIVE -> roommateTable.setItems(activeRmFilteredList);
+            case Util.FILTER_OLD -> roommateTable.setItems(oldRmFilteredList);
         }
     }
 
@@ -738,15 +756,15 @@ public class ListContractController implements Initializable {
         TableColumn ngayNhanCol
                 = new TableColumn<>("Ngày nhận");
         TableColumn ngayTraCol
-                = new TableColumn<>("Ngày trả");//8
+                = new TableColumn<>("Ngày trả");
         TableColumn tienCocCol
-                = new TableColumn<>("Tiền cọc");//9
+                = new TableColumn<>("Tiền cọc");
         TableColumn giaGocCol
-                = new TableColumn<>("Giá gốc");//10
+                = new TableColumn<>("Giá gốc");
         TableColumn ngayttgannhatCol
-                = new TableColumn<>("ngayttgannhat");//11
+                = new TableColumn<>("ngayttgannhat");
         TableColumn songayCol
-                = new TableColumn<>("Số ngày");//12
+                = new TableColumn<>("Số ngày");
 
         contractTable.getColumns().addAll(
                 mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol, makhCol,
@@ -829,6 +847,7 @@ public class ListContractController implements Initializable {
                 }
             };
         });
+
     }
 
     public void initRoommateTableColumns() {
@@ -843,23 +862,23 @@ public class ListContractController implements Initializable {
         TableColumn maphongCol
                 = new TableColumn<>("Mã phòng");
         TableColumn tenPhongCol
-                = new TableColumn<>("Tên phòng");
+                = new TableColumn<>("Tên phòng");//5
         TableColumn makhCol
                 = new TableColumn<>("Mã khách");
         TableColumn tenkhCol
-                = new TableColumn<>("Chủ hợp đồng");
+                = new TableColumn<>("Chủ hợp đồng");//7
         TableColumn maRoommateCol
                 = new TableColumn<>("Mã kh ghép");
         TableColumn tenRoommateCol
-                = new TableColumn<>("Tên khách");
+                = new TableColumn<>("Tên khách");//9
         TableColumn ngayNhanCol
                 = new TableColumn<>("Ngày nhận");
         TableColumn ngayTraCol
                 = new TableColumn<>("Ngày trả");
         TableColumn ngayVaoCol
-                = new TableColumn<>("Ngày vào");
+                = new TableColumn<>("Ngày vào");//12
         TableColumn ngayDiCol
-                = new TableColumn<>("Ngày đi");
+                = new TableColumn<>("Ngày đi");//13
 
         roommateTable.getColumns().addAll(
                 idhdk, mahdongCol, maKhuCol, tenKhuCol, maphongCol, tenPhongCol,
@@ -931,22 +950,61 @@ public class ListContractController implements Initializable {
         return (Stage) root.getScene().getWindow();
     }
 
-    private void loadComplexData() {
-        complexList.clear();
-        comboBox.getItems().clear();
+    @FXML
+    private void clearFilter() {
+        filterField.clear();
+    }
 
-        ResultSet rs = handler.selectAllComplex();
-        try {
-            while (rs.next()) {
-                int id = rs.getInt("MAKHU");
-                String ten = rs.getString("TENKHU");
-                String diaChi = rs.getString("DIACHI");
-                complexList.add(new Complex(id, ten, diaChi));
-            }
-            rs.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ListContractController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        comboBox.getItems().addAll(complexList);
+    /**
+     * set condition for contract filtered lists
+     * @param f contract list to be filtered
+     */
+    void setContractFilterFieldProperty(FilteredList f) {
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            f.setPredicate((Object t) -> {
+                ObservableList row = (ObservableList) t;
+
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterText = newValue.toLowerCase();
+                String ngaynhan = Util.DATE_TIME_FORMATTER.format(
+                        Util.SQL_DATE_TIME_FORMATTER.parse(row.get(7).toString()));
+                String ngaytra = Util.DATE_TIME_FORMATTER.format(
+                        Util.SQL_DATE_TIME_FORMATTER.parse(row.get(8).toString()));
+
+                return row.get(4).toString().toLowerCase().contains(filterText)
+                        || row.get(6).toString().toLowerCase().contains(filterText)
+                        || ngaynhan.contains(filterText)
+                        || ngaytra.contains(filterText);
+            });
+        });
+    }
+
+    /**
+     * set condition for contract filtered lists
+     * @param f roommate table list to be filtered
+     */
+    void setRoommateFilterFieldProperty(FilteredList f) {
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            f.setPredicate((Object t) -> {
+                ObservableList row = (ObservableList) t;
+
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterText = newValue.toLowerCase();
+                String ngaynhan = Util.DATE_TIME_FORMATTER.format(
+                        Util.SQL_DATE_TIME_FORMATTER.parse(row.get(12).toString()));
+                String ngaytra = Util.DATE_TIME_FORMATTER.format(
+                        Util.SQL_DATE_TIME_FORMATTER.parse(row.get(13).toString()));
+                
+                return row.get(5).toString().toLowerCase().contains(filterText)
+                        || row.get(7).toString().toLowerCase().contains(filterText)
+                        || row.get(9).toString().toLowerCase().contains(filterText)
+                        || ngaynhan.contains(filterText)
+                        || ngaytra.contains(filterText);
+            });
+        });
     }
 }

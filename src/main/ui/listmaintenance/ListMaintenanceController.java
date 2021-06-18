@@ -20,13 +20,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -57,7 +57,7 @@ public class ListMaintenanceController implements Initializable {
     @FXML
     private MenuItem deleteMenu;
     @FXML
-    private Button help;
+    private TextField filterField;
 
     // extra elements
     ObservableList<Complex> complexList = ListRoomController.complexList;
@@ -74,12 +74,16 @@ public class ListMaintenanceController implements Initializable {
 
         handler = DatabaseHandler.getInstance();
         setting = Setting.getInstance();
-        initTableColumns(tableView);
+        initTableColumns();
 
         comboBox.setItems(complexList);
         comboBox.getSelectionModel().selectFirst();
 
         loadData();
+
+        allFilteredList = new FilteredList<>(listOfAllMaintenance);
+        setFilterFieldProperty(allFilteredList);
+        loadListToTable();
     }
 
     @FXML
@@ -93,7 +97,6 @@ public class ListMaintenanceController implements Initializable {
         try {
             listOfAllMaintenance.clear();
             loadAllMaintenance(chosenComplex.getId());
-            loadListToTable();
         } catch (NullPointerException ex) {
         }
     }
@@ -104,13 +107,14 @@ public class ListMaintenanceController implements Initializable {
     }
 
     private void loadListToTable() {
-        tableView.setItems(listOfAllMaintenance);
+        tableView.setItems(allFilteredList);
     }
 
     @FXML
     public void handleRefresh(ActionEvent event) {
         comboBox.getSelectionModel().selectFirst();
         loadData();
+        loadListToTable();
     }
 
     @FXML
@@ -198,12 +202,7 @@ public class ListMaintenanceController implements Initializable {
         }
     }
 
-    @FXML
-    private void handleHelp(ActionEvent event) {
-        // TODO help
-    }
-
-    public void initTableColumns(TableView tableView) {
+    public void initTableColumns() {
         TableColumn idCol
                 = new TableColumn<>("Mã bao tri");
         TableColumn maphongCol
@@ -253,7 +252,6 @@ public class ListMaintenanceController implements Initializable {
                     } else {
                         LocalDate d = LocalDate.parse(item, Util.SQL_DATE_TIME_FORMATTER);
                         setText(Util.DATE_TIME_FORMATTER.format(d));
-                        d = null;
                     }
                 }
             };
@@ -271,8 +269,6 @@ public class ListMaintenanceController implements Initializable {
                         DecimalFormat formatter = new DecimalFormat("###,###");
                         BigDecimal d = new BigDecimal(item);
                         setText(formatter.format(d));
-                        d = null;
-                        formatter = null;
                     }
                 }
             };
@@ -286,6 +282,22 @@ public class ListMaintenanceController implements Initializable {
     public void comboBoxSelectFirst() {
         comboBox.getSelectionModel().selectFirst();
     }
-    
-    
+
+    void setFilterFieldProperty(FilteredList f) {
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            f.setPredicate((Object t) -> {
+                ObservableList row = (ObservableList) t;
+
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterText = newValue.toLowerCase();
+                if (row.get(2).toString().toLowerCase().contains(filterText)) {
+                    return true;
+                } else {
+                    return row.get(5).toString().toLowerCase().contains(filterText);
+                }
+            });
+        });
+    }
 }
