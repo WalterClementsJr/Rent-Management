@@ -1,3 +1,4 @@
+# Netbeans
 nbproject/
 build/
 nbbuild/
@@ -6,3 +7,5 @@ nbdist/
 *.mf
 *.ini
 build.xml
+
+library/
