@@ -1,4 +1,4 @@
-# Java application for managing rent
+# Rent Manager Application in Java
 
 ## Technologies
 - JavaFX
